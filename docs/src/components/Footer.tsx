@@ -35,7 +35,7 @@ export default function Footer() {
       {/* styles.footer */}
       <div style={styles.nav}>
         {prev ? (
-          <a href={link(prev.path)} style={styles.btn} class="tt-t">
+          <a href={link(prev.path)} style={styles.btn} class="tt-t sb-8">
             ← {prev.path.replace("/", "")}
           </a>
         ) : (
@@ -43,7 +43,7 @@ export default function Footer() {
         )}
 
         {next ? (
-          <a href={link(next.path)} style={styles.btn} class="tt-t">
+          <a href={link(next.path)} style={styles.btn} class="tt-t sb-8">
             {next.path.replace("/", "")} →
           </a>
         ) : (
