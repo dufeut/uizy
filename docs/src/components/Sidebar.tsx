@@ -74,8 +74,8 @@ export function Sidebar() {
         {filteredSections.value.map((section) => (
           <a
             key={section.id}
-            href={link(`/docs/${section.id}`)}
-            class={`nav-item ${url === link(`/docs/${section.id}`) ? "active" : ""}`}
+            href={link(`/${section.id}`)}
+            class={`nav-item ${url === link(`/${section.id}`) ? "active" : ""}`}
             onClick={handleNavClick}
           >
             <span class="nav-emoji">{section.emoji}</span>

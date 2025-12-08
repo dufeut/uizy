@@ -146,11 +146,11 @@ export function GettingStarted() {
 				</p>
 
 				<div class="next-links">
-					<a href={link("/docs/display")} class="next-link">
+					<a href={link("/display")} class="next-link">
 						<span>👁️</span>
 						<span>Learn Display Utilities →</span>
 					</a>
-					<a href={link("/docs/spacing")} class="next-link">
+					<a href={link("/spacing")} class="next-link">
 						<span>📏</span>
 						<span>Learn Spacing →</span>
 					</a>

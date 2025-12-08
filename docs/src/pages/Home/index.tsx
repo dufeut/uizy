@@ -23,7 +23,7 @@ export function Home() {
           for modern UIs.
         </p>
         <div class="hero-buttons">
-          <a href={link("/docs/getting-started")} class="btn btn-primary">
+          <a href={link("/getting-started")} class="btn btn-primary">
             🚀 Get Started
           </a>
           <a href={config.github} target="_blank" class="btn btn-secondary">
@@ -84,7 +84,7 @@ export function Home() {
           {docSections.map((section) => (
             <a
               key={section.id}
-              href={link(`/docs/${section.id}`)}
+              href={link(`/${section.id}`)}
               class="section-card"
             >
               <span class="card-emoji">{section.emoji}</span>
