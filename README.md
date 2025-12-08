@@ -49,6 +49,45 @@ import "uizy";
 - **Customizable** – CSS variables for runtime theming
 - **No dependencies** – Pure CSS
 
+## Layout System
+
+Build complete app layouts with fixed positioning:
+
+```html
+<div class="layout-system-bar">System Status</div>
+<header class="layout-header">Header</header>
+<aside class="layout-left layout-drawer layout-drawer--left">Sidebar</aside>
+<main class="layout-main layout-clip-top layout-clip-bottom layout-clip-left">Content</main>
+<footer class="layout-footer">Footer</footer>
+```
+
+| Class | Description |
+|-------|-------------|
+| `layout-system-bar` | Fixed top bar |
+| `layout-header` | Fixed header below system bar |
+| `layout-footer` | Fixed footer |
+| `layout-left` / `layout-right` | Fixed sidebars |
+| `layout-main` | Main content area |
+| `layout-drawer` | Slide-in animation |
+| `layout-drawer--left` / `layout-drawer--right` | Drawer direction |
+| `layout-drawer--open` | Show drawer |
+| `layout-clip-top` | Position below header |
+| `layout-clip-bottom` | Position above footer |
+| `layout-clip-left` / `layout-clip-right` | Margin for sidebars |
+| `layout-overlay` | Dark backdrop |
+
+Configure via CSS variables:
+
+```css
+:root {
+  --layout-header-height: 56px;
+  --layout-footer-height: 48px;
+  --layout-left-width: 240px;
+  --layout-right-width: 280px;
+  --layout-drawer-speed: 0.25s;
+}
+```
+
 ## License
 
 BSD 3-Clause

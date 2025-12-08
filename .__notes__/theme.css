@@ -1,0 +1,44 @@
+/* ------------------------------------------------------ 
+@ Theming 
+------------------------------------------------------ */
+:root {
+  /* Transitions */
+  --transition-fast: 0.1s;
+  --transition-normal: 0.15s;
+  --transition-slow: 0.2s;
+}
+
+/* Theme (Light) */
+:root[data-theme="light"] {
+  /* Primary (One) */
+  --color-back-one: #1e1e1e;
+  --color-text-one: #336eff;
+  --color-line-one: #858585;
+  /* Secondary (Two) */
+  --color-back-two: #252526;
+  --color-text-two: #336eff;
+  --color-line-two: #37373d;
+  /* Tertiary (Extended) */
+  --color-back-ext: #252526;
+  --color-text-ext: #336eff;
+  --color-line-ext: #3c3c3c;
+  /* Status */
+  --color-info: #0066b8;
+  --color-accent: #00b7ff;
+  --color-success: #0dbc79;
+  --color-warning: #e5e510;
+  --color-danger: #e74c3c;
+  --color-error: #ff0000;
+  /* Shadow */
+  --shadow-dropdown: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-dialog: 0 8px 32px rgba(0, 0, 0, 0.4);
+  /* Scrollbar */
+  --scrollbar-size: 10px;
+  --scrollbar-thumb: rgba(121, 121, 121, 0.4);
+  --scrollbar-thumb-hover: rgba(121, 121, 121, 0.7);
+}
+
+/* Theme (Dark) */
+:root[data-theme="dark"] {
+  --color-back-one: #white;
+}

@@ -4,10 +4,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uizy CSS - Utility Classes Showcase</title>
-    <!--
-        <link rel="stylesheet" href="dist/index.css">
-    -->
+    <title>Uizy Layout Demo</title>
+    <style>
+        /* =========================
+       CONFIGURATION (CSS Variables)
+       ========================= */
+        :root {
+            /* System Bar */
+            --layout-system-bar-height: 24px;
+
+            /* Header & Footer */
+            --layout-header-height: 56px;
+            --layout-footer-height: 48px;
+
+            /* Sidebars */
+            --layout-left-width: 240px;
+            --layout-left-mini-width: 64px;
+            --layout-right-width: 280px;
+
+            /* Drawer Animation */
+            --layout-drawer-speed: 0.25s;
+
+            /* Overlay */
+            --layout-overlay-color: rgba(0, 0, 0, 0.5);
+            --layout-overlay-opacity: 1;
+        }
+
+        /* =========================
+       DEMO STYLES (not part of framework)
+       ========================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .layout-system-bar {
+            background: #1a1a2e;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            font-size: 12px;
+        }
+
+        .layout-header {
+            background: #16213e;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 16px;
+        }
+
+        .layout-footer {
+            background: #0f3460;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .layout-left,
+        .layout-right {
+            background: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .layout-right {
+            border-right: none;
+            border-left: 1px solid #e0e0e0;
+        }
+
+        .layout-main {
+            background: #fafafa;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        /* Buttons */
+        .btn {
+            background: #e94560;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            background: #c73e54;
+        }
+
+        /* Nav items */
+        .nav-item {
+            display: block;
+            padding: 12px;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-bottom: 4px;
+        }
+
+        .nav-item:hover {
+            background: #f0f0f0;
+        }
+
+        /* Content card */
+        .card {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 16px;
+        }
+
+        .card h2 {
+            margin-bottom: 16px;
+            color: #16213e;
+        }
+
+        .card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .card code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 13px;
+        }
+
+        .card pre {
+            background: #1a1a2e;
+            color: #e94560;
+            padding: 16px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin-top: 12px;
+            font-size: 13px;
+        }
+
+        /* Hide on desktop */
+        @media (min-width: 1025px) {
+            .mobile-only {
+                display: none;
+            }
+        }
+    </style>
     <style>
         /* Demo-specific styles */
         .demo-box {
@@ -43,707 +197,740 @@
         }
     </style>
 
-
 </head>
 
-<body class="pa-4">
+<body>
 
-    <!-- Header -->
-    <header class="mb-8">
-        <h1 class="ts-1 mb-2">Uizy CSS</h1>
-        <p class="ts-5">A lightweight utility-first CSS framework with CSS custom properties for easy customization.</p>
+    <!-- SYSTEM BAR (optional top bar) -->
+    <div class="layout-system-bar">
+        <span>System Status: Online</span>
+        <span style="margin-left: auto;">v1.0.0</span>
+    </div>
+
+    <!-- HEADER -->
+    <header class="layout-header d-flex dx-sb dy-ce layout-clip-left layout-clip-right">
+        <button class="btn" onclick="toggleLeft()">Left</button>
+        <div class="d-flex dy-ce dx-sb df-g1">
+            <h1 class="ts-1 mb-2">UIZY</h1>
+            <p class="ts-5">A lightweight utility-first CSS framework with CSS custom properties for easy customization.
+            </p>
+        </div>
+        <button class="btn" onclick="toggleRight()">Right</button>
     </header>
 
-    <!-- Customization Example -->
-    <section class="demo-section pb-6 mb-6">
-        <h2 class="demo-title pa-3 br-2 mb-4 ts-3">CSS Custom Properties</h2>
-        <p class="mb-4">Override any variable in <code>:root</code> to customize the framework:</p>
-        <pre class="pa-4 br-2" style="background: #263238; color: #aed581; overflow-x: auto;"><code>:root {
+    <!-- LEFT SIDEBAR (Drawer on mobile) -->
+    <aside class="layout-left layout-drawer layout-drawer--left layout-clip-system-bar layout-drawer--open"
+        id="leftSidebar">
+        <h3 style="margin-bottom: 16px;">Navigation</h3>
+        <a href="#" class="nav-item">Dashboard</a>
+        <a href="#" class="nav-item">Projects</a>
+        <a href="#" class="nav-item">Settings</a>
+        <a href="#" class="nav-item">Profile</a>
+    </aside>
+
+    <!-- RIGHT SIDEBAR (Drawer) -->
+    <aside class="layout-right layout-drawer layout-drawer--right layout-clip-system-bar layout-drawer--open"
+        id="rightSidebar">
+        <h3 style="margin-bottom: 16px;">Details Panel</h3>
+        <p style="color: #666; font-size: 14px;">This panel slides in from the right. Click the overlay or button to
+            close.</p>
+    </aside>
+
+
+    <!-- OVERLAY -->
+    <div class="layout-overlay-mask layout-clip-top layout-clip-bottom layout-clip-left layout-clip-right" id="overlay"
+        style="display: none;">
+        <div class="layout-overlay"></div>
+    </div>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="layout-main layout-clip-top layout-clip-bottom layout-clip-left layout-clip-right" id="mainContent">
+
+        <!-- Customization Example -->
+        <section class="demo-section pb-6 mb-6">
+            <h2 class="demo-title pa-3 br-2 mb-4 ts-3">CSS Custom Properties</h2>
+            <p class="mb-4">Override any variable in <code>:root</code> to customize the framework:</p>
+            <pre class="pa-4 br-2" style="background: #263238; color: #aed581; overflow-x: auto;"><code>:root {
   --font-family: "Inter", sans-serif;
   --border-color: #ccc;
   --shadow-color: 50, 50, 50;
   --br-2: 0.5rem;
   --sp-4: 20px;
 }</code></pre>
-    </section>
+        </section>
 
-    <!-- Display -->
-    <section class="demo-section pb-6 mb-6">
-        <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Display</h2>
-        <div class="row gx-4 gy-4">
-            <div class="col-6 col-md-3">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-block</code> block</p>
-                <div class="demo-box d-block pa-2">Block</div>
-            </div>
-            <div class="col-6 col-md-3">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-inline-block</code></p>
-                <div class="demo-box d-inline-block pa-2">Inline</div>
-                <div class="demo-box d-inline-block pa-2">Block</div>
-            </div>
-            <div class="col-6 col-md-3">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-flex</code> flex</p>
-                <div class="demo-box d-flex pa-2">Flex Container</div>
-            </div>
-            <div class="col-6 col-md-3">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-none</code> none</p>
-                <div class="demo-box d-none pa-2">Hidden</div>
-                <span class="ts-6">(element is hidden)</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- Position -->
-    <section class="demo-section pb-6 mb-6">
-        <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Position</h2>
-        <div class="row gx-4 gy-4">
-            <div class="col-6 col-md-3">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.dp-r</code> relative</p>
-            </div>
-            <div class="col-6 col-md-3">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.dp-a</code> absolute</p>
-            </div>
-            <div class="col-6 col-md-3">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.dp-f</code> fixed</p>
-            </div>
-            <div class="col-6 col-md-3">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.dp-s</code> sticky</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Flexbox -->
-    <section class="demo-section pb-6 mb-6">
-        <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Flexbox Utilities</h2>
-
-        <h3 class="ts-4 mb-3 mt-4">Direction</h3>
-        <div class="row gx-4 gy-4 mb-4">
-            <div class="col-12 col-md-6">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-flex .df-row</code></p>
-                <div class="d-flex df-row gx-2">
-                    <div class="demo-box pa-2">1</div>
-                    <div class="demo-box pa-2">2</div>
-                    <div class="demo-box pa-2">3</div>
+        <!-- Display -->
+        <section class="demo-section pb-6 mb-6">
+            <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Display</h2>
+            <div class="row gx-4 gy-4">
+                <div class="col-6 col-md-3">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-block</code> block</p>
+                    <div class="demo-box d-block pa-2">Block</div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-inline-block</code></p>
+                    <div class="demo-box d-inline-block pa-2">Inline</div>
+                    <div class="demo-box d-inline-block pa-2">Block</div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-flex</code> flex</p>
+                    <div class="demo-box d-flex pa-2">Flex Container</div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-none</code> none</p>
+                    <div class="demo-box d-none pa-2">Hidden</div>
+                    <span class="ts-6">(element is hidden)</span>
                 </div>
             </div>
-            <div class="col-12 col-md-6">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-flex .df-col</code></p>
-                <div class="d-flex df-col gy-2">
-                    <div class="demo-box pa-2">1</div>
-                    <div class="demo-box pa-2">2</div>
-                    <div class="demo-box pa-2">3</div>
+        </section>
+
+        <!-- Position -->
+        <section class="demo-section pb-6 mb-6">
+            <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Position</h2>
+            <div class="row gx-4 gy-4">
+                <div class="col-6 col-md-3">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.dp-r</code> relative</p>
+                </div>
+                <div class="col-6 col-md-3">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.dp-a</code> absolute</p>
+                </div>
+                <div class="col-6 col-md-3">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.dp-f</code> fixed</p>
+                </div>
+                <div class="col-6 col-md-3">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.dp-s</code> sticky</p>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <h3 class="ts-4 mb-3 mt-4">Justify Content (X-axis)</h3>
-        <div class="row gx-4 gy-4 mb-4">
-            <div class="col-12 col-md-4">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.dx-fs</code> flex-start</p>
-                <div class="d-flex dx-fs" style="background:#f5f5f5; padding:8px;">
-                    <div class="demo-box pa-2 mr-2">1</div>
-                    <div class="demo-box pa-2 mr-2">2</div>
-                    <div class="demo-box pa-2">3</div>
-                </div>
-            </div>
-            <div class="col-12 col-md-4">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.dx-ce</code> center</p>
-                <div class="d-flex dx-ce" style="background:#f5f5f5; padding:8px;">
-                    <div class="demo-box pa-2 mr-2">1</div>
-                    <div class="demo-box pa-2 mr-2">2</div>
-                    <div class="demo-box pa-2">3</div>
-                </div>
-            </div>
-            <div class="col-12 col-md-4">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.dx-sb</code> space-between</p>
-                <div class="d-flex dx-sb" style="background:#f5f5f5; padding:8px;">
-                    <div class="demo-box pa-2">1</div>
-                    <div class="demo-box pa-2">2</div>
-                    <div class="demo-box pa-2">3</div>
-                </div>
-            </div>
-        </div>
+        <!-- Flexbox -->
+        <section class="demo-section pb-6 mb-6">
+            <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Flexbox Utilities</h2>
 
-        <h3 class="ts-4 mb-3 mt-4">Align Items (Y-axis)</h3>
-        <div class="row gx-4 gy-4">
-            <div class="col-12 col-md-4">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.dy-fs</code> flex-start</p>
-                <div class="d-flex dy-fs" style="background:#f5f5f5; padding:8px; height:100px;">
-                    <div class="demo-box pa-2 mr-2">1</div>
-                    <div class="demo-box pa-2 mr-2" style="height:60px;">2</div>
-                    <div class="demo-box pa-2">3</div>
-                </div>
-            </div>
-            <div class="col-12 col-md-4">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.dy-ce</code> center</p>
-                <div class="d-flex dy-ce" style="background:#f5f5f5; padding:8px; height:100px;">
-                    <div class="demo-box pa-2 mr-2">1</div>
-                    <div class="demo-box pa-2 mr-2" style="height:60px;">2</div>
-                    <div class="demo-box pa-2">3</div>
-                </div>
-            </div>
-            <div class="col-12 col-md-4">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.dy-st</code> stretch</p>
-                <div class="d-flex dy-st" style="background:#f5f5f5; padding:8px; height:100px;">
-                    <div class="demo-box pa-2 mr-2">1</div>
-                    <div class="demo-box pa-2 mr-2">2</div>
-                    <div class="demo-box pa-2">3</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Grid System -->
-    <section class="demo-section pb-6 mb-6">
-        <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Grid System (12 columns)</h2>
-        <p class="mb-4">Use <code>.row</code> with <code>.col-{1-12}</code> classes. Responsive: <code>.col-sm-*</code>,
-            <code>.col-md-*</code>, <code>.col-lg-*</code>, <code>.col-xl-*</code>
-        </p>
-
-        <div class="row gx-2 gy-2 mb-4">
-            <div class="col-12">
-                <div class="demo-box pa-2 ta-c">col-12</div>
-            </div>
-        </div>
-        <div class="row gx-2 gy-2 mb-4">
-            <div class="col-6">
-                <div class="demo-box pa-2 ta-c">col-6</div>
-            </div>
-            <div class="col-6">
-                <div class="demo-box pa-2 ta-c">col-6</div>
-            </div>
-        </div>
-        <div class="row gx-2 gy-2 mb-4">
-            <div class="col-4">
-                <div class="demo-box pa-2 ta-c">col-4</div>
-            </div>
-            <div class="col-4">
-                <div class="demo-box pa-2 ta-c">col-4</div>
-            </div>
-            <div class="col-4">
-                <div class="demo-box pa-2 ta-c">col-4</div>
-            </div>
-        </div>
-        <div class="row gx-2 gy-2 mb-4">
-            <div class="col-3">
-                <div class="demo-box pa-2 ta-c">col-3</div>
-            </div>
-            <div class="col-3">
-                <div class="demo-box pa-2 ta-c">col-3</div>
-            </div>
-            <div class="col-3">
-                <div class="demo-box pa-2 ta-c">col-3</div>
-            </div>
-            <div class="col-3">
-                <div class="demo-box pa-2 ta-c">col-3</div>
-            </div>
-        </div>
-        <div class="row gx-2 gy-2">
-            <div class="col-8">
-                <div class="demo-box pa-2 ta-c">col-8</div>
-            </div>
-            <div class="col-4">
-                <div class="demo-box pa-2 ta-c">col-4</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Spacing -->
-    <section class="demo-section pb-6 mb-6">
-        <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Spacing (Margin & Padding)</h2>
-        <p class="mb-4">Scale: 0-24 (4px increments). Format: <code>.{m|p}{a|t|b|l|r|x|y}-{0-24}</code></p>
-
-        <h3 class="ts-4 mb-3">Padding Examples</h3>
-        <div class="row gx-4 gy-4 mb-4">
-            <div class="col-6 col-md-3">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.pa-1</code> (4px)</p>
-                <div class="demo-box pa-1">Content</div>
-            </div>
-            <div class="col-6 col-md-3">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.pa-4</code> (16px)</p>
-                <div class="demo-box pa-4">Content</div>
-            </div>
-            <div class="col-6 col-md-3">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.pa-8</code> (32px)</p>
-                <div class="demo-box pa-8">Content</div>
-            </div>
-            <div class="col-6 col-md-3">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.px-8 .py-2</code></p>
-                <div class="demo-box px-8 py-2">Content</div>
-            </div>
-        </div>
-
-        <h3 class="ts-4 mb-3">Margin Examples</h3>
-        <div class="row gx-4 gy-4">
-            <div class="col-12 col-md-6">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.mx-auto</code> (center)</p>
-                <div class="demo-box pa-2 mx-auto" style="width:150px;">Centered</div>
-            </div>
-            <div class="col-12 col-md-6">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.ml-auto</code> (push right)</p>
-                <div class="demo-box pa-2 ml-auto" style="width:150px;">Right</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Typography -->
-    <section class="demo-section pb-6 mb-6">
-        <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Typography</h2>
-
-        <h3 class="ts-4 mb-3">Text Sizes</h3>
-        <div class="mb-4">
-            <p class="ts-1 mb-2">.ts-1 (3rem)</p>
-            <p class="ts-2 mb-2">.ts-2 (2.25rem)</p>
-            <p class="ts-3 mb-2">.ts-3 (1.5rem)</p>
-            <p class="ts-4 mb-2">.ts-4 (1.25rem)</p>
-            <p class="ts-5 mb-2">.ts-5 (1rem)</p>
-            <p class="ts-6 mb-2">.ts-6 (0.875rem)</p>
-        </div>
-
-        <h3 class="ts-4 mb-3">Text Decoration</h3>
-        <div class="row gx-4 gy-4 mb-4">
-            <div class="col-6 col-md-3">
-                <p class="td-b">.td-b Bold</p>
-            </div>
-            <div class="col-6 col-md-3">
-                <p class="td-i">.td-i Italic</p>
-            </div>
-            <div class="col-6 col-md-3">
-                <p class="td-u">.td-u Underline</p>
-            </div>
-            <div class="col-6 col-md-3">
-                <p class="td-s">.td-s Strikethrough</p>
-            </div>
-        </div>
-
-        <h3 class="ts-4 mb-3">Text Transform</h3>
-        <div class="row gx-4 gy-4 mb-4">
-            <div class="col-6 col-md-4">
-                <p class="tt-u">.tt-u uppercase</p>
-            </div>
-            <div class="col-6 col-md-4">
-                <p class="tt-l">.tt-l LOWERCASE</p>
-            </div>
-            <div class="col-6 col-md-4">
-                <p class="tt-t">.tt-t capitalize text</p>
-            </div>
-        </div>
-
-        <h3 class="ts-4 mb-3">Text Align</h3>
-        <div class="row gx-4 gy-4 mb-4">
-            <div class="col-12 col-md-4">
-                <div class="demo-box pa-2 ta-l">.ta-l Left</div>
-            </div>
-            <div class="col-12 col-md-4">
-                <div class="demo-box pa-2 ta-c">.ta-c Center</div>
-            </div>
-            <div class="col-12 col-md-4">
-                <div class="demo-box pa-2 ta-r">.ta-r Right</div>
-            </div>
-        </div>
-
-        <h3 class="ts-4 mb-3">Text Truncate</h3>
-        <div class="row gx-4">
-            <div class="col-12 col-md-6">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.tt-c</code> (ellipsis)</p>
-                <div class="demo-box pa-2 tt-c" style="width:200px;">This is a very long text that will be truncated
-                    with ellipsis</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Borders -->
-    <section class="demo-section pb-6 mb-6">
-        <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Borders</h2>
-
-        <h3 class="ts-4 mb-3">Border Display</h3>
-        <div class="row gx-4 gy-4 mb-4">
-            <div class="col-6 col-md-2">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bd-a</code></p>
-                <div class="bd-a pa-3">All</div>
-            </div>
-            <div class="col-6 col-md-2">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bd-t</code></p>
-                <div class="bd-t pa-3">Top</div>
-            </div>
-            <div class="col-6 col-md-2">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bd-b</code></p>
-                <div class="bd-b pa-3">Bottom</div>
-            </div>
-            <div class="col-6 col-md-2">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bd-l</code></p>
-                <div class="bd-l pa-3">Left</div>
-            </div>
-            <div class="col-6 col-md-2">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bd-r</code></p>
-                <div class="bd-r pa-3">Right</div>
-            </div>
-        </div>
-
-        <h3 class="ts-4 mb-3">Border Radius</h3>
-        <div class="row gx-4 gy-4 mb-4">
-            <div class="col-6 col-md-2">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.br-0</code></p>
-                <div class="color-box pa-3 br-0 ta-c">0</div>
-            </div>
-            <div class="col-6 col-md-2">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.br-1</code></p>
-                <div class="color-box pa-3 br-1 ta-c">1</div>
-            </div>
-            <div class="col-6 col-md-2">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.br-2</code></p>
-                <div class="color-box pa-3 br-2 ta-c">2</div>
-            </div>
-            <div class="col-6 col-md-2">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.br-3</code></p>
-                <div class="color-box pa-3 br-3 ta-c">3</div>
-            </div>
-            <div class="col-6 col-md-2">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.br-4</code></p>
-                <div class="color-box pa-3 br-4 ta-c">4</div>
-            </div>
-            <div class="col-6 col-md-2">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.br-pill</code></p>
-                <div class="color-box pa-3 br-pill ta-c">pill</div>
-            </div>
-        </div>
-
-        <h3 class="ts-4 mb-3">Border Width</h3>
-        <div class="row gx-4 gy-4 mb-4">
-            <div class="col-6 col-md-2">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bw-1</code></p>
-                <div class="bd-a bw-1 pa-3 ta-c">1</div>
-            </div>
-            <div class="col-6 col-md-2">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bw-2</code></p>
-                <div class="bd-a bw-2 pa-3 ta-c">2</div>
-            </div>
-            <div class="col-6 col-md-2">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bw-3</code></p>
-                <div class="bd-a bw-3 pa-3 ta-c">3</div>
-            </div>
-            <div class="col-6 col-md-2">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bw-4</code></p>
-                <div class="bd-a bw-4 pa-3 ta-c">4</div>
-            </div>
-            <div class="col-6 col-md-2">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bw-5</code></p>
-                <div class="bd-a bw-5 pa-3 ta-c">5</div>
-            </div>
-        </div>
-
-        <h3 class="ts-4 mb-3">Border Style</h3>
-        <div class="row gx-4 gy-4">
-            <div class="col-6 col-md-4">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bs-solid</code></p>
-                <div class="bd-a bs-solid bw-2 pa-3 ta-c">Solid</div>
-            </div>
-            <div class="col-6 col-md-4">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bs-dashed</code></p>
-                <div class="bd-a bs-dashed bw-2 pa-3 ta-c">Dashed</div>
-            </div>
-            <div class="col-6 col-md-4">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bs-dotted</code></p>
-                <div class="bd-a bs-dotted bw-2 pa-3 ta-c">Dotted</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Shadows -->
-    <section class="demo-section pb-6 mb-6">
-        <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Shadows</h2>
-        <p class="mb-4">Bottom shadows: <code>.sb-{0-24}</code> | Top: <code>.st-{1-24}</code> | Left:
-            <code>.sl-{1-12}</code> | Right: <code>.sr-{1-12}</code>
-        </p>
-
-        <h3 class="ts-4 mb-3">Bottom Shadows</h3>
-        <div class="row gx-4 gy-6 mb-6">
-            <div class="col-6 col-md-2">
-                <div class="pa-4 br-2 sb-1 ta-c" style="background:white;">.sb-1</div>
-            </div>
-            <div class="col-6 col-md-2">
-                <div class="pa-4 br-2 sb-4 ta-c" style="background:white;">.sb-4</div>
-            </div>
-            <div class="col-6 col-md-2">
-                <div class="pa-4 br-2 sb-8 ta-c" style="background:white;">.sb-8</div>
-            </div>
-            <div class="col-6 col-md-2">
-                <div class="pa-4 br-2 sb-12 ta-c" style="background:white;">.sb-12</div>
-            </div>
-            <div class="col-6 col-md-2">
-                <div class="pa-4 br-2 sb-16 ta-c" style="background:white;">.sb-16</div>
-            </div>
-            <div class="col-6 col-md-2">
-                <div class="pa-4 br-2 sb-24 ta-c" style="background:white;">.sb-24</div>
-            </div>
-        </div>
-
-        <h3 class="ts-4 mb-3">Directional Shadows</h3>
-        <div class="row gx-4 gy-6">
-            <div class="col-6 col-md-3">
-                <div class="pa-4 br-2 st-8 ta-c" style="background:white;">.st-8 (top)</div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="pa-4 br-2 sb-8 ta-c" style="background:white;">.sb-8 (bottom)</div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="pa-4 br-2 sl-8 ta-c" style="background:white;">.sl-8 (left)</div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="pa-4 br-2 sr-8 ta-c" style="background:white;">.sr-8 (right)</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Overflow -->
-    <section class="demo-section pb-6 mb-6">
-        <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Overflow</h2>
-        <div class="row gx-4 gy-4">
-            <div class="col-12 col-md-6">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.oy-a</code> (overflow-y: auto)</p>
-                <div class="demo-box pa-2 oy-a" style="height:100px;">
-                    <p>Scrollable content</p>
-                    <p>Line 2</p>
-                    <p>Line 3</p>
-                    <p>Line 4</p>
-                    <p>Line 5</p>
-                    <p>Line 6</p>
-                </div>
-            </div>
-            <div class="col-12 col-md-6">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.oy-h</code> (overflow-y: hidden)</p>
-                <div class="demo-box pa-2 oy-h" style="height:100px;">
-                    <p>Hidden overflow content</p>
-                    <p>Line 2</p>
-                    <p>Line 3</p>
-                    <p>Line 4</p>
-                    <p>Line 5</p>
-                    <p>Line 6</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Extras -->
-    <section class="demo-section pb-6 mb-6">
-        <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Extras</h2>
-        <div class="row gx-4 gy-4">
-            <div class="col-12 col-md-4">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.e-p</code> (cursor: pointer)</p>
-                <div class="demo-box pa-3 e-p ta-c">Hover me</div>
-            </div>
-            <div class="col-12 col-md-4">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.e-ns</code> (user-select: none)</p>
-                <div class="demo-box pa-3 e-ns ta-c">Can't select this</div>
-            </div>
-            <div class="col-12 col-md-4">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.e-ne</code> (pointer-events: none)</p>
-                <div class="demo-box pa-3 e-ne ta-c">No click</div>
-            </div>
-        </div>
-
-        <h3 class="ts-4 mb-3 mt-6">Dimensions</h3>
-        <div class="row gx-4 gy-4">
-            <div class="col-12 col-md-6">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.ew-100p</code> (width: 100%)</p>
-                <div class="demo-box pa-2 ew-100p ta-c">Full width</div>
-            </div>
-            <div class="col-12 col-md-6">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.eh-100p</code> (height: 100%)</p>
-                <div style="height:60px; background:#f5f5f5;">
-                    <div class="demo-box pa-2 eh-100p ta-c d-flex dy-ce dx-ce">Full height</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Responsive Display Utilities -->
-    <section class="demo-section pb-6 mb-6">
-        <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Responsive Display</h2>
-        <p class="mb-4">Mobile-first display utilities: <code>.d-{none|block|flex|...}</code> and
-            <code>.d-{sm|md|lg|xl}-{none|block|flex|...}</code>
-        </p>
-
-        <h3 class="ts-4 mb-3">Base Classes</h3>
-        <div class="row gx-4 gy-4 mb-4">
-            <div class="col-6 col-md-2">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-none</code></p>
-            </div>
-            <div class="col-6 col-md-2">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-block</code></p>
-            </div>
-            <div class="col-6 col-md-2">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-flex</code></p>
-            </div>
-            <div class="col-6 col-md-2">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-grid</code></p>
-            </div>
-            <div class="col-6 col-md-2">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-inline</code></p>
-            </div>
-            <div class="col-6 col-md-2">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-inline-block</code></p>
-            </div>
-        </div>
-
-        <h3 class="ts-4 mb-3">Common Patterns</h3>
-        <div class="row gx-4 gy-4">
-            <div class="col-12 col-md-6">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-none .d-md-block</code> - Hidden on mobile,
-                    visible on tablet+</p>
-                <div class="demo-box pa-3 d-none d-md-block ta-c">Visible on tablet and up (md+)</div>
-            </div>
-            <div class="col-12 col-md-6">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-block .d-md-none</code> - Visible on mobile only
-                </p>
-                <div class="demo-box pa-3 d-block d-md-none ta-c" style="background:#c8e6c9;">Mobile only</div>
-                <div class="d-none d-md-block pa-3 ta-c" style="background:#f5f5f5;">(Hidden on desktop)</div>
-            </div>
-            <div class="col-12 col-md-6">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-none .d-lg-flex</code> - Flex on desktop only</p>
-                <div class="demo-box pa-3 d-none d-lg-flex dx-sb ta-c" style="background:#fff9c4;">
-                    <span>Flex</span>
-                    <span>on</span>
-                    <span>desktop</span>
-                </div>
-            </div>
-            <div class="col-12 col-md-6">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-block .d-sm-none .d-lg-block</code> - Show xs,
-                    hide sm-md, show lg+</p>
-                <div class="demo-box pa-3 d-block d-sm-none d-lg-block ta-c" style="background:#e1bee7;">XS and LG+ only
-                </div>
-            </div>
-        </div>
-
-        <h3 class="ts-4 mb-3 mt-4">Breakpoint Reference</h3>
-        <div class="row gx-4 gy-2">
-            <div class="col-12">
-                <table class="ew-100p" style="border-collapse: collapse;">
-                    <tr class="bd-b">
-                        <td class="pa-2 td-b">Class</td>
-                        <td class="pa-2 td-b">Applies from</td>
-                    </tr>
-                    <tr class="bd-b">
-                        <td class="pa-2"><code>.d-*</code></td>
-                        <td class="pa-2">All sizes (base)</td>
-                    </tr>
-                    <tr class="bd-b">
-                        <td class="pa-2"><code>.d-sm-*</code></td>
-                        <td class="pa-2">576px and up</td>
-                    </tr>
-                    <tr class="bd-b">
-                        <td class="pa-2"><code>.d-md-*</code></td>
-                        <td class="pa-2">768px and up</td>
-                    </tr>
-                    <tr class="bd-b">
-                        <td class="pa-2"><code>.d-lg-*</code></td>
-                        <td class="pa-2">992px and up</td>
-                    </tr>
-                    <tr>
-                        <td class="pa-2"><code>.d-xl-*</code></td>
-                        <td class="pa-2">1200px and up</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </section>
-
-    <!-- Gap Utilities -->
-    <section class="demo-section pb-6 mb-6">
-        <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Gap Utilities</h2>
-        <p class="mb-4">Use with grid/flex: <code>.gx-{0-16}</code> (column gap) / <code>.gy-{0-16}</code> (row gap)</p>
-
-        <div class="row gx-4 gy-4">
-            <div class="col-12 col-md-6">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.row .gx-2 .gy-2</code></p>
-                <div class="row gx-2 gy-2">
-                    <div class="col-4">
-                        <div class="demo-box pa-2 ta-c">1</div>
+            <h3 class="ts-4 mb-3 mt-4">Direction</h3>
+            <div class="row gx-4 gy-4 mb-4">
+                <div class="col-12 col-md-6">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-flex .df-row</code></p>
+                    <div class="d-flex df-row gx-2">
+                        <div class="demo-box pa-2">1</div>
+                        <div class="demo-box pa-2">2</div>
+                        <div class="demo-box pa-2">3</div>
                     </div>
-                    <div class="col-4">
-                        <div class="demo-box pa-2 ta-c">2</div>
-                    </div>
-                    <div class="col-4">
-                        <div class="demo-box pa-2 ta-c">3</div>
-                    </div>
-                    <div class="col-4">
-                        <div class="demo-box pa-2 ta-c">4</div>
-                    </div>
-                    <div class="col-4">
-                        <div class="demo-box pa-2 ta-c">5</div>
-                    </div>
-                    <div class="col-4">
-                        <div class="demo-box pa-2 ta-c">6</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-flex .df-col</code></p>
+                    <div class="d-flex df-col gy-2">
+                        <div class="demo-box pa-2">1</div>
+                        <div class="demo-box pa-2">2</div>
+                        <div class="demo-box pa-2">3</div>
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-6">
-                <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.row .gx-6 .gy-6</code></p>
-                <div class="row gx-6 gy-6">
-                    <div class="col-4">
-                        <div class="demo-box pa-2 ta-c">1</div>
+
+            <h3 class="ts-4 mb-3 mt-4">Justify Content (X-axis)</h3>
+            <div class="row gx-4 gy-4 mb-4">
+                <div class="col-12 col-md-4">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.dx-fs</code> flex-start</p>
+                    <div class="d-flex dx-fs" style="background:#f5f5f5; padding:8px;">
+                        <div class="demo-box pa-2 mr-2">1</div>
+                        <div class="demo-box pa-2 mr-2">2</div>
+                        <div class="demo-box pa-2">3</div>
                     </div>
-                    <div class="col-4">
-                        <div class="demo-box pa-2 ta-c">2</div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.dx-ce</code> center</p>
+                    <div class="d-flex dx-ce" style="background:#f5f5f5; padding:8px;">
+                        <div class="demo-box pa-2 mr-2">1</div>
+                        <div class="demo-box pa-2 mr-2">2</div>
+                        <div class="demo-box pa-2">3</div>
                     </div>
-                    <div class="col-4">
-                        <div class="demo-box pa-2 ta-c">3</div>
-                    </div>
-                    <div class="col-4">
-                        <div class="demo-box pa-2 ta-c">4</div>
-                    </div>
-                    <div class="col-4">
-                        <div class="demo-box pa-2 ta-c">5</div>
-                    </div>
-                    <div class="col-4">
-                        <div class="demo-box pa-2 ta-c">6</div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.dx-sb</code> space-between</p>
+                    <div class="d-flex dx-sb" style="background:#f5f5f5; padding:8px;">
+                        <div class="demo-box pa-2">1</div>
+                        <div class="demo-box pa-2">2</div>
+                        <div class="demo-box pa-2">3</div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- Footer -->
-    <footer class="ta-c py-6 mt-8 bd-t">
-        <p class="ts-6">Utility-First CSS Framework</p>
+            <h3 class="ts-4 mb-3 mt-4">Align Items (Y-axis)</h3>
+            <div class="row gx-4 gy-4">
+                <div class="col-12 col-md-4">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.dy-fs</code> flex-start</p>
+                    <div class="d-flex dy-fs" style="background:#f5f5f5; padding:8px; height:100px;">
+                        <div class="demo-box pa-2 mr-2">1</div>
+                        <div class="demo-box pa-2 mr-2" style="height:60px;">2</div>
+                        <div class="demo-box pa-2">3</div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.dy-ce</code> center</p>
+                    <div class="d-flex dy-ce" style="background:#f5f5f5; padding:8px; height:100px;">
+                        <div class="demo-box pa-2 mr-2">1</div>
+                        <div class="demo-box pa-2 mr-2" style="height:60px;">2</div>
+                        <div class="demo-box pa-2">3</div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.dy-st</code> stretch</p>
+                    <div class="d-flex dy-st" style="background:#f5f5f5; padding:8px; height:100px;">
+                        <div class="demo-box pa-2 mr-2">1</div>
+                        <div class="demo-box pa-2 mr-2">2</div>
+                        <div class="demo-box pa-2">3</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Grid System -->
+        <section class="demo-section pb-6 mb-6">
+            <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Grid System (12 columns)</h2>
+            <p class="mb-4">Use <code>.row</code> with <code>.col-{1-12}</code> classes. Responsive:
+                <code>.col-sm-*</code>,
+                <code>.col-md-*</code>, <code>.col-lg-*</code>, <code>.col-xl-*</code>
+            </p>
+
+            <div class="row gx-2 gy-2 mb-4">
+                <div class="col-12">
+                    <div class="demo-box pa-2 ta-c">col-12</div>
+                </div>
+            </div>
+            <div class="row gx-2 gy-2 mb-4">
+                <div class="col-6">
+                    <div class="demo-box pa-2 ta-c">col-6</div>
+                </div>
+                <div class="col-6">
+                    <div class="demo-box pa-2 ta-c">col-6</div>
+                </div>
+            </div>
+            <div class="row gx-2 gy-2 mb-4">
+                <div class="col-4">
+                    <div class="demo-box pa-2 ta-c">col-4</div>
+                </div>
+                <div class="col-4">
+                    <div class="demo-box pa-2 ta-c">col-4</div>
+                </div>
+                <div class="col-4">
+                    <div class="demo-box pa-2 ta-c">col-4</div>
+                </div>
+            </div>
+            <div class="row gx-2 gy-2 mb-4">
+                <div class="col-3">
+                    <div class="demo-box pa-2 ta-c">col-3</div>
+                </div>
+                <div class="col-3">
+                    <div class="demo-box pa-2 ta-c">col-3</div>
+                </div>
+                <div class="col-3">
+                    <div class="demo-box pa-2 ta-c">col-3</div>
+                </div>
+                <div class="col-3">
+                    <div class="demo-box pa-2 ta-c">col-3</div>
+                </div>
+            </div>
+            <div class="row gx-2 gy-2">
+                <div class="col-8">
+                    <div class="demo-box pa-2 ta-c">col-8</div>
+                </div>
+                <div class="col-4">
+                    <div class="demo-box pa-2 ta-c">col-4</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spacing -->
+        <section class="demo-section pb-6 mb-6">
+            <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Spacing (Margin & Padding)</h2>
+            <p class="mb-4">Scale: 0-24 (4px increments). Format: <code>.{m|p}{a|t|b|l|r|x|y}-{0-24}</code></p>
+
+            <h3 class="ts-4 mb-3">Padding Examples</h3>
+            <div class="row gx-4 gy-4 mb-4">
+                <div class="col-6 col-md-3">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.pa-1</code> (4px)</p>
+                    <div class="demo-box pa-1">Content</div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.pa-4</code> (16px)</p>
+                    <div class="demo-box pa-4">Content</div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.pa-8</code> (32px)</p>
+                    <div class="demo-box pa-8">Content</div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.px-8 .py-2</code></p>
+                    <div class="demo-box px-8 py-2">Content</div>
+                </div>
+            </div>
+
+            <h3 class="ts-4 mb-3">Margin Examples</h3>
+            <div class="row gx-4 gy-4">
+                <div class="col-12 col-md-6">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.mx-auto</code> (center)</p>
+                    <div class="demo-box pa-2 mx-auto" style="width:150px;">Centered</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.ml-auto</code> (push right)</p>
+                    <div class="demo-box pa-2 ml-auto" style="width:150px;">Right</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Typography -->
+        <section class="demo-section pb-6 mb-6">
+            <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Typography</h2>
+
+            <h3 class="ts-4 mb-3">Text Sizes</h3>
+            <div class="mb-4">
+                <p class="ts-1 mb-2">.ts-1 (3rem)</p>
+                <p class="ts-2 mb-2">.ts-2 (2.25rem)</p>
+                <p class="ts-3 mb-2">.ts-3 (1.5rem)</p>
+                <p class="ts-4 mb-2">.ts-4 (1.25rem)</p>
+                <p class="ts-5 mb-2">.ts-5 (1rem)</p>
+                <p class="ts-6 mb-2">.ts-6 (0.875rem)</p>
+            </div>
+
+            <h3 class="ts-4 mb-3">Text Decoration</h3>
+            <div class="row gx-4 gy-4 mb-4">
+                <div class="col-6 col-md-3">
+                    <p class="td-b">.td-b Bold</p>
+                </div>
+                <div class="col-6 col-md-3">
+                    <p class="td-i">.td-i Italic</p>
+                </div>
+                <div class="col-6 col-md-3">
+                    <p class="td-u">.td-u Underline</p>
+                </div>
+                <div class="col-6 col-md-3">
+                    <p class="td-s">.td-s Strikethrough</p>
+                </div>
+            </div>
+
+            <h3 class="ts-4 mb-3">Text Transform</h3>
+            <div class="row gx-4 gy-4 mb-4">
+                <div class="col-6 col-md-4">
+                    <p class="tt-u">.tt-u uppercase</p>
+                </div>
+                <div class="col-6 col-md-4">
+                    <p class="tt-l">.tt-l LOWERCASE</p>
+                </div>
+                <div class="col-6 col-md-4">
+                    <p class="tt-t">.tt-t capitalize text</p>
+                </div>
+            </div>
+
+            <h3 class="ts-4 mb-3">Text Align</h3>
+            <div class="row gx-4 gy-4 mb-4">
+                <div class="col-12 col-md-4">
+                    <div class="demo-box pa-2 ta-l">.ta-l Left</div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="demo-box pa-2 ta-c">.ta-c Center</div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="demo-box pa-2 ta-r">.ta-r Right</div>
+                </div>
+            </div>
+
+            <h3 class="ts-4 mb-3">Text Truncate</h3>
+            <div class="row gx-4">
+                <div class="col-12 col-md-6">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.tt-c</code> (ellipsis)</p>
+                    <div class="demo-box pa-2 tt-c" style="width:200px;">This is a very long text that will be truncated
+                        with ellipsis</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Borders -->
+        <section class="demo-section pb-6 mb-6">
+            <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Borders</h2>
+
+            <h3 class="ts-4 mb-3">Border Display</h3>
+            <div class="row gx-4 gy-4 mb-4">
+                <div class="col-6 col-md-2">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bd-a</code></p>
+                    <div class="bd-a pa-3">All</div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bd-t</code></p>
+                    <div class="bd-t pa-3">Top</div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bd-b</code></p>
+                    <div class="bd-b pa-3">Bottom</div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bd-l</code></p>
+                    <div class="bd-l pa-3">Left</div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bd-r</code></p>
+                    <div class="bd-r pa-3">Right</div>
+                </div>
+            </div>
+
+            <h3 class="ts-4 mb-3">Border Radius</h3>
+            <div class="row gx-4 gy-4 mb-4">
+                <div class="col-6 col-md-2">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.br-0</code></p>
+                    <div class="color-box pa-3 br-0 ta-c">0</div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.br-1</code></p>
+                    <div class="color-box pa-3 br-1 ta-c">1</div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.br-2</code></p>
+                    <div class="color-box pa-3 br-2 ta-c">2</div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.br-3</code></p>
+                    <div class="color-box pa-3 br-3 ta-c">3</div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.br-4</code></p>
+                    <div class="color-box pa-3 br-4 ta-c">4</div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.br-pill</code></p>
+                    <div class="color-box pa-3 br-pill ta-c">pill</div>
+                </div>
+            </div>
+
+            <h3 class="ts-4 mb-3">Border Width</h3>
+            <div class="row gx-4 gy-4 mb-4">
+                <div class="col-6 col-md-2">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bw-1</code></p>
+                    <div class="bd-a bw-1 pa-3 ta-c">1</div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bw-2</code></p>
+                    <div class="bd-a bw-2 pa-3 ta-c">2</div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bw-3</code></p>
+                    <div class="bd-a bw-3 pa-3 ta-c">3</div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bw-4</code></p>
+                    <div class="bd-a bw-4 pa-3 ta-c">4</div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bw-5</code></p>
+                    <div class="bd-a bw-5 pa-3 ta-c">5</div>
+                </div>
+            </div>
+
+            <h3 class="ts-4 mb-3">Border Style</h3>
+            <div class="row gx-4 gy-4">
+                <div class="col-6 col-md-4">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bs-solid</code></p>
+                    <div class="bd-a bs-solid bw-2 pa-3 ta-c">Solid</div>
+                </div>
+                <div class="col-6 col-md-4">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bs-dashed</code></p>
+                    <div class="bd-a bs-dashed bw-2 pa-3 ta-c">Dashed</div>
+                </div>
+                <div class="col-6 col-md-4">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.bs-dotted</code></p>
+                    <div class="bd-a bs-dotted bw-2 pa-3 ta-c">Dotted</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shadows -->
+        <section class="demo-section pb-6 mb-6">
+            <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Shadows</h2>
+            <p class="mb-4">Bottom shadows: <code>.sb-{0-24}</code> | Top: <code>.st-{1-24}</code> | Left:
+                <code>.sl-{1-12}</code> | Right: <code>.sr-{1-12}</code>
+            </p>
+
+            <h3 class="ts-4 mb-3">Bottom Shadows</h3>
+            <div class="row gx-4 gy-6 mb-6">
+                <div class="col-6 col-md-2">
+                    <div class="pa-4 br-2 sb-1 ta-c" style="background:white;">.sb-1</div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="pa-4 br-2 sb-4 ta-c" style="background:white;">.sb-4</div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="pa-4 br-2 sb-8 ta-c" style="background:white;">.sb-8</div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="pa-4 br-2 sb-12 ta-c" style="background:white;">.sb-12</div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="pa-4 br-2 sb-16 ta-c" style="background:white;">.sb-16</div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="pa-4 br-2 sb-24 ta-c" style="background:white;">.sb-24</div>
+                </div>
+            </div>
+
+            <h3 class="ts-4 mb-3">Directional Shadows</h3>
+            <div class="row gx-4 gy-6">
+                <div class="col-6 col-md-3">
+                    <div class="pa-4 br-2 st-8 ta-c" style="background:white;">.st-8 (top)</div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="pa-4 br-2 sb-8 ta-c" style="background:white;">.sb-8 (bottom)</div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="pa-4 br-2 sl-8 ta-c" style="background:white;">.sl-8 (left)</div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="pa-4 br-2 sr-8 ta-c" style="background:white;">.sr-8 (right)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Overflow -->
+        <section class="demo-section pb-6 mb-6">
+            <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Overflow</h2>
+            <div class="row gx-4 gy-4">
+                <div class="col-12 col-md-6">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.oy-a</code> (overflow-y: auto)</p>
+                    <div class="demo-box pa-2 oy-a" style="height:100px;">
+                        <p>Scrollable content</p>
+                        <p>Line 2</p>
+                        <p>Line 3</p>
+                        <p>Line 4</p>
+                        <p>Line 5</p>
+                        <p>Line 6</p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.oy-h</code> (overflow-y: hidden)</p>
+                    <div class="demo-box pa-2 oy-h" style="height:100px;">
+                        <p>Hidden overflow content</p>
+                        <p>Line 2</p>
+                        <p>Line 3</p>
+                        <p>Line 4</p>
+                        <p>Line 5</p>
+                        <p>Line 6</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Extras -->
+        <section class="demo-section pb-6 mb-6">
+            <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Extras</h2>
+            <div class="row gx-4 gy-4">
+                <div class="col-12 col-md-4">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.e-p</code> (cursor: pointer)</p>
+                    <div class="demo-box pa-3 e-p ta-c">Hover me</div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.e-ns</code> (user-select: none)</p>
+                    <div class="demo-box pa-3 e-ns ta-c">Can't select this</div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.e-ne</code> (pointer-events: none)</p>
+                    <div class="demo-box pa-3 e-ne ta-c">No click</div>
+                </div>
+            </div>
+
+            <h3 class="ts-4 mb-3 mt-6">Dimensions</h3>
+            <div class="row gx-4 gy-4">
+                <div class="col-12 col-md-6">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.ew-100p</code> (width: 100%)</p>
+                    <div class="demo-box pa-2 ew-100p ta-c">Full width</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.eh-100p</code> (height: 100%)</p>
+                    <div style="height:60px; background:#f5f5f5;">
+                        <div class="demo-box pa-2 eh-100p ta-c d-flex dy-ce dx-ce">Full height</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Responsive Display Utilities -->
+        <section class="demo-section pb-6 mb-6">
+            <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Responsive Display</h2>
+            <p class="mb-4">Mobile-first display utilities: <code>.d-{none|block|flex|...}</code> and
+                <code>.d-{sm|md|lg|xl}-{none|block|flex|...}</code>
+            </p>
+
+            <h3 class="ts-4 mb-3">Base Classes</h3>
+            <div class="row gx-4 gy-4 mb-4">
+                <div class="col-6 col-md-2">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-none</code></p>
+                </div>
+                <div class="col-6 col-md-2">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-block</code></p>
+                </div>
+                <div class="col-6 col-md-2">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-flex</code></p>
+                </div>
+                <div class="col-6 col-md-2">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-grid</code></p>
+                </div>
+                <div class="col-6 col-md-2">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-inline</code></p>
+                </div>
+                <div class="col-6 col-md-2">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-inline-block</code></p>
+                </div>
+            </div>
+
+            <h3 class="ts-4 mb-3">Common Patterns</h3>
+            <div class="row gx-4 gy-4">
+                <div class="col-12 col-md-6">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-none .d-md-block</code> - Hidden on mobile,
+                        visible on tablet+</p>
+                    <div class="demo-box pa-3 d-none d-md-block ta-c">Visible on tablet and up (md+)</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-block .d-md-none</code> - Visible on mobile
+                        only
+                    </p>
+                    <div class="demo-box pa-3 d-block d-md-none ta-c" style="background:#c8e6c9;">Mobile only</div>
+                    <div class="d-none d-md-block pa-3 ta-c" style="background:#f5f5f5;">(Hidden on desktop)</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-none .d-lg-flex</code> - Flex on desktop only
+                    </p>
+                    <div class="demo-box pa-3 d-none d-lg-flex dx-sb ta-c" style="background:#fff9c4;">
+                        <span>Flex</span>
+                        <span>on</span>
+                        <span>desktop</span>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.d-block .d-sm-none .d-lg-block</code> - Show xs,
+                        hide sm-md, show lg+</p>
+                    <div class="demo-box pa-3 d-block d-sm-none d-lg-block ta-c" style="background:#e1bee7;">XS and LG+
+                        only
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="ts-4 mb-3 mt-4">Breakpoint Reference</h3>
+            <div class="row gx-4 gy-2">
+                <div class="col-12">
+                    <table class="ew-100p" style="border-collapse: collapse;">
+                        <tr class="bd-b">
+                            <td class="pa-2 td-b">Class</td>
+                            <td class="pa-2 td-b">Applies from</td>
+                        </tr>
+                        <tr class="bd-b">
+                            <td class="pa-2"><code>.d-*</code></td>
+                            <td class="pa-2">All sizes (base)</td>
+                        </tr>
+                        <tr class="bd-b">
+                            <td class="pa-2"><code>.d-sm-*</code></td>
+                            <td class="pa-2">576px and up</td>
+                        </tr>
+                        <tr class="bd-b">
+                            <td class="pa-2"><code>.d-md-*</code></td>
+                            <td class="pa-2">768px and up</td>
+                        </tr>
+                        <tr class="bd-b">
+                            <td class="pa-2"><code>.d-lg-*</code></td>
+                            <td class="pa-2">992px and up</td>
+                        </tr>
+                        <tr>
+                            <td class="pa-2"><code>.d-xl-*</code></td>
+                            <td class="pa-2">1200px and up</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gap Utilities -->
+        <section class="demo-section pb-6 mb-6">
+            <h2 class="demo-title pa-3 br-2 mb-4 ts-3">Gap Utilities</h2>
+            <p class="mb-4">Use with grid/flex: <code>.gx-{0-16}</code> (column gap) / <code>.gy-{0-16}</code> (row gap)
+            </p>
+
+            <div class="row gx-4 gy-4">
+                <div class="col-12 col-md-6">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.row .gx-2 .gy-2</code></p>
+                    <div class="row gx-2 gy-2">
+                        <div class="col-4">
+                            <div class="demo-box pa-2 ta-c">1</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="demo-box pa-2 ta-c">2</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="demo-box pa-2 ta-c">3</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="demo-box pa-2 ta-c">4</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="demo-box pa-2 ta-c">5</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="demo-box pa-2 ta-c">6</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <p class="demo-subtitle pa-2 br-1 mb-2 ts-6"><code>.row .gx-6 .gy-6</code></p>
+                    <div class="row gx-6 gy-6">
+                        <div class="col-4">
+                            <div class="demo-box pa-2 ta-c">1</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="demo-box pa-2 ta-c">2</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="demo-box pa-2 ta-c">3</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="demo-box pa-2 ta-c">4</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="demo-box pa-2 ta-c">5</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="demo-box pa-2 ta-c">6</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="ta-c py-6 mt-8 bd-t">
+            <p class="ts-6">Utility-First CSS Framework</p>
+        </footer>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="layout-footer">
+        Uizy CSS Framework - Layout Demo
     </footer>
 
     <script type="module" src="/src/__init__.js"></script>
+    <script>
+        const leftSidebar = document.getElementById('leftSidebar');
+        const rightSidebar = document.getElementById('rightSidebar');
+        const mainContent = document.getElementById('mainContent');
 
-    <style>
-        /* custom.css - Load this AFTER `module` */
-        :root {
-            /* Typography */
-            --font-family: "Comic Sans MS", "Papyrus", cursive, fantasy;
+        // Check if desktop
+        const isDesktop = () => window.innerWidth > 1024;
 
-            --ts-1: 3.5rem;
-            --ts-2: 2.5rem;
-            --ts-3: 1.75rem;
-            --ts-4: 1.25rem;
-            --ts-5: 1rem;
-            --ts-6: 0.875rem;
-
-            /* Border Radius - More rounded */
-            --br-1: 4px;
-            --br-2: 8px;
-            --br-3: 12px;
-            --br-4: 16px;
-
-            /* Border Width - Thinner */
-            --bw-1: 1px;
-            --bw-2: 2px;
-            --bw-3: 3px;
-            --border-color: #e2e8f0;
-
-            /* Shadows - Slightly lighter */
-            --shadow-opacity-1: 0.15;
-            --shadow-opacity-2: 0.1;
-            --shadow-opacity-3: 0.08;
-
-            /* RGB values */
-            --shadow-color: 117, 7, 7;
-            --shadow-color-rgb: rgb(0, 0, 0);
+        function toggleLeft() {
+            const isOpen = leftSidebar.classList.toggle('layout-drawer--open');
         }
-    </style>
+
+        function toggleRight() {
+            const isOpen = rightSidebar.classList.toggle('layout-drawer--open');
+        }
+
+    </script>
+
 </body>
 
 </html>

@@ -16,10 +16,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build && rm dist/index.js && pnpm run todocs",
-    "preview": "vite preview",
-    "size": "gzip -c dist/index.css | wc -c",
-    "todocs": "mkdir -p docs/public/css && cp dist/index.css docs/public/css/index.css"
+    "build": "vite build && node scripts/postbuild.mjs",
+    "preview": "vite preview"
   },
   "devDependencies": {
     "cssnano": "^7.1.2",

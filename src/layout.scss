@@ -1,0 +1,270 @@
+@use "sass:map";
+
+// ==========================
+// Layout CSS Variables
+// ==========================
+// All values are configurable via CSS custom properties
+
+$layout: (
+  system-bar: (
+    height: var(--layout-system-bar-height, 0px),
+    layer: var(--layout-system-bar-layer, 40),
+  ),
+  header: (
+    height: var(--layout-header-height, 50px),
+    layer: var(--layout-header-layer, 20),
+  ),
+  footer: (
+    height: var(--layout-footer-height, 50px),
+    layer: var(--layout-footer-layer, 20),
+  ),
+  left: (
+    width: var(--layout-left-width, 185px),
+    width-mini: var(--layout-left-mini-width, 60px),
+    layer: var(--layout-left-layer, 20),
+  ),
+  right: (
+    width: var(--layout-right-width, 185px),
+    width-mini: var(--layout-right-mini-width, 60px),
+    layer: var(--layout-right-layer, 20),
+  ),
+  overlay: (
+    color: var(--layout-overlay-color, black),
+    opacity: var(--layout-overlay-opacity, 0.4),
+    layer: var(--layout-overlay-layer, 10),
+  ),
+  drawer: (
+    speed: var(--layout-drawer-speed, 0.2s),
+    easing: var(--layout-drawer-easing, cubic-bezier(0.4, 0, 0.2, 1)),
+  ),
+);
+
+@function layout-get($section, $property) {
+  @return map.get(map.get($layout, $section), $property);
+}
+
+// ==========================
+// Base - All Fixed Position
+// ==========================
+.layout-system-bar,
+.layout-header,
+.layout-footer,
+.layout-left,
+.layout-right,
+.layout-main {
+  position: fixed;
+  box-sizing: border-box;
+}
+
+// ==========================
+// System Bar
+// ==========================
+.layout-system-bar {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: layout-get(system-bar, height);
+  z-index: layout-get(system-bar, layer);
+}
+
+// ==========================
+// Header
+// ==========================
+.layout-header {
+  top: layout-get(system-bar, height);
+  height: layout-get(header, height);
+  z-index: layout-get(header, layer);
+}
+
+// ==========================
+// Footer
+// ==========================
+.layout-footer {
+  bottom: 0;
+  height: layout-get(footer, height);
+  z-index: layout-get(footer, layer);
+}
+
+// ==========================
+// Header, Footer, Main share left/right: 0
+// ==========================
+.layout-header,
+.layout-footer,
+.layout-main {
+  left: 0;
+  right: 0;
+}
+
+// ==========================
+// Main Content
+// ==========================
+.layout-main {
+  height: 100dvh;
+  transition: margin 0.2s linear;
+}
+
+// ==========================
+// Sidebars & Main share top/bottom: 0
+// ==========================
+.layout-main,
+.layout-left,
+.layout-right {
+  top: 0;
+  bottom: 0;
+}
+
+// ==========================
+// Left Sidebar
+// ==========================
+.layout-left {
+  left: 0;
+  width: layout-get(left, width);
+  z-index: layout-get(left, layer);
+}
+
+.layout-left--mini {
+  width: layout-get(left, width-mini);
+}
+
+// ==========================
+// Right Sidebar
+// ==========================
+.layout-right {
+  right: 0;
+  width: layout-get(right, width);
+  z-index: layout-get(right, layer);
+}
+
+.layout-right--mini {
+  width: layout-get(right, width-mini);
+}
+
+// ==========================
+// Drawer Animation
+// ==========================
+.layout-drawer {
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform layout-get(drawer, speed) layout-get(drawer, easing);
+}
+
+.layout-drawer--left {
+  transform: translateX(-100vw);
+}
+
+.layout-drawer--right {
+  transform: translateX(100vw);
+}
+
+.layout-drawer--open {
+  transform: translateX(0) !important;
+}
+
+// ==========================
+// Clip X (horizontal margins)
+// ==========================
+.layout-clip-left {
+  margin-left: layout-get(left, width);
+}
+
+.layout-clip-right {
+  margin-right: layout-get(right, width);
+}
+
+@media (max-width: 1024px) {
+  .layout-clip-left {
+    margin-left: 0;
+  }
+  .layout-clip-right {
+    margin-right: 0;
+  }
+}
+
+// ==========================
+// Clip Y (vertical positioning)
+// ==========================
+
+// System bar only
+.layout-clip-system-bar {
+  top: layout-get(system-bar, height);
+}
+
+// Full top clip (system-bar + header)
+.layout-clip-top {
+  top: calc(#{layout-get(system-bar, height)} + #{layout-get(header, height)});
+}
+
+// Bottom clip
+.layout-clip-bottom {
+  bottom: layout-get(footer, height);
+}
+
+// Main height adjustments
+.layout-main.layout-clip-system-bar {
+  height: calc(100dvh - #{layout-get(system-bar, height)});
+}
+
+.layout-main.layout-clip-top {
+  height: calc(100dvh - (#{layout-get(system-bar, height)} + #{layout-get(header, height)}));
+}
+
+.layout-main.layout-clip-bottom {
+  height: calc(100dvh - #{layout-get(footer, height)});
+}
+
+.layout-main.layout-clip-top.layout-clip-bottom {
+  height: calc(100dvh - (#{layout-get(system-bar, height)} + #{layout-get(header, height)} + #{layout-get(footer, height)}));
+}
+
+.layout-main.layout-clip-system-bar.layout-clip-bottom {
+  height: calc(100dvh - (#{layout-get(system-bar, height)} + #{layout-get(footer, height)}));
+}
+
+// ==========================
+// Overlay
+// ==========================
+.layout-overlay-mask {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: layout-get(overlay, layer);
+  background-color: transparent;
+
+  // Clip classes set position for overlay (reset margins from general clip rules)
+  &.layout-clip-system-bar {
+    top: layout-get(system-bar, height);
+  }
+  &.layout-clip-top {
+    top: calc(#{layout-get(system-bar, height)} + #{layout-get(header, height)});
+  }
+  &.layout-clip-bottom {
+    bottom: layout-get(footer, height);
+  }
+  &.layout-clip-left {
+    left: layout-get(left, width);
+    margin-left: 0; // Reset margin from general .layout-clip-left
+  }
+  &.layout-clip-right {
+    right: layout-get(right, width);
+    margin-right: 0; // Reset margin from general .layout-clip-right
+  }
+
+  @media (max-width: 1024px) {
+    &.layout-clip-left {
+      left: 0;
+    }
+    &.layout-clip-right {
+      right: 0;
+    }
+  }
+}
+
+.layout-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: layout-get(overlay, layer);
+  opacity: layout-get(overlay, opacity);
+  background-color: layout-get(overlay, color);
+}

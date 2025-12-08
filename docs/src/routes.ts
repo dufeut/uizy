@@ -15,6 +15,7 @@ const componentMap: Record<string, ComponentType> = {
   shadows: DocPages.Shadows,
   extras: DocPages.Extras,
   responsive: DocPages.Responsive,
+  layout: DocPages.Layout,
   customization: DocPages.Customization,
 };
 

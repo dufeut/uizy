@@ -6,7 +6,7 @@ export default function Component({ height, space }: any) {
       src={logo}
       alt="Logo"
       height={height || "80px"}
-      class={`mr-${space || "4"}`}
+      class={`mr-${space || "4"} sl-12 br-100p`}
     />
   );
 }

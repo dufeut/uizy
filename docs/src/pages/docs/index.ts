@@ -7,4 +7,5 @@ export { Borders } from './Borders';
 export { Shadows } from './Shadows';
 export { Extras } from './Extras';
 export { Responsive } from './Responsive';
+export { Layout } from './Layout';
 export { Customization } from './Customization';

@@ -2,6 +2,7 @@ import "./_variables.scss";
 import "./_core.scss";
 import "./borders.scss";
 import "./extras.scss";
+import "./layout.scss";
 import "./display.scss";
 import "./rows.scss";
 import "./shadows.scss";
