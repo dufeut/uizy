@@ -1,11 +1,11 @@
-# Uizy CSS
+# Uizy
 
 <div align="center">
-  
+
   <img height="140px" src="https://raw.githubusercontent.com/dufeut/uizy/main/docs/public/logo.png" alt="logo"/>
 
-   <p><strong>A Lightweight CSS Micro Framework</strong></p>
-   <p><code>43kb</code> minified | <code>5.79kb</code> gzipped</p>
+   <p><strong>Small footprint, big impact – the micro CSS framework for UIs.</strong></p>
+   <p><code>~43kb</code> minified | <code>~5.8kb</code> gzipped</p>
 
 [![License: BSD 3-Clause](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![npm version](https://img.shields.io/npm/v/uizy.svg)](https://www.npmjs.com/package/uizy)
@@ -14,18 +14,6 @@
 [GitHub](https://github.com/dufeut/uizy)
 
 </div>
-
-## Overview
-
-Uizy CSS is a utility-first CSS framework that provides a collection of atomic CSS classes for rapid UI development. With a focus on lightweight design and intuitive naming conventions.
-
-## Features
-
-- **Lightweight**: (5kb gzipped)
-- **Intuitive**: Simple abbreviated class names
-- **No Dependencies**: Pure CSS solution
-- **Responsive**: Built-in responsive utilities
-- **Customizable**: Easy to extend and adapt
 
 ## Installation
 
@@ -41,29 +29,25 @@ Uizy CSS is a utility-first CSS framework that provides a collection of atomic C
 npm install uizy
 ```
 
+```js
+import "uizy";
+```
+
 ## Usage
 
-Uizy CSS uses abbreviated class names for quick styling:
-
 ```html
-<!-- Flex container with spacing and border -->
-<div class="d-f dx-ce dy-ce p-3 bd-a br-2">
-  <!-- Bold centered text with margin -->
+<div class="d-flex dx-ce dy-ce pa-3 br-2">
   <p class="td-b ta-c mb-2">Hello World</p>
 </div>
 ```
 
-## Core Modules
+## Features
 
-Uizy CSS is organized into focused modules:
-
-- **Core**: Display, positioning, and flex layouts (`d-f`, `dp-r`, `dx-ce`)
-- **Borders**: Border styling and radius (`bd-a`, `br-2`)
-- **Spacing**: Margin and padding utilities (`m-2`, `p-3`)
-- **Text**: Typography utilities (`ts-1`, `td-b`, `ta-c`)
-- **Shadows**: Shadow effects for depth
-- **Rows**: Row-based layout utilities
-- **Hide**: Visibility control (`d-n`, `d-hide`)
+- **Lightweight** – ~5.8kb gzipped
+- **Utility-first** – Compose UIs with atomic classes
+- **Responsive** – Mobile-first breakpoints (`sm`, `md`, `lg`, `xl`, `xxl`)
+- **Customizable** – CSS variables for runtime theming
+- **No dependencies** – Pure CSS
 
 ## License
 
