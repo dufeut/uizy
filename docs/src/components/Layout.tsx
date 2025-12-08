@@ -1,22 +1,24 @@
-import { useLocation } from 'preact-iso';
-import { Sidebar } from './Sidebar';
-import { isSidebarOpen, closeSidebar } from '../store';
+import { useLocation } from "preact-iso";
+import { Sidebar } from "./Sidebar";
+import { isSidebarOpen, closeSidebar } from "../store";
+import Footer from "./Footer";
 
 export function Layout({ children }: { children: any }) {
-	const { url } = useLocation();
+  const { url } = useLocation();
 
-	return (
-		<div class="layout">
-			<Sidebar />
+  return (
+    <div class="layout">
+      <Sidebar />
 
-			{/* Overlay for mobile */}
-			{isSidebarOpen.value && (
-				<div class="sidebar-overlay" onClick={closeSidebar} />
-			)}
+      {/* Overlay for mobile */}
+      {isSidebarOpen.value && (
+        <div class="sidebar-overlay" onClick={closeSidebar} />
+      )}
 
-			<main class="main-content">
-				{children}
-			</main>
-		</div>
-	);
+      <main class="main-content">
+        {children}
+        <Footer />
+      </main>
+    </div>
+  );
 }

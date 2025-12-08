@@ -26,12 +26,31 @@ export const docRoutes = docSections.map((section) => ({
 }));
 
 // All routes including home and 404
-export const routes = [
-  { path: "/", component: Home },
-  ...docRoutes,
-];
+export const routes = [{ path: "/", component: Home }, ...docRoutes];
 
 // For prerendering - just the paths
-export const prerenderPaths = ["/", "/404", ...docSections.map((s) => `/${s.id}`)];
+export const prerenderPaths = [
+  "/",
+  "/404",
+  ...docSections.map((s) => `/${s.id}`),
+];
+
+// --- Previous & Next Helpers ---
+
+export function getNextRoute(currentId: string) {
+  const index = docSections.findIndex((s) => s.id === currentId);
+  if (index === -1 || index === docSections.length - 1) return null;
+
+  const nextSection = docSections[index + 1];
+  return docRoutes.find((r) => r.path === `/${nextSection.id}`) ?? null;
+}
+
+export function getPreviousRoute(currentId: string) {
+  const index = docSections.findIndex((s) => s.id === currentId);
+  if (index <= 0) return null;
+
+  const prevSection = docSections[index - 1];
+  return docRoutes.find((r) => r.path === `/${prevSection.id}`) ?? null;
+}
 
 export { Home, NotFound };
