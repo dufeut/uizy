@@ -8,7 +8,7 @@
    <p><code>6.46kb</code> gzipped</p>
 
 [![License: BSD 3-Clause](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
-[![npm version](https://img.shields.io/npm/v/uizy.svg)](https://www.npmjs.com/package/uizy)
+[![npm version](https://img.shields.io/npm/v/@dufeut/uizy.svg)](https://www.npmjs.com/package/@dufeut/uizy)
 
 [Documentation](https://dufeut.github.io/uizy/) |
 [GitHub](https://github.com/dufeut/uizy)
@@ -20,17 +20,17 @@
 ### CDN
 
 ```html
-<link href="https://unpkg.com/uizy@latest" rel="stylesheet" />
+<link href="https://unpkg.com/@dufeut/uizy@latest" rel="stylesheet" />
 ```
 
 ### NPM
 
 ```bash
-npm install uizy
+npm install @dufeut/uizy
 ```
 
 ```js
-import "uizy";
+import "@dufeut/uizy";
 ```
 
 ## Usage
