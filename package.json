@@ -6,8 +6,10 @@
   "author": "dufeut",
   "main": "dist/index.css",
   "style": "dist/index.css",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "style": "./dist/index.css",
       "import": "./dist/index.css",
       "require": "./dist/index.css",

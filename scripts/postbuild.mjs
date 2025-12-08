@@ -1,4 +1,4 @@
-import { cpSync, rmSync, mkdirSync, existsSync } from "fs";
+import { cpSync, rmSync, mkdirSync, existsSync, writeFileSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -13,6 +13,15 @@ if (existsSync(indexJs)) {
   rmSync(indexJs);
   console.log("✓ Removed dist/index.js");
 }
+
+// Generate TypeScript declaration for CSS module
+const dts = `declare module "@dufeut/uizy" {
+  const styles: string;
+  export default styles;
+}
+`;
+// writeFileSync(join(dist, "index.d.ts"), dts);
+//console.log("✓ Generated dist/index.d.ts");
 
 // Copy CSS to docs
 mkdirSync(docsCSS, { recursive: true });
