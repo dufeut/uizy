@@ -1,4 +1,4 @@
-import { config } from '../../config';
+import { config, link } from '../../config';
 import { CodeDemo, TipBox, ClassTable } from '../../components/CodeDemo';
 
 export function GettingStarted() {
@@ -146,11 +146,11 @@ export function GettingStarted() {
 				</p>
 
 				<div class="next-links">
-					<a href="/docs/display" class="next-link">
+					<a href={link("/docs/display")} class="next-link">
 						<span>👁️</span>
 						<span>Learn Display Utilities →</span>
 					</a>
-					<a href="/docs/spacing" class="next-link">
+					<a href={link("/docs/spacing")} class="next-link">
 						<span>📏</span>
 						<span>Learn Spacing →</span>
 					</a>

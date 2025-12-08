@@ -7,7 +7,7 @@ import {
   theme,
   toggleTheme,
 } from "../store";
-import { config } from "../config";
+import { config, link } from "../config";
 import Logo from "./Logo";
 
 export function Sidebar() {
@@ -36,7 +36,7 @@ export function Sidebar() {
           alignItems: "center",
         }}
       >
-        <a href="/" class="logo" onClick={handleNavClick}>
+        <a href={link("/")} class="logo" onClick={handleNavClick}>
           <Logo height="40px" space="0" />
           <span class="logo-text">{config.name}</span>
         </a>
@@ -61,8 +61,8 @@ export function Sidebar() {
       {/* Navigation */}
       <nav class="sidebar-nav">
         <a
-          href="/"
-          class={`nav-item ${url === "/" ? "active" : ""}`}
+          href={link("/")}
+          class={`nav-item ${url === link("/") ? "active" : ""}`}
           onClick={handleNavClick}
         >
           <span class="nav-emoji">🏠</span>
@@ -74,8 +74,8 @@ export function Sidebar() {
         {filteredSections.value.map((section) => (
           <a
             key={section.id}
-            href={`/docs/${section.id}`}
-            class={`nav-item ${url === `/docs/${section.id}` ? "active" : ""}`}
+            href={link(`/docs/${section.id}`)}
+            class={`nav-item ${url === link(`/docs/${section.id}`) ? "active" : ""}`}
             onClick={handleNavClick}
           >
             <span class="nav-emoji">{section.emoji}</span>
