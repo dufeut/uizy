@@ -26,11 +26,14 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
-          cache-dependency-path: docs/pnpm-lock.yaml
+          cache-dependency-path: |
+            pnpm-lock.yaml
+            docs/pnpm-lock.yaml
 
       - name: Build CSS framework
         run: |
           pnpm install --frozen-lockfile
+          mkdir -p docs/public/css
           pnpm build
 
       - name: Build docs

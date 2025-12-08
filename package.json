@@ -19,7 +19,7 @@
     "build": "vite build && rm dist/index.js && pnpm run todocs",
     "preview": "vite preview",
     "size": "gzip -c dist/index.css | wc -c",
-    "todocs": "cp dist/index.css docs/public/css/index.css"
+    "todocs": "mkdir -p docs/public/css && cp dist/index.css docs/public/css/index.css"
   },
   "devDependencies": {
     "cssnano": "^7.1.2",
