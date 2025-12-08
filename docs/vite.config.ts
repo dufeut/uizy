@@ -7,31 +7,29 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const base = "/uizy";
-
 export default defineConfig({
-  base: `${base}/`,
+  base: "/uizy/",
   plugins: [
     preact({
       prerender: {
         enabled: true,
         renderTarget: "#app",
         additionalPrerenderRoutes: [
-          `${base}/`,
-          `${base}/404`,
-          `${base}/docs/getting-started`,
-          `${base}/docs/display`,
-          `${base}/docs/grid`,
-          `${base}/docs/spacing`,
-          `${base}/docs/typography`,
-          `${base}/docs/borders`,
-          `${base}/docs/shadows`,
-          `${base}/docs/extras`,
-          `${base}/docs/responsive`,
-          `${base}/docs/customization`,
+          "/",
+          "/404",
+          "/docs/getting-started",
+          "/docs/display",
+          "/docs/grid",
+          "/docs/spacing",
+          "/docs/typography",
+          "/docs/borders",
+          "/docs/shadows",
+          "/docs/extras",
+          "/docs/responsive",
+          "/docs/customization",
         ],
         previewMiddlewareEnabled: true,
-        previewMiddlewareFallback: `${base}/404`,
+        previewMiddlewareFallback: "/404",
       },
     }),
   ],

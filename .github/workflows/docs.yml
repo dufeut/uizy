@@ -41,6 +41,7 @@ jobs:
         run: |
           pnpm install --frozen-lockfile
           pnpm build
+          cp dist/404/index.html dist/404.html
 
       - uses: actions/configure-pages@v5
 

@@ -22,13 +22,9 @@ import {
   Responsive,
   Customization,
 } from "./pages/docs";
-import { config } from "./config";
-
 // Style
 import "normalize.css";
 import "./style.css";
-
-const { base } = config;
 
 export function App() {
   return (
@@ -36,23 +32,17 @@ export function App() {
       <MobileHeader />
       <Layout>
         <Router>
-          <Route path={`${base}/`} component={Home} />
-          <Route
-            path={`${base}/docs/getting-started`}
-            component={GettingStarted}
-          />
-          <Route path={`${base}/docs/display`} component={Display} />
-          <Route path={`${base}/docs/grid`} component={Grid} />
-          <Route path={`${base}/docs/spacing`} component={Spacing} />
-          <Route path={`${base}/docs/typography`} component={Typography} />
-          <Route path={`${base}/docs/borders`} component={Borders} />
-          <Route path={`${base}/docs/shadows`} component={Shadows} />
-          <Route path={`${base}/docs/extras`} component={Extras} />
-          <Route path={`${base}/docs/responsive`} component={Responsive} />
-          <Route
-            path={`${base}/docs/customization`}
-            component={Customization}
-          />
+          <Route path="/" component={Home} />
+          <Route path="/docs/getting-started" component={GettingStarted} />
+          <Route path="/docs/display" component={Display} />
+          <Route path="/docs/grid" component={Grid} />
+          <Route path="/docs/spacing" component={Spacing} />
+          <Route path="/docs/typography" component={Typography} />
+          <Route path="/docs/borders" component={Borders} />
+          <Route path="/docs/shadows" component={Shadows} />
+          <Route path="/docs/extras" component={Extras} />
+          <Route path="/docs/responsive" component={Responsive} />
+          <Route path="/docs/customization" component={Customization} />
           <Route default component={NotFound} />
         </Router>
       </Layout>
