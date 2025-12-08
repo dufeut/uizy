@@ -1,0 +1,50 @@
+@use 'sass:list';
+@use 'variables' as *;
+
+// =============================================================================
+// Typography Utilities
+// =============================================================================
+
+// Text sizes (using CSS variables)
+@each $key in $text-size-keys {
+  .ts-#{$key} {
+    font-size: var(--ts-#{$key}) !important;
+  }
+}
+
+// =============================================================================
+// Text Decoration
+// =============================================================================
+
+@each $suffix, $props in $text-decorations {
+  .td-#{$suffix} {
+    #{list.nth($props, 1)}: #{list.nth($props, 2)} !important;
+  }
+}
+
+// =============================================================================
+// Text Transform
+// =============================================================================
+
+@each $suffix, $value in $text-transforms {
+  .tt-#{$suffix} {
+    text-transform: $value !important;
+  }
+}
+
+// Text truncate (ellipsis)
+.tt-c {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+// =============================================================================
+// Text Alignment
+// =============================================================================
+
+@each $suffix, $value in $text-aligns {
+  .ta-#{$suffix} {
+    text-align: $value !important;
+  }
+}

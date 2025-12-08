@@ -1,0 +1,42 @@
+@use 'variables' as *;
+
+// =============================================================================
+// Border Utilities
+// =============================================================================
+
+// Border display
+@each $suffix, $side in $border-sides {
+  .bd-#{$suffix} {
+    border#{$side}-style: solid !important;
+    border#{$side}-width: 1px;
+    border#{$side}-color: var(--border-color);
+  }
+}
+
+// Border none
+@each $suffix, $side in $border-sides {
+  .bd-n#{$suffix} {
+    border#{$side}-style: none !important;
+  }
+}
+
+// Border width (using CSS variables)
+@each $key in $border-width-keys {
+  .bw-#{$key} { border-width: var(--bw-#{$key}) !important; }
+}
+
+// Border style
+@each $style in $border-styles {
+  .bs-#{$style} { border-style: $style !important; }
+}
+
+// Border radius (using CSS variables)
+@each $key in $border-radius-keys {
+  .br-#{$key} { border-radius: var(--br-#{$key}) !important; }
+}
+
+// Border radius corners (remove specific corner radius)
+.br-bl { border-top-left-radius: 0 !important; }
+.br-br { border-top-right-radius: 0 !important; }
+.br-tl { border-bottom-left-radius: 0 !important; }
+.br-tr { border-bottom-right-radius: 0 !important; }

@@ -1,0 +1,39 @@
+@use "sass:map";
+@use "variables" as *;
+
+// =============================================================================
+// Display Utilities (Bootstrap-style, mobile-first)
+// =============================================================================
+// Usage:
+//   .d-none           → hidden everywhere
+//   .d-block          → visible everywhere
+//   .d-{bp}-none      → hidden from breakpoint and UP
+//   .d-{bp}-block     → visible from breakpoint and UP
+//
+// Examples:
+//   class="d-none d-md-block"     → hidden on mobile, visible on tablet+
+//   class="d-block d-lg-none"     → visible until desktop, then hidden
+//   class="d-none d-sm-block d-xl-none" → hidden on xs, visible sm-lg, hidden xl+
+
+$display-values: (none, block, inline, inline-block, flex, inline-flex, grid);
+
+// Base display utilities (no breakpoint)
+@each $display in $display-values {
+  .d-#{$display} {
+    display: #{$display} !important;
+  }
+}
+
+// Responsive display utilities (mobile-first: applies from breakpoint and UP)
+@each $bp, $min-width in $breakpoints {
+  // Skip xs (0) - base classes already cover this
+  @if $min-width > 0 {
+    @media (min-width: $min-width) {
+      @each $display in $display-values {
+        .d-#{$bp}-#{$display} {
+          display: #{$display} !important;
+        }
+      }
+    }
+  }
+}

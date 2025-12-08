@@ -1,0 +1,128 @@
+@use 'sass:map';
+@use 'sass:math';
+@use 'variables' as *;
+
+// =============================================================================
+// Spacing Utilities Mixin
+// =============================================================================
+
+@mixin spacing-utilities($count: $spacer-count) {
+  // Auto margins
+  .ma-auto { margin: auto; }
+  .mt-auto { margin-top: auto; }
+  .mb-auto { margin-bottom: auto; }
+  .ml-auto { margin-left: auto; }
+  .mr-auto { margin-right: auto; }
+  .my-auto { margin-top: auto; margin-bottom: auto; }
+  .mx-auto { margin-left: auto; margin-right: auto; }
+
+  @for $i from 0 through $count {
+    // Margin
+    .ml-#{$i}, .mx-#{$i} { margin-left: var(--sp-#{$i}) !important; }
+    .mr-#{$i}, .mx-#{$i} { margin-right: var(--sp-#{$i}) !important; }
+    .mt-#{$i}, .my-#{$i} { margin-top: var(--sp-#{$i}) !important; }
+    .mb-#{$i}, .my-#{$i} { margin-bottom: var(--sp-#{$i}) !important; }
+    .ma-#{$i} { margin: var(--sp-#{$i}) !important; }
+
+    // Negative margin
+    @if $i > 0 {
+      .ml-n#{$i}, .mx-n#{$i} { margin-left: calc(var(--sp-#{$i}) * -1) !important; }
+      .mr-n#{$i}, .mx-n#{$i} { margin-right: calc(var(--sp-#{$i}) * -1) !important; }
+      .mt-n#{$i}, .my-n#{$i} { margin-top: calc(var(--sp-#{$i}) * -1) !important; }
+      .mb-n#{$i}, .my-n#{$i} { margin-bottom: calc(var(--sp-#{$i}) * -1) !important; }
+    }
+
+    // Padding
+    .pl-#{$i}, .px-#{$i} { padding-left: var(--sp-#{$i}) !important; }
+    .pr-#{$i}, .px-#{$i} { padding-right: var(--sp-#{$i}) !important; }
+    .pt-#{$i}, .py-#{$i} { padding-top: var(--sp-#{$i}) !important; }
+    .pb-#{$i}, .py-#{$i} { padding-bottom: var(--sp-#{$i}) !important; }
+    .pa-#{$i} { padding: var(--sp-#{$i}) !important; }
+  }
+}
+
+// =============================================================================
+// Grid Columns Mixin
+// =============================================================================
+
+@mixin grid-columns($prefix: '', $columns: $grid-columns) {
+  @for $i from 1 through $columns {
+    .col#{$prefix}-#{$i} {
+      grid-column: span $i;
+    }
+  }
+}
+
+// =============================================================================
+// Gap Utilities Mixin
+// =============================================================================
+
+@mixin gap-utilities($count: $gap-count) {
+  @for $i from 0 through $count {
+    .gx-#{$i} { column-gap: var(--gap-#{$i}) !important; }
+    .gy-#{$i} { row-gap: var(--gap-#{$i}) !important; }
+  }
+}
+
+// =============================================================================
+// Media Query Helpers
+// =============================================================================
+
+@mixin media-min($breakpoint) {
+  $value: map.get($breakpoints, $breakpoint);
+  @if $value > 0 {
+    @media (min-width: $value) {
+      @content;
+    }
+  } @else {
+    @content;
+  }
+}
+
+@mixin media-max($breakpoint) {
+  @media (max-width: map.get($breakpoints, $breakpoint) - 1px) {
+    @content;
+  }
+}
+
+@mixin media-between($min, $max) {
+  @media (min-width: map.get($breakpoints, $min)) and (max-width: map.get($breakpoints, $max) - 1px) {
+    @content;
+  }
+}
+
+// =============================================================================
+// Shadow Function
+// =============================================================================
+
+@function shadow-values($level, $direction: 'bottom') {
+  $sign: if($direction == 'top', -1, if($direction == 'left', -1, 1));
+  $is-horizontal: $direction == 'left' or $direction == 'right';
+
+  @if $level == 0 {
+    @return 0 0 0 0 rgba(var(--shadow-color), var(--shadow-opacity-1)),
+            0 0 0 0 rgba(var(--shadow-color), var(--shadow-opacity-2)),
+            0 0 0 0 rgba(var(--shadow-color), var(--shadow-opacity-3));
+  }
+
+  // Calculate shadow parameters based on level
+  $y1: math.round($level * 0.46);
+  $blur1: math.round($level * 0.625);
+  $spread1: math.round($level * -0.29);
+  $y2: $level;
+  $blur2: math.round($level * 1.58);
+  $spread2: math.round($level * 0.125);
+  $y3: math.round($level * 0.375);
+  $blur3: math.round($level * 1.92);
+  $spread3: math.round($level * 0.33);
+
+  @if $is-horizontal {
+    @return #{$sign * $y1}px 0 #{$blur1}px #{$spread1}px rgba(var(--shadow-color), var(--shadow-opacity-1)),
+            #{$sign * $y2}px 0 #{$blur2}px #{$spread2}px rgba(var(--shadow-color), var(--shadow-opacity-2)),
+            #{$sign * $y3}px 0 #{$blur3}px #{$spread3}px rgba(var(--shadow-color), var(--shadow-opacity-3));
+  } @else {
+    @return 0 #{$sign * $y1}px #{$blur1}px #{$spread1}px rgba(var(--shadow-color), var(--shadow-opacity-1)),
+            0 #{$sign * $y2}px #{$blur2}px #{$spread2}px rgba(var(--shadow-color), var(--shadow-opacity-2)),
+            0 #{$sign * $y3}px #{$blur3}px #{$spread3}px rgba(var(--shadow-color), var(--shadow-opacity-3));
+  }
+}

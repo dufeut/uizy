@@ -1,0 +1,43 @@
+@use 'sass:map';
+@use 'variables' as *;
+@use 'mixins' as *;
+
+// =============================================================================
+// Grid System
+// =============================================================================
+
+// Grid container
+.row {
+  display: grid;
+  grid-template-columns: repeat($grid-columns, 1fr);
+}
+
+// Flex column
+.col {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+}
+
+// =============================================================================
+// Responsive Grid Columns (mobile-first)
+// =============================================================================
+
+// Base columns (no breakpoint - applies to all sizes)
+@include grid-columns();
+
+// Responsive columns
+@each $bp, $min-width in $breakpoints {
+  @if $min-width > 0 {
+    @media (min-width: $min-width) {
+      @include grid-columns('-#{$bp}');
+    }
+  }
+}
+
+// =============================================================================
+// Gap Utilities
+// =============================================================================
+
+@include gap-utilities();

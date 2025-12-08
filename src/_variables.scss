@@ -1,0 +1,191 @@
+// =============================================================================
+// SCSS Compile-time Variables (for loop generation)
+// =============================================================================
+
+// Spacing
+$spacer-base: 4px !default;
+$spacer-count: 24 !default;
+
+// Gap
+$gap-base: 4px !default;
+$gap-count: 16 !default;
+
+// Grid
+$grid-columns: 12 !default;
+
+// Shadows
+$shadow-levels: 24 !default;
+
+// Breakpoints (SCSS compile-time only)
+// ⚠️ CSS media queries CANNOT use CSS custom properties - this is a browser limitation.
+// To customize breakpoints, modify these values and recompile.
+// Mobile-first: base styles apply to all, then min-width media queries override
+// (no prefix) = base styles for all screens
+// sm = 576px and up
+// md = 768px and up
+// lg = 992px and up
+// xl = 1200px and up
+// xxl = 1400px and up
+$breakpoints: (
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px,
+);
+
+// Maps for generating classes (keys only)
+$border-radius-keys: (0, 1, 2, 3, 4, 100p, pill);
+$border-width-keys: (0, 1, 2, 3, 4, 5);
+$text-size-keys: (1, 2, 3, 4, 5, 6);
+
+// Position utilities
+$positions: (
+  r: relative,
+  a: absolute,
+  s: sticky,
+  f: fixed,
+);
+
+// Flex alignment
+$align-items: (
+  fs: flex-start,
+  fe: flex-end,
+  ce: center,
+  st: stretch,
+);
+
+$justify-content: (
+  fs: flex-start,
+  fe: flex-end,
+  ce: center,
+  sb: space-between,
+  sa: space-around,
+  se: space-evenly,
+);
+
+// Overflow values
+$overflow-values: (
+  h: hidden,
+  a: auto,
+);
+
+// Border sides
+$border-sides: (
+  a: "",
+  b: -bottom,
+  t: -top,
+  r: -right,
+  l: -left,
+);
+
+// Border styles
+$border-styles: (dotted, dashed, solid);
+
+// Text decorations
+$text-decorations: (
+  i: (
+    font-style,
+    italic,
+  ),
+  b: (
+    font-weight,
+    bold,
+  ),
+  u: (
+    text-decoration,
+    underline,
+  ),
+  s: (
+    text-decoration,
+    line-through,
+  ),
+);
+
+// Text transforms
+$text-transforms: (
+  t: capitalize,
+  u: uppercase,
+  l: lowercase,
+);
+
+// Text alignment
+$text-aligns: (
+  c: center,
+  l: left,
+  r: right,
+);
+
+// Dimension values (using dvh/dvw for better mobile support)
+$dimension-values: (
+  100p: 100%,
+  100v: 100dvh,
+  i: inherit,
+);
+
+// =============================================================================
+// CSS Custom Properties (runtime customizable)
+// =============================================================================
+
+:root {
+  // Font
+  --font-family: "Roboto", "Arial", sans-serif;
+
+  // Spacing base unit
+  --spacer: #{$spacer-base};
+
+  // Border radius
+  --br-0: 0;
+  --br-1: 0.125rem;
+  --br-2: 0.25rem;
+  --br-3: 0.5rem;
+  --br-4: 1rem;
+  --br-100p: 100%;
+  --br-pill: 9999px;
+
+  // Border width
+  --bw-0: 0;
+  --bw-1: 0.125rem;
+  --bw-2: 0.25rem;
+  --bw-3: 0.4rem;
+  --bw-4: 0.525rem;
+  --bw-5: 0.65rem;
+
+  // Border color (default)
+  --border-color: currentColor;
+
+  // Text sizes
+  --ts-1: 3rem;
+  --ts-2: 2.25rem;
+  --ts-3: 1.5rem;
+  --ts-4: 1.25rem;
+  --ts-5: 1rem;
+  --ts-6: 0.875rem;
+
+  // Shadow opacity
+  --shadow-opacity-1: 0.2;
+  --shadow-opacity-2: 0.14;
+  --shadow-opacity-3: 0.12;
+
+  // Shadow color
+  --shadow-color: 0, 0, 0;
+
+  // Gap base
+  --gap: #{$gap-base};
+
+  // Spacing scale (generated)
+  @for $i from 0 through $spacer-count {
+    --sp-#{$i}: #{$i * $spacer-base};
+  }
+
+  // Gap scale (generated)
+  @for $i from 0 through $gap-count {
+    --gap-#{$i}: #{$i * $gap-base};
+  }
+
+  // Breakpoints (exposed for JS access - media queries use SCSS values at compile time)
+  // Note: CSS media queries cannot use CSS variables, so these are for reference/JS only
+  @each $bp, $value in $breakpoints {
+    --bp-#{$bp}: #{$value};
+  }
+}
