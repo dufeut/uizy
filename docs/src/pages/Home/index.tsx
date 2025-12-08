@@ -9,9 +9,13 @@ export function Home() {
       <section class="hero">
         <h1
           class="hero-title"
-          style={{ display: "flex", justifyContent: "center" }}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
-          <Logo />
+          <Logo height="128px" />
           Welcome to {config.name}!
         </h1>
         <p class="hero-subtitle">

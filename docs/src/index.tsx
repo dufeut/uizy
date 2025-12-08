@@ -25,6 +25,7 @@ import {
 import { config } from "./config";
 
 // Style
+import "normalize.css";
 import "./style.css";
 
 const { base } = config;
@@ -36,7 +37,10 @@ export function App() {
       <Layout>
         <Router>
           <Route path={`${base}/`} component={Home} />
-          <Route path={`${base}/docs/getting-started`} component={GettingStarted} />
+          <Route
+            path={`${base}/docs/getting-started`}
+            component={GettingStarted}
+          />
           <Route path={`${base}/docs/display`} component={Display} />
           <Route path={`${base}/docs/grid`} component={Grid} />
           <Route path={`${base}/docs/spacing`} component={Spacing} />
@@ -45,7 +49,10 @@ export function App() {
           <Route path={`${base}/docs/shadows`} component={Shadows} />
           <Route path={`${base}/docs/extras`} component={Extras} />
           <Route path={`${base}/docs/responsive`} component={Responsive} />
-          <Route path={`${base}/docs/customization`} component={Customization} />
+          <Route
+            path={`${base}/docs/customization`}
+            component={Customization}
+          />
           <Route default component={NotFound} />
         </Router>
       </Layout>

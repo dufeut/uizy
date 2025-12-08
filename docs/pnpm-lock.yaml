@@ -11,6 +11,9 @@ importers:
       '@preact/signals':
         specifier: ^2.5.1
         version: 2.5.1(preact@10.28.0)
+      normalize.css:
+        specifier: ^8.0.1
+        version: 8.0.1
       preact:
         specifier: ^10.26.9
         version: 10.28.0
@@ -777,6 +780,9 @@ packages:
 
   node-releases@2.0.27:
     resolution: {integrity: sha512-nmh3lCkYZ3grZvqcCH+fjmQ7X+H0OeZgP40OierEaAptX4XofMh5kwNbWh7lBduUzCcV/8kZ+NDLCwm2iorIlA==}
+
+  normalize.css@8.0.1:
+    resolution: {integrity: sha512-qizSNPO93t1YUuUhP22btGOo3chcvDFqFaj2TRybP0DMxkHOCTYwp3n34fel4a31ORXy4m1Xq0Gyqpb5m33qIg==}
 
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
@@ -1758,6 +1764,8 @@ snapshots:
       he: 1.2.0
 
   node-releases@2.0.27: {}
+
+  normalize.css@8.0.1: {}
 
   nth-check@2.1.1:
     dependencies:
