@@ -5,7 +5,7 @@
   <img height="140px" src="https://raw.githubusercontent.com/dufeut/uizy/main/docs/public/logo.png" alt="logo"/>
 
    <p><strong>Small footprint, big impact – the micro CSS framework for UIs.</strong></p>
-   <p><code>~43kb</code> minified | <code>~5.8kb</code> gzipped</p>
+   <p><code>6.46kb</code> gzipped</p>
 
 [![License: BSD 3-Clause](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![npm version](https://img.shields.io/npm/v/uizy.svg)](https://www.npmjs.com/package/uizy)
@@ -57,24 +57,26 @@ Build complete app layouts with fixed positioning:
 <div class="layout-system-bar">System Status</div>
 <header class="layout-header">Header</header>
 <aside class="layout-left layout-drawer layout-drawer--left">Sidebar</aside>
-<main class="layout-main layout-clip-top layout-clip-bottom layout-clip-left">Content</main>
+<main class="layout-main layout-clip-top layout-clip-bottom layout-clip-left">
+  Content
+</main>
 <footer class="layout-footer">Footer</footer>
 ```
 
-| Class | Description |
-|-------|-------------|
-| `layout-system-bar` | Fixed top bar |
-| `layout-header` | Fixed header below system bar |
-| `layout-footer` | Fixed footer |
-| `layout-left` / `layout-right` | Fixed sidebars |
-| `layout-main` | Main content area |
-| `layout-drawer` | Slide-in animation |
-| `layout-drawer--left` / `layout-drawer--right` | Drawer direction |
-| `layout-drawer--open` | Show drawer |
-| `layout-clip-top` | Position below header |
-| `layout-clip-bottom` | Position above footer |
-| `layout-clip-left` / `layout-clip-right` | Margin for sidebars |
-| `layout-overlay` | Dark backdrop |
+| Class                                          | Description                   |
+| ---------------------------------------------- | ----------------------------- |
+| `layout-system-bar`                            | Fixed top bar                 |
+| `layout-header`                                | Fixed header below system bar |
+| `layout-footer`                                | Fixed footer                  |
+| `layout-left` / `layout-right`                 | Fixed sidebars                |
+| `layout-main`                                  | Main content area             |
+| `layout-drawer`                                | Slide-in animation            |
+| `layout-drawer--left` / `layout-drawer--right` | Drawer direction              |
+| `layout-drawer--open`                          | Show drawer                   |
+| `layout-clip-top`                              | Position below header         |
+| `layout-clip-bottom`                           | Position above footer         |
+| `layout-clip-left` / `layout-clip-right`       | Margin for sidebars           |
+| `layout-overlay`                               | Dark backdrop                 |
 
 Configure via CSS variables:
 
