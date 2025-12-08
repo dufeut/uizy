@@ -2,27 +2,42 @@
   "name": "uizy",
   "version": "0.1.0",
   "description": "Small footprint, big impact – the micro CSS framework for UIs.",
-  "main": "dist/style.css",
+  "license": "BSD-3-Clause",
+  "author": "dufeut",
+  "main": "dist/index.css",
+  "style": "dist/index.css",
+  "exports": {
+    ".": "./dist/index.css",
+    "./dist/*": "./dist/*"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build && rm dist/index.js && npm run todocs",
+    "build": "vite build && rm dist/index.js && pnpm run todocs",
     "preview": "vite preview",
-    "size": "gzip -c dist/style.css | wc -c",
+    "size": "gzip -c dist/index.css | wc -c",
     "todocs": "cp dist/index.css docs/public/css/index.css"
   },
   "devDependencies": {
-    "vite": "^7.2.7",
-    "sass": "^1.77.8",
     "cssnano": "^7.1.2",
-    "postcss": "^8.5.6"
+    "postcss": "^8.5.6",
+    "sass": "^1.77.8",
+    "vite": "^7.2.7"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dufeut/uizy.git"
   },
   "keywords": [
-    "framework"
+    "css",
+    "css-framework",
+    "utility-css",
+    "micro-framework",
+    "responsive",
+    "lightweight"
   ],
   "bugs": {
     "url": "https://github.com/dufeut/uizy/issues"
