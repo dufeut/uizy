@@ -108,3 +108,4 @@ docs/.pdm-python
 docs/.pdm.toml
 docs/.pdm.toml
 
+dist/
