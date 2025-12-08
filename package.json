@@ -7,7 +7,12 @@
   "main": "dist/index.css",
   "style": "dist/index.css",
   "exports": {
-    ".": "./dist/index.css",
+    ".": {
+      "style": "./dist/index.css",
+      "import": "./dist/index.css",
+      "require": "./dist/index.css",
+      "default": "./dist/index.css"
+    },
     "./dist/*": "./dist/*"
   },
   "sideEffects": [
