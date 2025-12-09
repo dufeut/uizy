@@ -184,14 +184,10 @@ class UizyDrawer extends BaseElement {
   }
 }
 
-type OverlayActionPayload = {
-  self: HTMLElement | null;
-  set: (open?: boolean, full?: boolean) => void;
-};
-
 class UizyApp extends BaseElement {
   private initialized = false;
-  private parts: Record<string, any> = {
+
+  private parts: Record<string, HTMLElement | null> = {
     system: null,
     header: null,
     footer: null,
@@ -208,78 +204,73 @@ class UizyApp extends BaseElement {
   private ensureInitialized(): void {
     if (this.initialized) return;
 
-    const keys = Object.keys(SELECTORS);
-    keys.forEach((key) => {
+    for (const key of Object.keys(SELECTORS)) {
       this.parts[key] = qs<HTMLElement>(SELECTORS[key]);
-    });
+    }
 
     this.initialized = true;
   }
 
   private setOverlayState(
     el: HTMLElement | null,
-    open: boolean,
-    full: boolean
+    open?: boolean | null,
+    full?: boolean
   ): void {
     if (!el) return;
 
-    el.classList.toggle(CLASS.FULL, full && open);
-    el.style.display = open ? "block" : "none";
+    const noValue = open === undefined || open === null;
+    el.style.display = noValue
+      ? el.style.display === "none"
+        ? "block"
+        : "none"
+      : open
+      ? "block"
+      : "none";
+
+    el.classList.toggle(CLASS.FULL, Boolean(full));
+  }
+
+  private capitalize(str: string) {
+    return str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
+  }
+
+  private setDrawer(el: HTMLElement | null, open: boolean | null = null) {
+    if (!el) return;
+
+    const cls = "uizy-drawer--open";
+
+    if (open === null) {
+      el.classList.toggle(cls);
+      return;
+    }
+
+    el.classList.toggle(cls, open);
   }
 
   action(section: string, callback: (payload: any) => void): void {
     this.ensureInitialized();
 
-    let [root, part] = section.split(".");
-    let _section = root;
-    if (part) {
-      part = part.charAt(0).toUpperCase() + part.slice(1);
-      _section = root + part;
-    }
+    const [root, part] = section.split(".");
+    const key = part ? root + this.capitalize(part) : root;
+    const el = this.parts[key];
 
-    const setDrawer = (open = null) => {
-      const className = "uizy-drawer--open";
-      if (open === null) {
-        el?.classList.toggle(className);
-        return;
-      }
-      if (open) {
-        el?.classList.add(className);
-        return;
-      }
-      if (!open) {
-        el?.classList.remove(className);
-        return;
-      }
-    };
-    const utils: Record<string, Record<string, Function>> = {
+    if (!el || typeof callback !== "function") return;
+
+    const utils: Record<string, any> = {
       overlay: {
-        set: (open = false, full = false) =>
+        set: (open?: boolean | null, full?: boolean) =>
           this.setOverlayState(el, open, full),
       },
-      left: {
-        set: setDrawer,
-      },
-      right: {
-        set: setDrawer,
-      },
-      leftMini: {
-        set: setDrawer,
-      },
-      rightMini: {
-        set: setDrawer,
-      },
+      left: { set: (o?: boolean | null) => this.setDrawer(el, o) },
+      right: { set: (o?: boolean | null) => this.setDrawer(el, o) },
+      leftMini: { set: (o?: boolean | null) => this.setDrawer(el, o) },
+      rightMini: { set: (o?: boolean | null) => this.setDrawer(el, o) },
     };
 
-    const el = this.parts[_section];
-    if (typeof callback === "function") {
-      if (utils[_section]) {
-        callback({
-          ...utils[_section],
-          self: el,
-        });
-      }
-    }
+    const payload = utils[key];
+    if (!payload) return;
+
+    callback({ ...payload, self: el });
   }
 }
 
@@ -355,7 +346,7 @@ function setApp({
       leftMini: layout.leftMini ?? 64,
       rightMini: layout.rightMini ?? 64,
       drawerSpeed: layout.drawerSpeed ?? 0.2,
-      overlayOpacity: overlay.opacity ?? 1,
+      overlayOpacity: overlay.opacity ?? 0.45,
       overlayColor: overlay.color ?? "black",
     }),
   ].join(" ");
@@ -364,4 +355,4 @@ function setApp({
 }
 
 // now this works
-setApp();
+setApp({});
