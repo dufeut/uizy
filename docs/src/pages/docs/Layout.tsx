@@ -3,58 +3,58 @@ import { CodeDemo, TipBox, ClassTable } from "../../components/CodeDemo";
 
 const FULL_EXAMPLE = `
 <!-- System Bar -->
-<div class="layout-system-bar">
+<div class="uizy-system-bar">
     Status: Online
 </div>
 
 <!-- Header -->
-<header class="layout-header">
+<header class="uizy-header">
     <button onclick="toggleLeft()">Menu</button>
     <h1>My App</h1>
 </header>
 
 <!-- Left Sidebar (Drawer) -->
 <aside class="
-  layout-left
-  layout-drawer
-  layout-drawer--left
-  layout-clip-system-bar
+  uizy-left
+  uizy-drawer
+  uizy-drawer--left
+  uizy-clip-system-bar
 ">
     <nav>...</nav>
 </aside>
 
 <!-- Right Panel (Drawer) -->
 <aside class="
-  layout-right
-  layout-drawer
-  layout-drawer--right
-  layout-clip-system-bar
+  uizy-right
+  uizy-drawer
+  uizy-drawer--right
+  uizy-clip-system-bar
 ">
     <div>Details...</div>
 </aside>
 
 <!-- Overlay -->
 <div class="
-  layout-overlay-mask
-  layout-clip-top
-  layout-clip-bottom
+  uizy-overlay-mask
+  uizy-clip-top
+  uizy-clip-bottom
 ">
-    <div class="layout-overlay"></div>
+    <div class="uizy-overlay"></div>
 </div>
 
 <!-- Main Content -->
 <main class="
-  layout-main
-  layout-clip-top
-  layout-clip-bottom
-  layout-clip-left
-  layout-clip-right
+  uizy-main
+  uizy-clip-top
+  uizy-clip-bottom
+  uizy-clip-left
+  uizy-clip-right
 ">
     <div>Content here...</div>
 </main>
 
 <!-- Footer -->
-<footer class="layout-footer">
+<footer class="uizy-footer">
     Footer
 </footer>`.trim();
 
@@ -91,7 +91,7 @@ export function Layout() {
         <ClassTable
           classes={[
             {
-              class: "layout-system-bar",
+              class: "uizy-system-bar",
               description: "Fixed top bar at the very top of the viewport",
             },
           ]}
@@ -100,7 +100,7 @@ export function Layout() {
         <CodeDemo
           title="System Bar"
           description="A slim bar at the top for system info"
-          code={`<div class="layout-system-bar">
+          code={`<div class="uizy-system-bar">
   <span>System Status: Online</span>
   <span style="margin-left: auto;">v1.0.0</span>
 </div>`}
@@ -115,7 +115,7 @@ export function Layout() {
         </CodeDemo>
 
         <TipBox type="tip">
-          Configure the height with <code>--layout-system-bar-height</code>{" "}
+          Configure the height with <code>--uizy-system-bar-height</code>{" "}
           (default: 0px). Set to 0 if not using a system bar.
         </TipBox>
       </section>
@@ -128,7 +128,7 @@ export function Layout() {
         <ClassTable
           classes={[
             {
-              class: "layout-header",
+              class: "uizy-header",
               description: "Fixed header below system bar",
             },
           ]}
@@ -137,7 +137,7 @@ export function Layout() {
         <CodeDemo
           title="Header"
           description="Main application header with navigation"
-          code={`<header class="layout-header">
+          code={`<header class="uizy-header">
   <button class="btn">Menu</button>
   <h1>My App</h1>
   <button class="btn" style="margin-left: auto;">Settings</button>
@@ -164,8 +164,8 @@ export function Layout() {
         </CodeDemo>
 
         <TipBox type="info">
-          Configure with <code>--layout-header-height</code> (default: 50px) and{" "}
-          <code>--layout-header-layer</code> (z-index, default: 20).
+          Configure with <code>--uizy-header-height</code> (default: 50px) and{" "}
+          <code>--uizy-header-layer</code> (z-index, default: 20).
         </TipBox>
       </section>
 
@@ -177,7 +177,7 @@ export function Layout() {
         <ClassTable
           classes={[
             {
-              class: "layout-footer",
+              class: "uizy-footer",
               description: "Fixed footer at the bottom",
             },
           ]}
@@ -186,7 +186,7 @@ export function Layout() {
         <CodeDemo
           title="Footer"
           description="Application footer"
-          code={`<footer class="layout-footer">
+          code={`<footer class="uizy-footer">
   My Application - v1.0.0
 </footer>`}
         >
@@ -199,7 +199,7 @@ export function Layout() {
         </CodeDemo>
 
         <TipBox type="info">
-          Configure with <code>--layout-footer-height</code> (default: 50px).
+          Configure with <code>--uizy-footer-height</code> (default: 50px).
         </TipBox>
       </section>
 
@@ -212,9 +212,9 @@ export function Layout() {
 
         <ClassTable
           classes={[
-            { class: "layout-left", description: "Fixed left sidebar" },
+            { class: "uizy-left", description: "Fixed left sidebar" },
             {
-              class: "layout-left--mini",
+              class: "uizy-left--mini",
               description: "Collapsed mini sidebar",
             },
           ]}
@@ -223,7 +223,7 @@ export function Layout() {
         <CodeDemo
           title="Left Sidebar"
           description="Navigation sidebar"
-          code={`<aside class="layout-left">
+          code={`<aside class="uizy-left">
   <h3>Navigation</h3>
   <a href="#">Dashboard</a>
   <a href="#">Projects</a>
@@ -250,8 +250,8 @@ export function Layout() {
         </CodeDemo>
 
         <TipBox type="tip">
-          Use <code>--layout-left-width</code> (default: 185px) and{" "}
-          <code>--layout-left-mini-width</code> (default: 60px) for sizing.
+          Use <code>--uizy-left-width</code> (default: 185px) and{" "}
+          <code>--uizy-left-mini-width</code> (default: 60px) for sizing.
         </TipBox>
       </section>
 
@@ -265,9 +265,9 @@ export function Layout() {
 
         <ClassTable
           classes={[
-            { class: "layout-right", description: "Fixed right sidebar" },
+            { class: "uizy-right", description: "Fixed right sidebar" },
             {
-              class: "layout-right--mini",
+              class: "uizy-right--mini",
               description: "Collapsed mini right sidebar",
             },
           ]}
@@ -276,7 +276,7 @@ export function Layout() {
         <CodeDemo
           title="Right Sidebar"
           description="Details or settings panel"
-          code={`<aside class="layout-right">
+          code={`<aside class="uizy-right">
   <h3>Details Panel</h3>
   <p>Additional information here...</p>
 </aside>`}
@@ -296,8 +296,8 @@ export function Layout() {
         </CodeDemo>
 
         <TipBox type="info">
-          Configure with <code>--layout-right-width</code> and{" "}
-          <code>--layout-right-mini-width</code>.
+          Configure with <code>--uizy-right-width</code> and{" "}
+          <code>--uizy-right-mini-width</code>.
         </TipBox>
       </section>
 
@@ -312,7 +312,7 @@ export function Layout() {
         <ClassTable
           classes={[
             {
-              class: "layout-main",
+              class: "uizy-main",
               description: "Main content area with full viewport height",
             },
           ]}
@@ -321,7 +321,7 @@ export function Layout() {
         <CodeDemo
           title="Main Content"
           description="Primary content area"
-          code={`<main class="layout-main layout-clip-top layout-clip-bottom layout-clip-left layout-clip-right">
+          code={`<main class="uizy-main uizy-clip-top uizy-clip-bottom uizy-clip-left uizy-clip-right">
   <div class="card">
     <h2>Welcome</h2>
     <p>Your main content goes here.</p>
@@ -356,19 +356,19 @@ export function Layout() {
         <ClassTable
           classes={[
             {
-              class: "layout-drawer",
+              class: "uizy-drawer",
               description: "Base drawer with transform animation",
             },
             {
-              class: "layout-drawer--left",
+              class: "uizy-drawer--left",
               description: "Slides in from the left",
             },
             {
-              class: "layout-drawer--right",
+              class: "uizy-drawer--right",
               description: "Slides in from the right",
             },
             {
-              class: "layout-drawer--open",
+              class: "uizy-drawer--open",
               description: "Shows the drawer (translateX(0))",
             },
           ]}
@@ -378,14 +378,14 @@ export function Layout() {
           title="Drawer Navigation"
           description="Combine with sidebars for slide-in behavior"
           code={`<!-- Left drawer (hidden by default on mobile) -->
-<aside class="layout-left layout-drawer layout-drawer--left" id="leftNav">
+<aside class="uizy-left uizy-drawer uizy-drawer--left" id="leftNav">
   <nav>...</nav>
 </aside>
 
 <!-- Toggle with JavaScript -->
 <script>
   function toggleLeft() {
-    document.getElementById('leftNav').classList.toggle('layout-drawer--open');
+    document.getElementById('leftNav').classList.toggle('uizy-drawer--open');
   }
 </script>`}
         >
@@ -398,8 +398,8 @@ export function Layout() {
         </CodeDemo>
 
         <TipBox type="tip">
-          Configure animation with <code>--layout-drawer-speed</code> (default:
-          0.2s) and <code>--layout-drawer-easing</code> (default:
+          Configure animation with <code>--uizy-drawer-speed</code> (default:
+          0.2s) and <code>--uizy-drawer-easing</code> (default:
           cubic-bezier(0.4, 0, 0.2, 1)).
         </TipBox>
       </section>
@@ -417,15 +417,15 @@ export function Layout() {
         <ClassTable
           classes={[
             {
-              class: "layout-clip-system-bar",
+              class: "uizy-clip-system-bar",
               description: "Position below system bar only",
             },
             {
-              class: "layout-clip-top",
+              class: "uizy-clip-top",
               description: "Position below system bar + header",
             },
             {
-              class: "layout-clip-bottom",
+              class: "uizy-clip-bottom",
               description: "Position above footer",
             },
           ]}
@@ -435,11 +435,11 @@ export function Layout() {
         <ClassTable
           classes={[
             {
-              class: "layout-clip-left",
+              class: "uizy-clip-left",
               description: "Add left margin for sidebar (resets on mobile)",
             },
             {
-              class: "layout-clip-right",
+              class: "uizy-clip-right",
               description: "Add right margin for sidebar (resets on mobile)",
             },
           ]}
@@ -449,18 +449,18 @@ export function Layout() {
           title="Clipping Main Content"
           description="Adjust main content to fit within the layout"
           code={`<!-- Main content clipped on all sides -->
-<main class="layout-main layout-clip-top layout-clip-bottom layout-clip-left layout-clip-right">
+<main class="uizy-main uizy-clip-top uizy-clip-bottom uizy-clip-left uizy-clip-right">
   Content fits between header, footer, and sidebars
 </main>
 
 <!-- Sidebar clipped below system bar only -->
-<aside class="layout-left layout-clip-system-bar">
+<aside class="uizy-left uizy-clip-system-bar">
   Sidebar extends into header area
 </aside>`}
         >
           <div class="pa-3 br-2" style="background: #f5f5f5;">
             <p style="margin: 0; color: #666; font-size: 14px;">
-              Use <code>layout-clip-system-bar</code> when you want content to
+              Use <code>uizy-clip-system-bar</code> when you want content to
               start below the system bar but extend into the header area (common
               for sidebars).
             </p>
@@ -468,8 +468,8 @@ export function Layout() {
         </CodeDemo>
 
         <TipBox type="info">
-          Horizontal clip classes (<code>layout-clip-left</code>,{" "}
-          <code>layout-clip-right</code>) automatically reset to 0 on mobile
+          Horizontal clip classes (<code>uizy-clip-left</code>,{" "}
+          <code>uizy-clip-right</code>) automatically reset to 0 on mobile
           (under 1024px).
         </TipBox>
       </section>
@@ -485,11 +485,11 @@ export function Layout() {
         <ClassTable
           classes={[
             {
-              class: "layout-overlay-mask",
+              class: "uizy-overlay-mask",
               description: "Clickable overlay container (for closing drawers)",
             },
             {
-              class: "layout-overlay",
+              class: "uizy-overlay",
               description: "The visual overlay with opacity",
             },
           ]}
@@ -498,15 +498,15 @@ export function Layout() {
         <CodeDemo
           title="Overlay with Drawer"
           description="Show overlay when drawer is open"
-          code={`<div class="layout-overlay-mask layout-clip-top layout-clip-bottom" id="overlay" style="display: none;">
-  <div class="layout-overlay"></div>
+          code={`<div class="uizy-overlay-mask uizy-clip-top uizy-clip-bottom" id="overlay" style="display: none;">
+  <div class="uizy-overlay"></div>
 </div>
 
 <script>
   function toggleDrawer() {
     const drawer = document.getElementById('drawer');
     const overlay = document.getElementById('overlay');
-    const isOpen = drawer.classList.toggle('layout-drawer--open');
+    const isOpen = drawer.classList.toggle('uizy-drawer--open');
     overlay.style.display = isOpen ? 'block' : 'none';
   }
 
@@ -523,8 +523,8 @@ export function Layout() {
         </CodeDemo>
 
         <TipBox type="tip">
-          Configure with <code>--layout-overlay-color</code> (default: black)
-          and <code>--layout-overlay-opacity</code> (default: 0.4).
+          Configure with <code>--uizy-overlay-color</code> (default: black) and{" "}
+          <code>--uizy-overlay-opacity</code> (default: 0.4).
         </TipBox>
       </section>
 
@@ -541,35 +541,35 @@ export function Layout() {
           description="Customize the layout via CSS variables"
           code={`:root {
   /* System Bar */
-  --layout-system-bar-height: 24px;
-  --layout-system-bar-layer: 40;
+  --uizy-system-bar-height: 24px;
+  --uizy-system-bar-layer: 40;
 
   /* Header */
-  --layout-header-height: 56px;
-  --layout-header-layer: 20;
+  --uizy-header-height: 56px;
+  --uizy-header-layer: 20;
 
   /* Footer */
-  --layout-footer-height: 48px;
-  --layout-footer-layer: 20;
+  --uizy-footer-height: 48px;
+  --uizy-footer-layer: 20;
 
   /* Left Sidebar */
-  --layout-left-width: 240px;
-  --layout-left-mini-width: 64px;
-  --layout-left-layer: 20;
+  --uizy-left-width: 240px;
+  --uizy-left-mini-width: 64px;
+  --uizy-left-layer: 20;
 
   /* Right Sidebar */
-  --layout-right-width: 280px;
-  --layout-right-mini-width: 60px;
-  --layout-right-layer: 20;
+  --uizy-right-width: 280px;
+  --uizy-right-mini-width: 60px;
+  --uizy-right-layer: 20;
 
   /* Drawer Animation */
-  --layout-drawer-speed: 0.25s;
-  --layout-drawer-easing: cubic-bezier(0.4, 0, 0.2, 1);
+  --uizy-drawer-speed: 0.25s;
+  --uizy-drawer-easing: cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Overlay */
-  --layout-overlay-color: rgba(0, 0, 0, 0.5);
-  --layout-overlay-opacity: 1;
-  --layout-overlay-layer: 10;
+  --uizy-overlay-color: rgba(0, 0, 0, 0.5);
+  --uizy-overlay-opacity: 1;
+  --uizy-overlay-layer: 10;
 }`}
         >
           <div

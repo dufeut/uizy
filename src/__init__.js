@@ -8,3 +8,6 @@ import "./rows.scss";
 import "./shadows.scss";
 import "./spacing.scss";
 import "./text.scss";
+
+// Web Component
+import "./components/layout";

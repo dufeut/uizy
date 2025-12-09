@@ -7,35 +7,35 @@
 
 $layout: (
   system-bar: (
-    height: var(--layout-system-bar-height, 0px),
-    layer: var(--layout-system-bar-layer, 40),
+    height: var(--uizy-system-bar-height, 0px),
+    layer: var(--uizy-system-bar-layer, 40),
   ),
   header: (
-    height: var(--layout-header-height, 50px),
-    layer: var(--layout-header-layer, 20),
+    height: var(--uizy-header-height, 50px),
+    layer: var(--uizy-header-layer, 20),
   ),
   footer: (
-    height: var(--layout-footer-height, 50px),
-    layer: var(--layout-footer-layer, 20),
+    height: var(--uizy-footer-height, 50px),
+    layer: var(--uizy-footer-layer, 20),
   ),
   left: (
-    width: var(--layout-left-width, 185px),
-    width-mini: var(--layout-left-mini-width, 60px),
-    layer: var(--layout-left-layer, 20),
+    width: var(--uizy-left-width, 185px),
+    width-mini: var(--uizy-left-mini-width, 60px),
+    layer: var(--uizy-left-layer, 20),
   ),
   right: (
-    width: var(--layout-right-width, 185px),
-    width-mini: var(--layout-right-mini-width, 60px),
-    layer: var(--layout-right-layer, 20),
+    width: var(--uizy-right-width, 185px),
+    width-mini: var(--uizy-right-mini-width, 60px),
+    layer: var(--uizy-right-layer, 20),
   ),
   overlay: (
-    color: var(--layout-overlay-color, black),
-    opacity: var(--layout-overlay-opacity, 0.4),
-    layer: var(--layout-overlay-layer, 10),
+    color: var(--uizy-overlay-color, black),
+    opacity: var(--uizy-overlay-opacity, 0.4),
+    layer: var(--uizy-overlay-layer, 10),
   ),
   drawer: (
-    speed: var(--layout-drawer-speed, 0.2s),
-    easing: var(--layout-drawer-easing, cubic-bezier(0.4, 0, 0.2, 1)),
+    speed: var(--uizy-drawer-speed, 0.2s),
+    easing: var(--uizy-drawer-easing, cubic-bezier(0.4, 0, 0.2, 1)),
   ),
 );
 
@@ -46,12 +46,12 @@ $layout: (
 // ==========================
 // Base - All Fixed Position
 // ==========================
-.layout-system-bar,
-.layout-header,
-.layout-footer,
-.layout-left,
-.layout-right,
-.layout-main {
+.uizy-system-bar,
+.uizy-header,
+.uizy-footer,
+.uizy-left,
+.uizy-right,
+.uizy-main {
   position: fixed;
   box-sizing: border-box;
 }
@@ -59,7 +59,7 @@ $layout: (
 // ==========================
 // System Bar
 // ==========================
-.layout-system-bar {
+.uizy-system-bar {
   top: 0;
   left: 0;
   right: 0;
@@ -70,7 +70,7 @@ $layout: (
 // ==========================
 // Header
 // ==========================
-.layout-header {
+.uizy-header {
   top: layout-get(system-bar, height);
   height: layout-get(header, height);
   z-index: layout-get(header, layer);
@@ -79,7 +79,7 @@ $layout: (
 // ==========================
 // Footer
 // ==========================
-.layout-footer {
+.uizy-footer {
   bottom: 0;
   height: layout-get(footer, height);
   z-index: layout-get(footer, layer);
@@ -88,9 +88,9 @@ $layout: (
 // ==========================
 // Header, Footer, Main share left/right: 0
 // ==========================
-.layout-header,
-.layout-footer,
-.layout-main {
+.uizy-header,
+.uizy-footer,
+.uizy-main {
   left: 0;
   right: 0;
 }
@@ -98,7 +98,7 @@ $layout: (
 // ==========================
 // Main Content
 // ==========================
-.layout-main {
+.uizy-main {
   height: 100dvh;
   transition: margin 0.2s linear;
 }
@@ -106,9 +106,9 @@ $layout: (
 // ==========================
 // Sidebars & Main share top/bottom: 0
 // ==========================
-.layout-main,
-.layout-left,
-.layout-right {
+.uizy-main,
+.uizy-left,
+.uizy-right {
   top: 0;
   bottom: 0;
 }
@@ -116,68 +116,80 @@ $layout: (
 // ==========================
 // Left Sidebar
 // ==========================
-.layout-left {
+.uizy-left {
   left: 0;
   width: layout-get(left, width);
   z-index: layout-get(left, layer);
 }
 
-.layout-left--mini {
+.uizy-left--mini {
   width: layout-get(left, width-mini);
 }
 
 // ==========================
 // Right Sidebar
 // ==========================
-.layout-right {
+.uizy-right {
   right: 0;
   width: layout-get(right, width);
   z-index: layout-get(right, layer);
 }
 
-.layout-right--mini {
+.uizy-right--mini {
   width: layout-get(right, width-mini);
 }
 
 // ==========================
 // Drawer Animation
 // ==========================
-.layout-drawer {
+.uizy-drawer {
   transform-style: preserve-3d;
   will-change: transform;
   transition: transform layout-get(drawer, speed) layout-get(drawer, easing);
 }
 
-.layout-drawer--left {
+.uizy-drawer--left {
   transform: translateX(-100vw);
 }
 
-.layout-drawer--right {
+.uizy-drawer--right {
   transform: translateX(100vw);
 }
 
-.layout-drawer--open {
+.uizy-drawer--open {
   transform: translateX(0) !important;
 }
 
 // ==========================
 // Clip X (horizontal margins)
 // ==========================
-.layout-clip-left {
+.uizy-clip-left {
   margin-left: layout-get(left, width);
 }
 
-.layout-clip-right {
+.uizy-clip-right {
   margin-right: layout-get(right, width);
 }
 
-@media (max-width: 1024px) {
-  .layout-clip-left {
-    margin-left: 0;
-  }
-  .layout-clip-right {
-    margin-right: 0;
-  }
+.uizy-clip-left-mini {
+  margin-left: layout-get(left, width-mini);
+  width: calc(#{layout-get(left, width)} - #{layout-get(left, width-mini)});
+}
+
+.uizy-clip-right-mini {
+  margin-right: layout-get(right, width-mini);
+  width: calc(#{layout-get(right, width)} - #{layout-get(right, width-mini)});
+}
+
+// Main clip-mini (margin only, no width override)
+.uizy-main.uizy-clip-left-mini {
+  margin-left: layout-get(left, width-mini);
+  width: auto;
+}
+
+.uizy-main.uizy-clip-right-mini {
+  margin-right: layout-get(right, width-mini);
+  width: auto;
 }
 
 // ==========================
@@ -185,45 +197,57 @@ $layout: (
 // ==========================
 
 // System bar only
-.layout-clip-system-bar {
+.uizy-clip-system-bar {
   top: layout-get(system-bar, height);
 }
 
 // Full top clip (system-bar + header)
-.layout-clip-top {
+.uizy-clip-top {
   top: calc(#{layout-get(system-bar, height)} + #{layout-get(header, height)});
 }
 
 // Bottom clip
-.layout-clip-bottom {
+.uizy-clip-bottom {
   bottom: layout-get(footer, height);
 }
 
 // Main height adjustments
-.layout-main.layout-clip-system-bar {
+.uizy-main.uizy-clip-system-bar {
   height: calc(100dvh - #{layout-get(system-bar, height)});
 }
 
-.layout-main.layout-clip-top {
-  height: calc(100dvh - (#{layout-get(system-bar, height)} + #{layout-get(header, height)}));
+.uizy-main.uizy-clip-top {
+  height: calc(
+    100dvh - (#{layout-get(system-bar, height)} + #{layout-get(header, height)})
+  );
 }
 
-.layout-main.layout-clip-bottom {
+.uizy-main.uizy-clip-bottom {
   height: calc(100dvh - #{layout-get(footer, height)});
 }
 
-.layout-main.layout-clip-top.layout-clip-bottom {
-  height: calc(100dvh - (#{layout-get(system-bar, height)} + #{layout-get(header, height)} + #{layout-get(footer, height)}));
+.uizy-main.uizy-clip-top.uizy-clip-bottom {
+  height: calc(
+    100dvh -
+      (
+        #{layout-get(system-bar, height)} + #{layout-get(header, height)} + #{layout-get(
+            footer,
+            height
+          )}
+      )
+  );
 }
 
-.layout-main.layout-clip-system-bar.layout-clip-bottom {
-  height: calc(100dvh - (#{layout-get(system-bar, height)} + #{layout-get(footer, height)}));
+.uizy-main.uizy-clip-system-bar.uizy-clip-bottom {
+  height: calc(
+    100dvh - (#{layout-get(system-bar, height)} + #{layout-get(footer, height)})
+  );
 }
 
 // ==========================
 // Overlay
 // ==========================
-.layout-overlay-mask {
+.uizy-overlay-mask {
   position: fixed;
   top: 0;
   bottom: 0;
@@ -233,35 +257,45 @@ $layout: (
   background-color: transparent;
 
   // Clip classes set position for overlay (reset margins from general clip rules)
-  &.layout-clip-system-bar {
+  &.uizy-clip-system-bar {
     top: layout-get(system-bar, height);
   }
-  &.layout-clip-top {
-    top: calc(#{layout-get(system-bar, height)} + #{layout-get(header, height)});
+  &.uizy-clip-top {
+    top: calc(
+      #{layout-get(system-bar, height)} + #{layout-get(header, height)}
+    );
   }
-  &.layout-clip-bottom {
+  &.uizy-clip-bottom {
     bottom: layout-get(footer, height);
   }
-  &.layout-clip-left {
+  &.uizy-clip-left {
     left: layout-get(left, width);
-    margin-left: 0; // Reset margin from general .layout-clip-left
+    margin-left: 0; // Reset margin from general .uizy-clip-left
   }
-  &.layout-clip-right {
+  &.uizy-clip-right {
     right: layout-get(right, width);
-    margin-right: 0; // Reset margin from general .layout-clip-right
+    margin-right: 0; // Reset margin from general .uizy-clip-right
+  }
+  &.uizy-clip-left-mini {
+    left: layout-get(left, width-mini);
+  }
+  &.uizy-clip-right-mini {
+    right: layout-get(right, width-mini);
   }
 
   @media (max-width: 1024px) {
-    &.layout-clip-left {
+    &.uizy-clip-left,
+    &.uizy-clip-left-mini {
       left: 0;
     }
-    &.layout-clip-right {
+    &.uizy-clip-right,
+    &.uizy-clip-right-mini {
       right: 0;
     }
   }
 }
 
-.layout-overlay {
+.uizy-overlay {
   position: absolute;
   inset: 0;
   z-index: layout-get(overlay, layer);
