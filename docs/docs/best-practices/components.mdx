@@ -53,12 +53,24 @@ function PluginUI(App) {
   App.plugin("ui", {
     components: {
       button: {
-        // Base Component
-        base: () => "px-4 py-2",
-        // Primary Component (+ Base)
-        primary: (props) => ["bd-a", App.use("ui.button.base")],
+        base: ({ size }) => {
+          return {
+            "px-2 py-2": size === "sm",
+            "px-4 py-4": size === "md",
+            "px-8 py-8": size === "lg",
+          };
+        },
+        primary: (props) => {
+          return ["bd-a", App.use(["ui.button.base"], props)];
+        },
       },
     },
   });
 }
+```
+
+```html
+<ui-box use="ui.button.primary" use:props="{size:'sm'}">Sm</ui-box>
+<ui-box use="ui.button.primary" use:props="{size:'md'}">Md</ui-box>
+<ui-box use="ui.button.primary" use:props="{size:'lg'}">Lg</ui-box>
 ```
