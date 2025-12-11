@@ -5,7 +5,8 @@ import { defineConfig } from "vite";
 import pkg from "./package.json";
 import type { MinifyOptions } from "terser";
 
-const packageName = JSON.stringify(pkg.name.replace(/-/g, "_"));
+// Use "uizy" as the global name (handles scoped package names)
+const globalName = "uizy";
 
 const terserOptions: MinifyOptions = {
   compress: {
@@ -51,21 +52,25 @@ const terserOptions: MinifyOptions = {
 
 export default defineConfig({
   define: {
-    __APP_NAME__: packageName,
+    __APP_NAME__: JSON.stringify(globalName),
     __APP_VERSION__: JSON.stringify(pkg.version),
     __APP_AUTHOR__: JSON.stringify(pkg.author),
   },
   build: {
     lib: {
       entry: resolve(__dirname, "src/__init__.js"),
-      name: JSON.parse(packageName),
-      fileName: (format) => `waria.${format}.js`,
+      name: globalName,
+      fileName: (format) => (format === "es" ? "index.js" : `uizy.${format}.js`),
       formats: ["es", "iife"],
     },
     cssCodeSplit: false,
     rollupOptions: {
+      external: ["nanostores"],
       output: {
-        assetFileNames: "[name][extname]",
+        globals: {
+          nanostores: "nanostores",
+        },
+        assetFileNames: "index[extname]",
       },
     },
   },
