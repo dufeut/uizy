@@ -283,6 +283,7 @@ $layout: (
     right: layout-get(right, width-mini);
   }
 
+  /*
   @media (max-width: 1024px) {
     &.uizy-clip-left,
     &.uizy-clip-left-mini {
@@ -293,6 +294,7 @@ $layout: (
       right: 0;
     }
   }
+  */
 }
 
 .uizy-overlay {

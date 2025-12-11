@@ -54,16 +54,31 @@
 
     <script type="module">
         import uizy from "/src/__init__.js"
+
         uizy.layout({
-            layout: { system: 24 }, breakpoint: {
-                name: "sm",
+            overlay: {
+                opacity: 0.45,
+                color: "red",
+            },
+            layout: {
+                system: 24,
+                header: 56,
+                footer: 48,
+                left: 240,
+                right: 240,
+                leftMini: 64,
+                rightMini: 64,
+                drawerSpeed: 0.2,
+            },
+            breakpoint: {
+                name: "md",
+                main: true,
+                header: true,
+                top: true,
+                bottom: false,
                 left: true,
                 right: true,
-                top: true,
-                bottom: true,
-                leftMini: true,
-                rightMini: true,
-            }
+            },
         });
         uizy.init(() => {
             const el = uizy.get("app")

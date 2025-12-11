@@ -30,6 +30,7 @@ const config: Config = {
       "classic",
       {
         docs: {
+          routeBasePath: "/",
           sidebarPath: "./sidebars.ts",
           editUrl: "https://github.com/dufeut/uizy/tree/main/docs/",
         },
@@ -54,12 +55,6 @@ const config: Config = {
       },
       items: [
         {
-          type: "docSidebar",
-          sidebarId: "docsSidebar",
-          position: "left",
-          label: "Docs",
-        },
-        {
           href: "https://github.com/dufeut/uizy",
           label: "GitHub",
           position: "right",
@@ -74,15 +69,15 @@ const config: Config = {
           items: [
             {
               label: "Getting Started",
-              to: "/docs/getting-started",
+              to: "/getting-started",
             },
             {
               label: "Display",
-              to: "/docs/display",
+              to: "/display",
             },
             {
               label: "Grid System",
-              to: "/docs/grid",
+              to: "/grid",
             },
           ],
         },
