@@ -73,11 +73,11 @@ const config: Config = {
             },
             {
               label: "Display",
-              to: "/display",
+              to: "/utilities/display",
             },
             {
               label: "Grid System",
-              to: "/grid",
+              to: "/utilities/grid",
             },
           ],
         },
