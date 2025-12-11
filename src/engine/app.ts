@@ -1,5 +1,3 @@
-import { injectCSS, setBreakPoint, setLayout } from "./utils";
-
 // -------------------------------
 // Types
 // -------------------------------
@@ -287,15 +285,13 @@ const COMPONENT_REGISTRY: [string, CustomElementConstructor][] = [
   ["uizy-drawer", UizyDrawer],
 ];
 
-const initialize = (): void => {
+export const initialize = (): void => {
   COMPONENT_REGISTRY.forEach(([name, ctor]) => {
     if (!customElements.get(name)) {
       customElements.define(name, ctor);
     }
   });
 };
-
-initialize();
 
 export {
   UizySystemBar,
@@ -305,54 +301,3 @@ export {
   UizyMain,
   UizyDrawer,
 };
-
-function setApp({
-  breakpoint = {},
-  layout = {},
-  overlay = {},
-}: {
-  breakpoint?: {
-    left?: boolean;
-    right?: boolean;
-    top?: boolean;
-    bottom?: boolean;
-  };
-  layout?: {
-    system?: number;
-    header?: number;
-    footer?: number;
-    left?: number;
-    right?: number;
-    leftMini?: number;
-    rightMini?: number;
-    drawerSpeed?: number;
-  };
-  overlay?: { opacity?: number; color?: string };
-} = {}) {
-  const css = [
-    setBreakPoint({
-      left: breakpoint.left ?? true,
-      right: breakpoint.right ?? true,
-      top: breakpoint.top ?? false,
-      bottom: breakpoint.bottom ?? false,
-    }),
-
-    setLayout({
-      system: layout.system ?? 24,
-      header: layout.header ?? 56,
-      footer: layout.footer ?? 48,
-      left: layout.left ?? 240,
-      right: layout.right ?? 280,
-      leftMini: layout.leftMini ?? 64,
-      rightMini: layout.rightMini ?? 64,
-      drawerSpeed: layout.drawerSpeed ?? 0.2,
-      overlayOpacity: overlay.opacity ?? 0.45,
-      overlayColor: overlay.color ?? "black",
-    }),
-  ].join(" ");
-
-  injectCSS(css);
-}
-
-// now this works
-setApp({});
