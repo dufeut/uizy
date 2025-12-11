@@ -1,0 +1,414 @@
+---
+sidebar_position: 6
+sidebar_label: Plugins
+---
+
+# Plugins
+
+Extend Uizy with reusable, namespaced modules.
+
+## Overview
+
+Plugins allow you to bundle components, actions, stores, and directives into reusable packages. Each plugin uses a namespace to avoid conflicts.
+
+```javascript
+// Define a plugin
+function MyPlugin(app, options) {
+    app.plugin("mylib", {
+        components: { ... },
+        actions: { ... },
+        stores: { ... },
+        directives: { ... },
+    });
+}
+
+// Install it
+uizy.start({
+    plugins: [MyPlugin],
+});
+```
+
+## Creating Plugins
+
+A plugin is a function that receives the Uizy app instance and optional configuration:
+
+```javascript
+function TooltipPlugin(app, options = {}) {
+    const { defaultPosition = "bottom" } = options;
+
+    app.plugin("tooltip", {
+        // Directives become :tooltip-show, :tooltip-hide, etc.
+        directives: {
+            show: (el, { value, modifiers }) => {
+                const position = modifiers[0] || defaultPosition;
+                // Setup tooltip...
+            },
+        },
+
+        // Components become tooltip.dark, tooltip.light, etc.
+        components: {
+            dark: () => "bg-gray-900 text-white px-2 py-1 rounded text-sm",
+            light: () => "bg-white text-gray-900 px-2 py-1 rounded text-sm shadow",
+        },
+    });
+}
+```
+
+### Plugin as Object
+
+Plugins can also be objects with an `install` method:
+
+```javascript
+const AnimationPlugin = {
+    install(app, options) {
+        app.plugin("animate", {
+            directives: {
+                fade: (el) => {
+                    el.style.transition = "opacity 0.3s ease";
+                },
+                slide: (el, { modifiers }) => {
+                    const direction = modifiers[0] || "up";
+                    // Setup slide animation...
+                },
+            },
+        });
+    },
+};
+```
+
+## Installing Plugins
+
+### Via `start()`
+
+```javascript
+uizy.start({
+    plugins: [
+        // Plugin without options
+        MyPlugin,
+
+        // Plugin with options
+        [TooltipPlugin, { defaultPosition: "top" }],
+    ],
+});
+```
+
+### Duplicate Prevention
+
+Plugins are only installed once. If you try to install the same plugin twice, it will be skipped:
+
+```javascript
+uizy.start({
+    plugins: [
+        MyPlugin,
+        MyPlugin, // Skipped with warning
+    ],
+});
+```
+
+## Namespace Convention
+
+All plugin exports are prefixed with the namespace:
+
+| Export Type | Registration | Usage |
+|-------------|--------------|-------|
+| Components | `mylib.button` | `uizy.use("mylib.button")` or `use="mylib.button"` |
+| Actions | `mylib.submit` | `uizy.emit("mylib.submit")` or `$emit("mylib.submit")` |
+| Stores | `mylib.count` | `uizy.$("mylib.count")` |
+| Directives | `mylib-hover` | `:mylib-hover="value"` |
+
+Note: Directives use a hyphen (`-`) instead of a dot (`.`) to follow HTML attribute naming conventions.
+
+## Plugin Exports
+
+### components
+
+Register component functions under the namespace:
+
+```javascript
+app.plugin("ui", {
+    components: {
+        button: {
+            primary: () => "bg-blue-500 text-white px-4 py-2 rounded",
+            secondary: () => "bg-gray-200 text-gray-800 px-4 py-2 rounded",
+        },
+        card: () => "bg-white shadow rounded p-4",
+    },
+});
+
+// Usage
+// uizy.use("ui.button.primary")
+// <ui-box use="ui.button.primary">
+```
+
+### actions
+
+Register action handlers under the namespace:
+
+```javascript
+app.plugin("auth", {
+    actions: {
+        login: async (credentials) => {
+            // Handle login...
+        },
+        logout: () => {
+            // Handle logout...
+        },
+    },
+});
+
+// Usage
+// uizy.emit("auth.login", { email, password })
+```
+
+### stores
+
+Register stores under the namespace:
+
+```javascript
+app.plugin("cart", {
+    stores: {
+        items: app.store.atom([]),
+        total: app.store.atom(0),
+    },
+});
+
+// Usage
+// uizy.$("cart.items")
+// uizy.$set("cart.total", 100)
+```
+
+### directives
+
+Register directives with the namespace prefix:
+
+```javascript
+app.plugin("fx", {
+    directives: {
+        ripple: (el, { cleanup }) => {
+            const handler = (e) => {
+                // Create ripple effect...
+            };
+            el.addEventListener("click", handler);
+            cleanup(() => el.removeEventListener("click", handler));
+        },
+        shake: (el) => {
+            el.style.animation = "shake 0.5s ease";
+        },
+    },
+});
+
+// Usage
+// <ui-box :fx-ripple>Click me</ui-box>
+// <ui-box :fx-shake>Error!</ui-box>
+```
+
+## Examples
+
+### UI Kit Plugin
+
+```javascript
+function UIKitPlugin(app) {
+    app.plugin("kit", {
+        components: {
+            button: {
+                base: () => "px-4 py-2 rounded font-medium transition",
+                primary: () => "px-4 py-2 rounded bg-primary text-white",
+                ghost: () => "px-4 py-2 rounded hover:bg-gray-100",
+            },
+            input: {
+                text: () => "px-3 py-2 border rounded focus:ring-2",
+                checkbox: () => "w-4 h-4 rounded",
+            },
+            badge: {
+                success: () => "px-2 py-1 text-xs rounded-full bg-green-100 text-green-800",
+                error: () => "px-2 py-1 text-xs rounded-full bg-red-100 text-red-800",
+            },
+        },
+    });
+}
+```
+
+```html
+<ui-box use="kit.button.primary">Submit</ui-box>
+<ui-box use="kit.badge.success">Active</ui-box>
+```
+
+### Effects Plugin
+
+```javascript
+function EffectsPlugin(app) {
+    app.plugin("fx", {
+        directives: {
+            // :fx-highlight="yellow"
+            highlight: (el, { value }) => {
+                el.style.backgroundColor = value || "yellow";
+                el.style.padding = "2px 4px";
+                el.style.borderRadius = "2px";
+            },
+
+            // :fx-tooltip.top="Help text"
+            tooltip: (el, { value, modifiers, cleanup }) => {
+                const position = modifiers[0] || "bottom";
+                const tooltip = document.createElement("div");
+                tooltip.textContent = value;
+                tooltip.className = "tooltip tooltip-" + position;
+                document.body.appendChild(tooltip);
+
+                const show = () => {
+                    // Position and show tooltip...
+                };
+                const hide = () => {
+                    tooltip.style.opacity = "0";
+                };
+
+                el.addEventListener("mouseenter", show);
+                el.addEventListener("mouseleave", hide);
+
+                cleanup(() => {
+                    el.removeEventListener("mouseenter", show);
+                    el.removeEventListener("mouseleave", hide);
+                    tooltip.remove();
+                });
+            },
+
+            // :fx-show="store.path"
+            show: (el, { value, effect }) => {
+                effect(() => {
+                    const store = app.$(value, { raw: true });
+                    if (!store) {
+                        el.style.display = value ? "" : "none";
+                        return;
+                    }
+                    return store.subscribe((v) => {
+                        el.style.display = v ? "" : "none";
+                    });
+                });
+            },
+
+            // :fx-fade
+            fade: (el) => {
+                el.style.transition = "opacity 0.3s ease";
+            },
+        },
+    });
+}
+```
+
+```html
+<ui-box :fx-highlight="lightblue">Highlighted</ui-box>
+<ui-box :fx-tooltip.top="Click to submit" use="kit.button.primary">Submit</ui-box>
+<ui-box :fx-show="modal.visible" :fx-fade>Modal content</ui-box>
+```
+
+### Form Plugin
+
+```javascript
+function FormPlugin(app) {
+    app.plugin("form", {
+        stores: {
+            data: app.store.map({}),
+            errors: app.store.map({}),
+            submitting: app.store.atom(false),
+        },
+
+        actions: {
+            setField: ({ field, value }) => {
+                app.$key("form.data", field, value);
+            },
+            setError: ({ field, message }) => {
+                app.$key("form.errors", field, message);
+            },
+            clearErrors: () => {
+                app.$set("form.errors", {});
+            },
+            reset: () => {
+                app.$set("form.data", {});
+                app.$set("form.errors", {});
+            },
+        },
+
+        directives: {
+            // :form-model="fieldName"
+            model: (el, { value, effect }) => {
+                const input = el.querySelector("input, textarea, select") || el;
+
+                effect(() => {
+                    // Initialize field in form.data
+                    const current = app.$("form.data");
+                    if (!(value in current)) {
+                        app.$key("form.data", value, input.value || "");
+                    }
+
+                    // Two-way binding
+                    const store = app.$("form.data", { raw: true });
+                    const unsubscribe = store.subscribe((data) => {
+                        if (input.value !== data[value]) {
+                            input.value = data[value] || "";
+                        }
+                    });
+
+                    const onInput = () => app.$key("form.data", value, input.value);
+                    input.addEventListener("input", onInput);
+
+                    return () => {
+                        unsubscribe();
+                        input.removeEventListener("input", onInput);
+                    };
+                });
+            },
+        },
+    });
+}
+```
+
+```html
+<ui-box :form-model="username">
+    <input type="text" placeholder="Username" />
+</ui-box>
+<ui-box :form-model="email">
+    <input type="email" placeholder="Email" />
+</ui-box>
+<ui-box use="kit.button.primary" :click="$emit('form.submit')">Submit</ui-box>
+```
+
+## API Reference
+
+### Plugin Function
+
+```typescript
+type PluginFn<T = unknown> = (app: typeof uizy, options?: T) => void;
+```
+
+### Plugin Object
+
+```typescript
+type Plugin<T = unknown> = PluginFn<T> | { install: PluginFn<T> };
+```
+
+### Plugin Exports
+
+```typescript
+interface PluginExports {
+    components?: ComponentTree;
+    actions?: ComponentTree;
+    stores?: ComponentTree;
+    directives?: Record<string, DirectiveHandler>;
+}
+```
+
+### `uizy.plugin(namespace, exports)`
+
+Register a namespaced plugin.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `namespace` | `string` | Namespace prefix for all exports |
+| `exports` | `PluginExports` | Components, actions, stores, and directives to register |
+
+## Best Practices
+
+1. **Use descriptive namespaces** - Choose clear, short names like `ui`, `fx`, `auth`
+2. **Keep plugins focused** - One plugin should solve one problem
+3. **Document your exports** - List all components, actions, stores, and directives
+4. **Handle options gracefully** - Provide sensible defaults for all options
+5. **Clean up directives** - Always use `cleanup()` to prevent memory leaks

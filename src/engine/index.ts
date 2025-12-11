@@ -62,6 +62,24 @@ export interface ThemeConfig {
 /** Directives configuration (simple or full handlers) */
 export type DirectivesConfig = Record<string, DirectiveHandler | ((el: HTMLElement) => void)>;
 
+/** Plugin exports - what a plugin provides */
+export interface PluginExports {
+  /** Components to register under the namespace */
+  components?: ComponentTree;
+  /** Actions to register under the namespace */
+  actions?: ComponentTree;
+  /** Stores to register under the namespace */
+  stores?: ComponentTree;
+  /** Directives to register (prefixed with namespace) */
+  directives?: DirectivesConfig;
+}
+
+/** Plugin function signature */
+export type PluginFn<T = unknown> = (app: typeof UIZY, options?: T) => void;
+
+/** Plugin definition (function or object with install method) */
+export type Plugin<T = unknown> = PluginFn<T> | { install: PluginFn<T> };
+
 /** Complete configuration for the start() method */
 export interface StartConfig {
   /** Layout dimensions and breakpoint settings */
@@ -85,8 +103,91 @@ export interface StartConfig {
   /** Inject global shortcuts to window ($ and $emit) */
   globals?: boolean;
 
+  /** Plugins to install */
+  plugins?: Array<Plugin | [Plugin, unknown]>;
+
   /** Callback to run when DOM is ready */
   onReady?: () => void;
+}
+
+/* ------------------------------------------------------------------ */
+/* Plugin System                                                       */
+/* ------------------------------------------------------------------ */
+
+/** Set of installed plugins to prevent duplicates */
+const installedPlugins = new WeakSet<object>();
+
+/**
+ * Installs a plugin by calling its function or install method.
+ */
+function installPlugin(plugin: Plugin, options?: unknown): void {
+  // Use the function/object itself as the key for deduplication
+  const pluginKey = typeof plugin === "function" ? plugin : plugin;
+
+  if (installedPlugins.has(pluginKey)) {
+    console.warn("[uizy] Plugin already installed, skipping");
+    return;
+  }
+
+  installedPlugins.add(pluginKey);
+
+  if (typeof plugin === "function") {
+    plugin(UIZY, options);
+  } else if (plugin && typeof plugin.install === "function") {
+    plugin.install(UIZY, options);
+  }
+}
+
+/**
+ * Registers a namespaced plugin with components, actions, stores, and directives.
+ *
+ * @param namespace - The namespace prefix for all exports
+ * @param exports - The plugin exports (components, actions, stores, directives)
+ *
+ * @example
+ * ```ts
+ * // In a plugin
+ * function MyPlugin(app) {
+ *   app.plugin("mylib", {
+ *     components: {
+ *       button: () => "px-4 py-2 rounded",
+ *     },
+ *     directives: {
+ *       hover: (el, { value }) => { ... },
+ *     },
+ *   });
+ * }
+ *
+ * // Usage after installing plugin:
+ * // Components: uizy.use("mylib.button") or <ui-box use="mylib.button">
+ * // Directives: <ui-box :mylib-hover="value">
+ * ```
+ */
+function registerPlugin(namespace: string, exports: PluginExports): void {
+  const { components, actions, stores, directives } = exports;
+
+  // Register components under namespace
+  if (components) {
+    Components.add({ [namespace]: components });
+  }
+
+  // Register actions under namespace
+  if (actions) {
+    Actions.add({ [namespace]: actions });
+  }
+
+  // Register stores under namespace
+  if (stores) {
+    Stores.add({ [namespace]: stores });
+  }
+
+  // Register directives with namespace prefix (namespace-directiveName)
+  if (directives) {
+    for (const [name, handler] of Object.entries(directives)) {
+      const prefixedName = `${namespace}-${name}`;
+      Directives.add(prefixedName, handler as DirectiveHandler);
+    }
+  }
 }
 
 /* ------------------------------------------------------------------ */
@@ -226,8 +327,23 @@ function start(config: StartConfig = {}): void {
     stores,
     directives,
     globals,
+    plugins,
     onReady,
   } = config;
+
+  // 0. Install plugins first (they may add components, actions, stores, directives)
+  if (plugins && plugins.length > 0) {
+    for (const pluginEntry of plugins) {
+      if (Array.isArray(pluginEntry)) {
+        // [Plugin, options] format
+        const [plugin, options] = pluginEntry;
+        installPlugin(plugin, options);
+      } else {
+        // Plugin only (no options)
+        installPlugin(pluginEntry);
+      }
+    }
+  }
 
   // 1. Configure layout
   if (layoutConfig) {
@@ -316,6 +432,7 @@ function start(config: StartConfig = {}): void {
  * - `$sub()` - Subscribe to store (immediate + changes)
  * - `$on()` - Listen to store (changes only)
  * - `directive()` - Register a custom directive
+ * - `plugin()` - Register a namespaced plugin
  */
 const UIZY = {
   /** Unified configuration method */
@@ -389,6 +506,9 @@ const UIZY = {
 
   /** Directives registry */
   directives: Directives,
+
+  /** Register a namespaced plugin */
+  plugin: registerPlugin,
 } as const;
 
 /* ------------------------------------------------------------------ */
@@ -414,3 +534,6 @@ export type {
   DirectiveHandler,
   DirectiveContext,
 } from "./components.ts";
+
+// Note: Plugin types (PluginExports, PluginFn, Plugin, StartConfig, ThemeConfig, DirectivesConfig)
+// are already exported via their interface/type definitions above
