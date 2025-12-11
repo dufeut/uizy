@@ -10,6 +10,6 @@ import "./spacing.scss";
 import "./text.scss";
 
 // Web Component
-import engine from "./engine";
+import engine from "./engine/index.ts";
 
 export default engine;

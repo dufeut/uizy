@@ -16,5 +16,11 @@ export default defineConfig({
       fileName: "index",
       formats: ["es"],
     },
+    cssCodeSplit: false,
+    rollupOptions: {
+      output: {
+        assetFileNames: "[name][extname]",
+      },
+    },
   },
 });

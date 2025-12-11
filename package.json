@@ -4,15 +4,19 @@
   "description": "Small footprint, big impact – the micro CSS framework for UIs.",
   "license": "BSD-3-Clause",
   "author": "dufeut",
-  "main": "dist/index.css",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
   "style": "dist/index.css",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./index.css": {
       "style": "./dist/index.css",
       "import": "./dist/index.css",
-      "require": "./dist/index.css",
       "default": "./dist/index.css"
     },
     "./dist/*": "./dist/*"
