@@ -1,15 +1,35 @@
-# `create-preact`
+# Uizy Documentation
 
-<h2 align="center">
-  <img height="256" width="256" src="./src/assets/preact.svg">
-</h2>
+This is the documentation site for [Uizy](https://github.com/dufeut/uizy), built using [Docusaurus](https://docusaurus.io/).
 
-<h3 align="center">Get started using Preact and Vite!</h3>
+## Installation
 
-## Getting Started
+```bash
+pnpm install
+```
 
--   `pnpm dev` - Starts a dev server at http://localhost:5173/
+## Local Development
 
--   `pnpm build` - Builds for production, emitting to `dist/`. Prerenders all found routes in app to static HTML
+```bash
+pnpm dev
+```
 
--   `pnpm preview` - Starts a server at http://localhost:4173/ to test production build locally
+This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+
+## Build
+
+```bash
+pnpm build
+```
+
+This command generates static content into the `build` directory and can be served using any static contents hosting service.
+
+## Deployment
+
+The documentation is deployed to GitHub Pages at `https://dufeut.github.io/uizy/`.
+
+```bash
+pnpm deploy
+```
+
+This command builds the website and pushes to the `gh-pages` branch.

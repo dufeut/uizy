@@ -1,0 +1,180 @@
+# Spacing Utilities
+
+Add space around and inside elements! Spacing is one of the most important parts of good design - it makes everything easier to read.
+
+## Padding vs Margin
+
+There are two types of spacing:
+
+| Type | Description |
+|------|-------------|
+| **Padding** | Space *inside* the element, between the border and content |
+| **Margin** | Space *outside* the element, pushing other elements away |
+
+```html
+<!-- Padding (inside) -->
+<div class="pa-4" style="background: lightblue;">
+  I have padding inside me!
+</div>
+
+<!-- Margin (outside) -->
+<div class="ma-4" style="background: lightgreen;">
+  I have margin pushing others away!
+</div>
+```
+
+## The Spacing Scale
+
+Spacing uses a simple number system. Each number = 4 pixels:
+
+| Class | Size |
+|-------|------|
+| `*-0` | 0px |
+| `*-1` | 4px |
+| `*-2` | 8px |
+| `*-3` | 12px |
+| `*-4` | 16px |
+| `*-6` | 24px |
+| `*-8` | 32px |
+| `*-12` | 48px |
+| `*-16` | 64px |
+| `*-24` | 96px |
+
+:::tip Easy math
+Multiply the number by 4 to get pixels!
+`pa-4` = 4 x 4 = 16px
+:::
+
+## Padding Classes
+
+Add space inside elements:
+
+| Class | Description |
+|-------|-------------|
+| `pa-*` | Padding All sides |
+| `pt-*` | Padding Top |
+| `pb-*` | Padding Bottom |
+| `pl-*` | Padding Left |
+| `pr-*` | Padding Right |
+| `px-*` | Padding X-axis (left + right) |
+| `py-*` | Padding Y-axis (top + bottom) |
+
+```html
+<!-- All sides -->
+<div class="pa-4">Padding everywhere!</div>
+
+<!-- Just top and bottom -->
+<div class="py-4">Padding top & bottom only</div>
+
+<!-- Just left and right -->
+<div class="px-4">Padding left & right only</div>
+```
+
+## Margin Classes
+
+Add space outside elements:
+
+| Class | Description |
+|-------|-------------|
+| `ma-*` | Margin All sides |
+| `mt-*` | Margin Top |
+| `mb-*` | Margin Bottom |
+| `ml-*` | Margin Left |
+| `mr-*` | Margin Right |
+| `mx-*` | Margin X-axis (left + right) |
+| `my-*` | Margin Y-axis (top + bottom) |
+
+```html
+<div>
+  <div class="mb-4">I have margin bottom</div>
+  <div class="mt-4">I have margin top</div>
+</div>
+```
+
+### Center with Auto Margin
+
+Use `mx-auto` to center block elements:
+
+```html
+<div class="mx-auto" style="width: 200px;">
+  I'm centered!
+</div>
+```
+
+## Gap (for Flexbox/Grid)
+
+The easiest way to add space between items in a flex or grid container:
+
+| Class | Description |
+|-------|-------------|
+| `gx-0` | No column gap (0px) |
+| `gx-1` | 4px column gap |
+| `gx-2` | 8px column gap |
+| `gx-4` | 16px column gap |
+| `gy-*` | Row gap (for wrapped rows) |
+
+```html
+<div class="d-flex gx-4">
+  <div>Item 1</div>
+  <div>Item 2</div>
+  <div>Item 3</div>
+</div>
+```
+
+:::tip Why use gap?
+It's cleaner than margin because you don't have to worry about extra space on the first/last items!
+:::
+
+## Common Patterns
+
+### Card with Good Spacing
+
+```html
+<div class="pa-4 br-2 sb-2">
+  <h3 class="mb-2">Card Title</h3>
+  <p class="mb-4">Card description with some text.</p>
+  <button class="px-4 py-2">Click Me</button>
+</div>
+```
+
+### Button Group
+
+```html
+<div class="d-flex gx-2">
+  <button class="px-4 py-2">Save</button>
+  <button class="px-4 py-2">Cancel</button>
+</div>
+```
+
+### Stacked List
+
+```html
+<div>
+  <div class="pa-3 mb-2">Item 1</div>
+  <div class="pa-3 mb-2">Item 2</div>
+  <div class="pa-3">Item 3</div>
+</div>
+```
+
+## Cheat Sheet
+
+### Sides
+| Code | Meaning |
+|------|---------|
+| `a` | All |
+| `t` | Top |
+| `b` | Bottom |
+| `l` | Left |
+| `r` | Right |
+| `x` | Left + Right |
+| `y` | Top + Bottom |
+
+### Values (x 4px)
+| Value | Size |
+|-------|------|
+| `0` | 0px |
+| `1` | 4px |
+| `2` | 8px |
+| `4` | 16px |
+| `8` | 32px |
+| `auto` | auto |

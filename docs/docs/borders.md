@@ -1,0 +1,141 @@
+# Borders
+
+Add borders and rounded corners to make your elements look polished!
+
+## Border Radius (Rounded Corners)
+
+Use `br-*` (Border Radius) to round corners:
+
+| Class | Description |
+|-------|-------------|
+| `br-0` | No rounding (sharp corners) |
+| `br-1` | Slightly rounded (2px) |
+| `br-2` | Medium rounded (4px) |
+| `br-3` | More rounded (8px) |
+| `br-4` | Very rounded (16px) |
+| `br-100p` | Circle (for squares) |
+| `br-pill` | Pill shape (very round ends) |
+
+```html
+<div class="br-0">Sharp corners</div>
+<div class="br-2">Medium rounded</div>
+<div class="br-4">Very rounded</div>
+<div class="br-pill">Pill shape</div>
+```
+
+### Circle Avatar
+
+Use `br-100p` with a square element:
+
+```html
+<div class="br-100p" style="width: 80px; height: 80px;">
+  JD
+</div>
+```
+
+## Border Width
+
+Use `bw-*` (Border Width) classes:
+
+| Class | Description |
+|-------|-------------|
+| `bw-0` | No border |
+| `bw-1` | Thin border (2px) |
+| `bw-2` | Medium border (4px) |
+| `bw-3` | Thick border (8px) |
+| `bw-4` | Very thick (16px) |
+
+```html
+<div class="bd-a bw-1">Thin border</div>
+<div class="bd-a bw-2">Medium border</div>
+<div class="bd-a bw-3">Thick border</div>
+```
+
+:::info Note
+You need to add `bd-a` (border-all) or a side-specific class for the border to show. Width alone isn't enough!
+:::
+
+## Border Sides
+
+Add borders to specific sides:
+
+| Class | Description |
+|-------|-------------|
+| `bd-a` | Border All sides |
+| `bd-t` | Border Top only |
+| `bd-b` | Border Bottom only |
+| `bd-l` | Border Left only |
+| `bd-r` | Border Right only |
+
+```html
+<div class="bd-t bw-2">Top border only</div>
+<div class="bd-b bw-2">Bottom border only</div>
+<div class="bd-l bw-2">Left border only</div>
+```
+
+## Border Styles
+
+Change the border line style:
+
+| Class | Description |
+|-------|-------------|
+| `bs-solid` | Solid line (default) |
+| `bs-dashed` | Dashed line (- - -) |
+| `bs-dotted` | Dotted line (. . .) |
+
+```html
+<div class="bd-a bw-2 bs-solid">Solid border</div>
+<div class="bd-a bw-2 bs-dashed">Dashed border</div>
+<div class="bd-a bw-2 bs-dotted">Dotted border</div>
+```
+
+## Common Patterns
+
+### Card with Border
+
+```html
+<div class="pa-4 br-2 bd-a bw-1">
+  <h3>Card Title</h3>
+  <p>Card content goes here</p>
+</div>
+```
+
+### Accent Border
+
+Left border for emphasis:
+
+```html
+<div class="pa-4 bd-l bw-3">
+  <strong>Important Note</strong>
+  <p>This content is highlighted!</p>
+</div>
+```
+
+### Pill Button
+
+```html
+<button class="px-4 py-2 br-pill bd-a bw-1">
+  Click Me
+</button>
+```
+
+### Divider Line
+
+Use border-bottom as a separator:
+
+```html
+<div>
+  <p class="pb-2 bd-b bw-1">Section 1</p>
+  <p class="py-2 bd-b bw-1">Section 2</p>
+  <p class="pt-2">Section 3</p>
+</div>
+```
+
+## Quick Reference
+
+| Category | Classes |
+|----------|---------|
+| Radius (br-*) | `0, 1, 2, 3, 4, 100p, pill` |
+| Width (bw-*) | `0, 1, 2, 3, 4, 5` |
+| Sides | `bd-a, bd-t, bd-b, bd-l, bd-r` |
+| Style (bs-*) | `solid, dashed, dotted` |

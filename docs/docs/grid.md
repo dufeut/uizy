@@ -1,0 +1,132 @@
+# Grid System
+
+Create beautiful layouts with rows and columns! The grid has 12 columns, making it easy to divide your page into sections.
+
+## How it Works
+
+Think of the page as divided into **12 equal parts**. You can make elements take up any number of those parts!
+
+:::tip Remember
+Column numbers must add up to 12 (or less) for a single row!
+:::
+
+## Basic Columns
+
+Use `.row` for the container and `.col-*` for columns:
+
+| Class | Description |
+|-------|-------------|
+| `row` | Container for columns (uses flexbox) |
+| `col-1` to `col-12` | Column width (1-12 parts) |
+| `col-6` | Half width (6/12 = 50%) |
+| `col-4` | One third (4/12 = 33.33%) |
+| `col-3` | One quarter (3/12 = 25%) |
+
+### Two Equal Columns
+
+Each column takes half the width (6 + 6 = 12):
+
+```html
+<div class="row gx-2">
+  <div class="col-6">Left Half</div>
+  <div class="col-6">Right Half</div>
+</div>
+```
+
+### Three Equal Columns
+
+Each column takes one third (4 + 4 + 4 = 12):
+
+```html
+<div class="row gx-2">
+  <div class="col-4">Column 1</div>
+  <div class="col-4">Column 2</div>
+  <div class="col-4">Column 3</div>
+</div>
+```
+
+### Mixed Widths
+
+Sidebar + Main content layout (4 + 8 = 12):
+
+```html
+<div class="row gx-2">
+  <div class="col-4">Sidebar</div>
+  <div class="col-8">Main Content</div>
+</div>
+```
+
+## Responsive Grid
+
+Make your grid adapt to different screen sizes with breakpoint prefixes!
+
+| Class | Description |
+|-------|-------------|
+| `col-sm-*` | Small screens (576px+) |
+| `col-md-*` | Medium screens (768px+) |
+| `col-lg-*` | Large screens (992px+) |
+| `col-xl-*` | Extra large screens (1200px+) |
+
+### Responsive Cards
+
+Stack on mobile, side-by-side on tablet, three columns on desktop:
+
+```html
+<div class="row gx-2 gy-2">
+  <div class="col-12 col-md-6 col-lg-4">Card 1</div>
+  <div class="col-12 col-md-6 col-lg-4">Card 2</div>
+  <div class="col-12 col-md-12 col-lg-4">Card 3</div>
+</div>
+```
+
+:::info Mobile-First
+Start with `col-12` (full width), then add larger breakpoints. This ensures your site looks good on phones first!
+:::
+
+## Grid Gaps
+
+Control the space between columns with `gx-*` (column-gap) and `gy-*` (row-gap) classes:
+
+| Class | Description |
+|-------|-------------|
+| `gx-0` | No column gap |
+| `gx-1` | 4px column gap |
+| `gx-2` | 8px column gap |
+| `gx-4` | 16px column gap |
+| `gy-*` | Row gap (for wrapped rows) |
+
+```html
+<!-- No gap -->
+<div class="row gx-0">...</div>
+
+<!-- Large gap -->
+<div class="row gx-4">...</div>
+```
+
+## Real-World Example
+
+Here's a complete page layout using the grid system:
+
+```html
+<div class="row gx-4 gy-2">
+  <!-- Header (full width) -->
+  <div class="col-12">
+    <header>My Blog</header>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="col-12 col-md-4">
+    <aside>Categories, Tags...</aside>
+  </div>
+
+  <!-- Main Content -->
+  <div class="col-12 col-md-8">
+    <main>Blog posts go here!</main>
+  </div>
+
+  <!-- Footer (full width) -->
+  <div class="col-12">
+    <footer>© 2024</footer>
+  </div>
+</div>
+```

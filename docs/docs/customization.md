@@ -1,0 +1,281 @@
+# Customization
+
+Make Uizy CSS your own! Customize colors, spacing, fonts, and more using CSS variables.
+
+## How CSS Variables Work
+
+Uizy CSS uses **CSS Custom Properties** (also called CSS variables) that you can override to customize the framework without touching the source code.
+
+### The Pattern
+
+```css
+--variable-name: value;
+```
+
+Override these in your own CSS file to customize it!
+
+:::tip Best Practice
+Create a separate CSS file (like `custom.css`) for your overrides and load it *after* Uizy CSS.
+:::
+
+## Font Family
+
+Change the default font for your entire site:
+
+| Variable | Description |
+|----------|-------------|
+| `--font-family` | Base font for all text |
+
+```css
+:root {
+  --font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+/* Or use a Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+:root {
+  --font-family: "Poppins", sans-serif;
+}
+```
+
+## Text Sizes
+
+Customize the typography scale used by `ts-*` classes:
+
+| Variable | Description |
+|----------|-------------|
+| `--ts-1` | Largest text (default: 3rem / 48px) |
+| `--ts-2` | Very large (default: 2.25rem / 36px) |
+| `--ts-3` | Large (default: 1.5rem / 24px) |
+| `--ts-4` | Medium-large (default: 1.25rem / 20px) |
+| `--ts-5` | Normal (default: 1rem / 16px) |
+| `--ts-6` | Small (default: 0.875rem / 14px) |
+
+```css
+:root {
+  --ts-1: 4rem;     /* Make h1 even bigger */
+  --ts-2: 3rem;
+  --ts-3: 2rem;
+  --ts-4: 1.5rem;
+  --ts-5: 1rem;
+  --ts-6: 0.75rem;  /* Smaller caption text */
+}
+```
+
+## Spacing
+
+Spacing is based on a 4px scale. The `--spacer` variable controls the base unit.
+
+| Variable | Description |
+|----------|-------------|
+| `--spacer` | Base spacing unit (default: 4px) |
+| `--sp-0` to `--sp-24` | Generated spacing values (0 to 24 x base) |
+
+```css
+:root {
+  --spacer: 4px;   /* Default base unit */
+
+  /* Generated automatically: */
+  --sp-0: 0px;     /* 0 x 4 */
+  --sp-1: 4px;     /* 1 x 4 */
+  --sp-2: 8px;     /* 2 x 4 */
+  --sp-4: 16px;    /* 4 x 4 */
+  --sp-8: 32px;    /* 8 x 4 */
+}
+
+/* Change base to 8px for larger spacing */
+:root {
+  --spacer: 8px;
+}
+```
+
+**Formula:** `--sp-N = N x --spacer`
+
+So `pa-4` means padding of `var(--sp-4)` = 16px
+
+:::info Note
+The spacing values (--sp-*) are generated at build time from the base unit. To change the entire scale, you'd need to rebuild Uizy CSS with a different `$spacer-base` value.
+:::
+
+## Border Radius
+
+Customize how rounded your corners are:
+
+| Variable | Description |
+|----------|-------------|
+| `--br-0` | No rounding (default: 0) |
+| `--br-1` | Slight rounding (default: 0.125rem / 2px) |
+| `--br-2` | Medium rounding (default: 0.25rem / 4px) |
+| `--br-3` | More rounding (default: 0.5rem / 8px) |
+| `--br-4` | Heavy rounding (default: 1rem / 16px) |
+| `--br-100p` | Circle (default: 100%) |
+| `--br-pill` | Pill shape (default: 9999px) |
+
+```css
+:root {
+  /* Sharper corners */
+  --br-1: 1px;
+  --br-2: 2px;
+  --br-3: 4px;
+  --br-4: 6px;
+}
+
+/* Or rounder corners */
+:root {
+  --br-1: 4px;
+  --br-2: 8px;
+  --br-3: 12px;
+  --br-4: 20px;
+}
+```
+
+## Border Width
+
+Customize border thickness:
+
+| Variable | Description |
+|----------|-------------|
+| `--bw-0` | No border (default: 0) |
+| `--bw-1` | Thin (default: 0.125rem / 2px) |
+| `--bw-2` | Medium (default: 0.25rem / 4px) |
+| `--bw-3` | Thick (default: 0.4rem / 6px) |
+| `--bw-4` | Very thick (default: 0.525rem / 8px) |
+| `--bw-5` | Extra thick (default: 0.65rem / 10px) |
+| `--border-color` | Default border color (default: currentColor) |
+
+```css
+:root {
+  /* Thinner borders */
+  --bw-1: 1px;
+  --bw-2: 2px;
+  --bw-3: 3px;
+
+  /* Default border color */
+  --border-color: #e5e7eb;
+}
+```
+
+## Shadows
+
+Customize shadow appearance:
+
+| Variable | Description |
+|----------|-------------|
+| `--shadow-color` | RGB values for shadow (default: 0, 0, 0) |
+| `--shadow-opacity-1` | First shadow layer opacity (default: 0.2) |
+| `--shadow-opacity-2` | Second shadow layer opacity (default: 0.14) |
+| `--shadow-opacity-3` | Third shadow layer opacity (default: 0.12) |
+
+```css
+:root {
+  /* Default black shadow */
+  --shadow-color: 0, 0, 0;
+}
+
+/* Purple shadows */
+.purple-shadow {
+  --shadow-color: 99, 102, 241;
+}
+
+/* Blue shadows */
+.blue-shadow {
+  --shadow-color: 59, 130, 246;
+}
+```
+
+### Shadow Intensity
+
+Make shadows lighter or darker:
+
+```css
+:root {
+  /* Lighter shadows */
+  --shadow-opacity-1: 0.1;
+  --shadow-opacity-2: 0.07;
+  --shadow-opacity-3: 0.06;
+}
+
+/* Or darker shadows */
+:root {
+  --shadow-opacity-1: 0.3;
+  --shadow-opacity-2: 0.2;
+  --shadow-opacity-3: 0.15;
+}
+```
+
+## Gap (Flexbox/Grid)
+
+Customize the gap scale for flex and grid layouts:
+
+| Variable | Description |
+|----------|-------------|
+| `--gap` | Base gap unit (default: 4px) |
+| `--gap-0` to `--gap-16` | Generated gap values (0 to 16 x base) |
+
+```css
+:root {
+  --gap: 4px;      /* Base unit */
+
+  /* Generated automatically: */
+  --gap-0: 0px;    /* 0 x 4 */
+  --gap-1: 4px;    /* 1 x 4 */
+  --gap-2: 8px;    /* 2 x 4 */
+  --gap-4: 16px;   /* 4 x 4 */
+}
+```
+
+`gx-4` uses `var(--gap-4)` for column-gap (16px by default)
+
+## Complete Example
+
+Here's a complete customization file you can use as a starting point:
+
+```css
+/* custom.css - Load this AFTER Uizy CSS */
+
+:root {
+  /* Typography */
+  --font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --ts-1: 3.5rem;
+  --ts-2: 2.5rem;
+  --ts-3: 1.75rem;
+  --ts-4: 1.25rem;
+  --ts-5: 1rem;
+  --ts-6: 0.875rem;
+
+  /* Border Radius - More rounded */
+  --br-1: 4px;
+  --br-2: 8px;
+  --br-3: 12px;
+  --br-4: 16px;
+
+  /* Border Width - Thinner */
+  --bw-1: 1px;
+  --bw-2: 2px;
+  --bw-3: 3px;
+  --border-color: #e2e8f0;
+
+  /* Shadows - Slightly lighter */
+  --shadow-opacity-1: 0.15;
+  --shadow-opacity-2: 0.1;
+  --shadow-opacity-3: 0.08;
+}
+```
+
+**Load order:**
+1. Uizy CSS (base framework)
+2. Your custom.css (overrides)
+
+## All CSS Variables
+
+| Category | Variables |
+|----------|-----------|
+| Typography | `--font-family`, `--ts-1` to `--ts-6` |
+| Spacing | `--spacer`, `--sp-0` to `--sp-24` |
+| Borders | `--br-0` to `--br-pill`, `--bw-0` to `--bw-5`, `--border-color` |
+| Shadows | `--shadow-color`, `--shadow-opacity-*` |
+
+:::tip Pro tip
+You can scope CSS variables to specific elements! Set `--shadow-color` on a `.card` class to give all cards colored shadows.
+:::

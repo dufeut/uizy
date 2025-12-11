@@ -1,6 +1,11 @@
 name: Deploy Docs
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/docs.yml'
   workflow_dispatch:
 
 permissions:
@@ -33,7 +38,6 @@ jobs:
       - name: Build CSS framework
         run: |
           pnpm install --frozen-lockfile
-          mkdir -p docs/public/css
           pnpm build
 
       - name: Build docs
@@ -41,13 +45,12 @@ jobs:
         run: |
           pnpm install --frozen-lockfile
           pnpm build
-          cp dist/404/index.html dist/404.html
 
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: docs/dist
+          path: docs/build
 
   deploy:
     environment:

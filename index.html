@@ -9,69 +9,83 @@
 
 <body>
 
-    <uizy-app>
+    <uizy-app id="app">
         <!-- System -->
         <uizy-system-bar class="bd-a">
             System bar
         </uizy-system-bar>
 
         <!-- Header -->
-        <uizy-header class="bd-a" style="background-color: chartreuse;">
+        <uizy-header shadow="12" style="background-color: chartreuse;">
             <span></span>
             Header
             <span></span>
         </uizy-header>
 
-        <!-- SideBars -->
-        <uizy-drawer class="bd-a ta-r" open shadow="6" clip-top clip-bottom>
+        <!-- SideBars (Left) -->
+        <uizy-drawer class="ta-r" open shadow="6" clip-top clip-bottom>
             Left
         </uizy-drawer>
-        <uizy-drawer class="bd-a ta-r" open mini shadow="6" clip-system clip-bottom>
+        <uizy-drawer class="ta-r" open mini shadow="6" clip-system clip-bottom>
             L-Mini
         </uizy-drawer>
-        <uizy-drawer class="bd-a" right open shadow="6" clip-top clip-bottom>
+        <!-- SideBars (Right) -->
+        <uizy-drawer right open shadow="6" clip-top clip-bottom>
             Right
         </uizy-drawer>
-        <uizy-drawer class="bd-a" right open mini shadow="6" clip-system clip-bottom>
+        <uizy-drawer right open mini shadow="6" clip-system clip-bottom>
             R-Mini
         </uizy-drawer>
 
-        <!-- Main Content -->
-        <uizy-overlay clip-top clip-bottom clip-left clip-right></uizy-overlay>
+        <!-- Overlay -->
+        <uizy-overlay clip-top clip-bottom></uizy-overlay>
 
+        <!-- Main Content -->
         <uizy-main clip-top clip-bottom clip-left clip-right>
             <p>Main content here</p>
         </uizy-main>
 
         <!-- Footer -->
-        <uizy-footer class="bd-a">
+        <uizy-footer shadow="12">
             Footer
         </uizy-footer>
     </uizy-app>
 
 
-    <script type="module" src="/src/__init__.js"></script>
-    <script>
-        const el = document.querySelector("uizy-app")
-        setTimeout(() => {
-            el.action("system")
-            el.action("header")
-            el.action("main")
-            // el.action("overlay", ({ set }) => set(true, true))
-            el.action("left.mini")
-            el.action("right")
-            el.action("right.mini")
-            el.action("footer")
-        }, 1000);
+    <script type="module">
+        import uizy from "/src/__init__.js"
+        uizy.layout({
+            layout: { system: 24 }, breakpoint: {
+                name: "sm",
+                left: true,
+                right: true,
+                top: true,
+                bottom: true,
+                leftMini: true,
+                rightMini: true,
+            }
+        });
+        uizy.init(() => {
+            const el = uizy.get("app")
+            if (!el) return;
 
-        setInterval(() => {
-            el.action("left.mini", ({ set }) => set())
-            el.action("right.mini", ({ set }) => set())
-        }, 1000);
+            // el.action("system");
+            // el.action("header");
+            // el.action("main");
+            // el.action("footer");
+
+            el.action("overlay", ({ set }) => set(false));
+
+            setInterval(() => {
+                el.action("left.mini", ({ set }) => set());
+                el.action("right.mini", ({ set }) => set());
+                el.action("left", ({ set }) => set());
+                el.action("right", ({ set }) => set());
+                el.action("overlay", ({ set }) => set(null));
+            }, 1000);
+        })
     </script>
-    <style>
 
-    </style>
 
 </body>
 

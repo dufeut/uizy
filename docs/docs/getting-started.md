@@ -1,0 +1,97 @@
+# Getting Started
+
+Let's get Uizy set up in your project! It only takes a minute.
+
+## Installation
+
+Choose the method that works best for you:
+
+### Option 1: CDN (Easiest!)
+
+Just add this line to your HTML file's `<head>`:
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/@dufeut/uizy/dist/index.css">
+```
+
+### Option 2: NPM
+
+If you're using a build tool like Vite or Webpack:
+
+```bash
+npm install @dufeut/uizy
+```
+
+Then import it in your JavaScript/TypeScript:
+
+```javascript
+import '@dufeut/uizy';
+```
+
+## How Classes Work
+
+Uizy uses short class names that tell you exactly what they do. Here's the pattern:
+
+```
+[property]-[value]
+```
+
+:::tip Example
+`ta-c` means **T**ext **A**lign - **C**enter
+:::
+
+### Common Abbreviations
+
+| Class | Description |
+|-------|-------------|
+| `pa-*` | Padding All sides |
+| `ma-*` | Margin All sides |
+| `ta-*` | Text Align |
+| `d-*` | Display |
+| `br-*` | Border Radius |
+| `ts-*` | Text Size |
+
+## Your First Uizy Code
+
+Let's create a simple card using only utility classes!
+
+```html
+<div class="pa-4 br-2 sb-4">
+  <h2 class="ts-4 ta-c">Hello World!</h2>
+  <p class="mt-2 ta-c">This card uses only utility classes.</p>
+</div>
+```
+
+:::info What each class does
+- `pa-4` - Padding of 16px on all sides
+- `br-2` - Border radius (rounded corners)
+- `sb-4` - A nice drop shadow (bottom)
+- `ts-4` - Text size 4 (1.25rem)
+- `ta-c` - Text align center
+- `mt-2` - Margin top of 8px
+:::
+
+## Responsive Classes
+
+Make your site look great on all devices! Add a breakpoint prefix to any class:
+
+| Class | Description |
+|-------|-------------|
+| `d-none` | Hidden on all screens |
+| `d-sm-block` | Visible on small screens and up (576px+) |
+| `d-md-flex` | Flex on medium screens and up (768px+) |
+| `d-lg-grid` | Grid on large screens and up (992px+) |
+
+```html
+<div class="d-none d-md-block">
+  I only show on tablets and larger!
+</div>
+```
+
+## You're Ready!
+
+That's all you need to get started! Explore the sidebar to learn about all the utility classes available.
+
+**Next Steps:**
+- [Display Utilities](./display) - Learn how to show/hide elements
+- [Spacing](./spacing) - Master padding and margins

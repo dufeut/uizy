@@ -1,0 +1,137 @@
+# Typography
+
+Make your text look awesome! Change sizes, alignment, and add styles like bold and italic.
+
+## Text Sizes
+
+Use `ts-*` (Text Size) classes to change font size:
+
+| Class | Description |
+|-------|-------------|
+| `ts-1` | Huge (Title) - ideal for main page titles or hero sections |
+| `ts-2` | Big (Article) - perfect for article headings |
+| `ts-3` | Medium-large (Section) - suitable for subsection headings |
+| `ts-4` | Medium (Topic) - good for smaller section headings |
+| `ts-5` | Normal (Detail) - for body content and paragraphs |
+| `ts-6` | Small (Unit) - ideal for captions, labels, or fine print |
+
+```html
+<p class="ts-1">Size 1 - Huge!</p>
+<p class="ts-2">Size 2 - Big</p>
+<p class="ts-3">Size 3 - Medium-large</p>
+<p class="ts-4">Size 4 - Medium</p>
+<p class="ts-5">Size 5 - Normal</p>
+<p class="ts-6">Size 6 - Small</p>
+```
+
+## Text Alignment
+
+Use `ta-*` (Text Align) classes:
+
+| Class | Description |
+|-------|-------------|
+| `ta-l` | Text Align Left |
+| `ta-c` | Text Align Center |
+| `ta-r` | Text Align Right |
+
+```html
+<p class="ta-l">Left aligned text</p>
+<p class="ta-c">Center aligned text</p>
+<p class="ta-r">Right aligned text</p>
+```
+
+## Text Decoration
+
+Add style to your text with `td-*` (Text Decoration) classes:
+
+| Class | Description |
+|-------|-------------|
+| `td-b` | Bold text |
+| `td-i` | Italic text |
+| `td-u` | Underlined text |
+| `td-s` | Strikethrough text |
+
+```html
+<p class="td-b">Bold text</p>
+<p class="td-i">Italic text</p>
+<p class="td-u">Underlined text</p>
+<p class="td-s">Strikethrough text</p>
+```
+
+### Combine Decorations
+
+You can use multiple at once!
+
+```html
+<p class="td-b td-i">Bold AND italic!</p>
+<p class="td-b td-u">Bold AND underlined!</p>
+```
+
+## Text Transform
+
+Change letter case with `tt-*` (Text Transform) classes:
+
+| Class | Description |
+|-------|-------------|
+| `tt-u` | UPPERCASE - all caps |
+| `tt-l` | lowercase - all small |
+| `tt-t` | Title Case - capitalize first letters |
+
+```html
+<p class="tt-u">this becomes uppercase</p>
+<p class="tt-l">THIS BECOMES LOWERCASE</p>
+<p class="tt-t">this becomes title case</p>
+```
+
+## Text Truncate
+
+When text is too long, show "..." instead of wrapping to the next line:
+
+| Class | Description |
+|-------|-------------|
+| `tt-c` | Truncate text with ellipsis (...) |
+
+```html
+<div style="width: 200px;">
+  <p class="tt-c">
+    This is a very long text that will be truncated
+  </p>
+</div>
+```
+
+:::tip Note
+The container needs a fixed width for truncation to work!
+:::
+
+## Common Patterns
+
+### Page Title
+
+```html
+<h1 class="ts-1 ta-c td-b">Welcome to My Site!</h1>
+<p class="ts-5 ta-c">A subtitle goes here</p>
+```
+
+### Card Title + Description
+
+```html
+<div class="pa-4">
+  <h3 class="ts-4 td-b mb-1">Card Title</h3>
+  <p class="ts-6">Some description text here...</p>
+</div>
+```
+
+### Badge / Label
+
+```html
+<span class="ts-6 tt-u td-b px-2 py-1">New</span>
+```
+
+## Quick Reference
+
+| Category | Prefix | Values | Notes |
+|----------|--------|--------|-------|
+| Size | `ts-*` | 1 - 6 | 1 = biggest, 6 = smallest |
+| Align | `ta-*` | l, c, r | Left, Center, Right |
+| Decorations | `td-*` | b, i, u, s | Bold, Italic, Underline, Strike |
+| Transform | `tt-*` | u, l, t, c | Upper, Lower, Title, Clip |

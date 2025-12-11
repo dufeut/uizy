@@ -1,0 +1,95 @@
+/**
+ * CSS files with the .module.css suffix will be treated as CSS modules
+ * and scoped locally.
+ */
+
+.heroBanner {
+  padding: 4rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 996px) {
+  .heroBanner {
+    padding: 2rem;
+  }
+}
+
+.heroDescription {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.9;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.features {
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+.featureEmoji {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.comparison {
+  padding: 4rem 0;
+  background: var(--ifm-background-surface-color);
+}
+
+.comparisonBox {
+  padding: 1.5rem;
+  border-radius: 8px;
+  background: var(--ifm-background-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: 100%;
+}
+
+.comparisonBox h4 {
+  margin-bottom: 1rem;
+}
+
+.codeBlock {
+  background: var(--ifm-code-background);
+  padding: 1rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  overflow-x: auto;
+  margin: 0;
+}
+
+.quickStart {
+  padding: 4rem 0;
+}
+
+.installOption {
+  padding: 1.5rem;
+  border-radius: 8px;
+  background: var(--ifm-background-surface-color);
+  height: 100%;
+}
+
+.installOption h4 {
+  margin-bottom: 1rem;
+}
+
+@media screen and (max-width: 996px) {
+  .comparison,
+  .quickStart {
+    padding: 2rem 0;
+  }
+
+  .comparisonBox,
+  .installOption {
+    margin-bottom: 1rem;
+  }
+}

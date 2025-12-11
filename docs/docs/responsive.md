@@ -1,0 +1,160 @@
+# Responsive Design
+
+Make your website look great on phones, tablets, and desktops! Responsive design means your site adapts to any screen size.
+
+## How Responsive Classes Work
+
+Add a **breakpoint prefix** to classes to make them apply only at certain screen sizes.
+
+### The Pattern
+
+```
+.[property]-[breakpoint]-[value]
+```
+
+Example: `d-md-flex` = display flex on medium screens and up
+
+### Available Properties & Values
+
+- **d** (display): `none`, `block`, `flex`, `grid`, `inline`, `inline-block`, `inline-flex`
+- **col** (columns): `1` - `12`, `auto`
+
+:::tip Mobile-First
+Start with the smallest screen, then add classes for larger ones. Classes without a prefix apply to ALL screen sizes!
+:::
+
+## Breakpoints
+
+Here are the screen size breakpoints:
+
+| Prefix | Screen Size | Description |
+|--------|-------------|-------------|
+| (no prefix) | All screens | Mobile-first base |
+| `-sm-` | >=576px | Small tablets, large phones |
+| `-md-` | >=768px | Tablets |
+| `-lg-` | >=992px | Laptops, small desktops |
+| `-xl-` | >=1200px | Large desktops |
+| `-xxl-` | >=1400px | Extra large desktops |
+
+## Responsive Display
+
+Show or hide elements at different screen sizes:
+
+### Mobile Menu Button
+
+Only visible on mobile, hidden on tablets and up:
+
+```html
+<!-- Mobile only -->
+<button class="d-block d-md-none">Menu</button>
+
+<!-- Desktop only -->
+<nav class="d-none d-md-flex gx-4">
+  <a href="#">Home</a>
+  <a href="#">About</a>
+</nav>
+```
+
+:::info Tip
+Resize your browser to see responsive elements change!
+:::
+
+## Responsive Grid
+
+Make your columns stack on mobile and spread out on desktop:
+
+### Responsive Cards
+
+Stack on mobile, 2 columns on tablet, 3 on desktop:
+
+```html
+<div class="row gx-4 gy-2">
+  <div class="col-12 col-md-6 col-lg-4">Card 1</div>
+  <div class="col-12 col-md-6 col-lg-4">Card 2</div>
+  <div class="col-12 col-md-12 col-lg-4">Card 3</div>
+</div>
+```
+
+### How it works
+
+- **Mobile (default):** `col-12` = full width (stacked)
+- **Tablet (md):** `col-md-6` = half width (2 columns)
+- **Desktop (lg):** `col-lg-4` = one-third width (3 columns)
+
+## Common Responsive Patterns
+
+### Responsive Header
+
+Logo + hamburger on mobile, full nav on desktop:
+
+```html
+<header class="d-flex dx-sb dy-ce pa-3">
+  <div class="logo">Brand</div>
+
+  <!-- Mobile: hamburger -->
+  <button class="d-block d-lg-none">Menu</button>
+
+  <!-- Desktop: full nav -->
+  <nav class="d-none d-lg-flex gx-4">
+    <a href="#">Home</a>
+    <a href="#">About</a>
+    <a href="#">Services</a>
+    <a href="#">Contact</a>
+  </nav>
+</header>
+```
+
+### Responsive Sidebar Layout
+
+Sidebar becomes top section on mobile:
+
+```html
+<div class="row gx-4 gy-2">
+  <!-- Sidebar (full width on mobile, 1/4 on desktop) -->
+  <aside class="col-12 col-lg-3">
+    Sidebar
+  </aside>
+
+  <!-- Main content (full width on mobile, 3/4 on desktop) -->
+  <main class="col-12 col-lg-9">
+    Main Content
+  </main>
+</div>
+```
+
+### Responsive Image Gallery
+
+1 column mobile, 2 tablet, 4 desktop:
+
+```html
+<div class="row gx-2 gy-2">
+  <div class="col-12 col-sm-6 col-lg-3">Image 1</div>
+  <div class="col-12 col-sm-6 col-lg-3">Image 2</div>
+  <div class="col-12 col-sm-6 col-lg-3">Image 3</div>
+  <div class="col-12 col-sm-6 col-lg-3">Image 4</div>
+</div>
+```
+
+## Testing Responsive Design
+
+### How to test
+
+1. **Browser resize:** Drag your browser window smaller/larger
+2. **DevTools:** Press F12 -> Click the phone/tablet icon
+3. **Real devices:** Test on actual phones and tablets
+
+:::tip Pro tip
+Always design for mobile first! Start with the smallest screen, then add classes for larger screens. This ensures your site works everywhere.
+:::
+
+## Quick Reference
+
+| Class | Description |
+|-------|-------------|
+| `.d-none` | Hidden on all screens |
+| `.d-sm-block` | Visible on 576px+ |
+| `.d-md-flex` | Flex on 768px+ |
+| `.d-lg-grid` | Grid on 992px+ |
+| `.col-sm-6` | Half width on 576px+ |
+| `.col-md-4` | One-third on 768px+ |
+| `.col-lg-3` | One-quarter on 992px+ |

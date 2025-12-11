@@ -1,0 +1,165 @@
+# Extra Utilities
+
+Helpful utilities for cursors, dimensions, overflow, and positioning!
+
+## Cursor & User Events
+
+Change the mouse cursor and control user interactions:
+
+| Class | Description |
+|-------|-------------|
+| `e-p` | Cursor Pointer (hand) - for clickable items |
+| `e-ns` | No Select - prevents text selection |
+| `e-ne` | No Events - disables pointer events |
+
+```html
+<div class="e-p">Click me!</div>
+```
+
+:::tip When to use
+Add `e-p` to any clickable element that isn't already a button or link. This helps users know they can interact with it!
+:::
+
+## Dimensions
+
+Set width and height of elements:
+
+### Width (ew-*)
+
+| Class | Description |
+|-------|-------------|
+| `ew-100p` | Width 100% (full width of parent) |
+| `ew-100v` | Width 100dvw (full viewport width) |
+| `ew-i` | Width inherit (same as parent) |
+
+### Height (eh-*)
+
+| Class | Description |
+|-------|-------------|
+| `eh-100p` | Height 100% (full height of parent) |
+| `eh-100v` | Height 100dvh (full viewport height) |
+| `eh-i` | Height inherit (same as parent) |
+
+```html
+<div class="ew-100p">I take up all the space!</div>
+```
+
+:::info About dvh/dvw
+These are "dynamic viewport" units that work better on mobile phones where the address bar can hide/show!
+:::
+
+## Overflow
+
+Control what happens when content is bigger than its container:
+
+| Class | Description |
+|-------|-------------|
+| `ox-h` | Overflow-X Hidden (horizontal) |
+| `ox-a` | Overflow-X Auto (horizontal scroll) |
+| `oy-h` | Overflow-Y Hidden (vertical) |
+| `oy-a` | Overflow-Y Auto (vertical scroll) |
+
+### Overflow Hidden
+
+Content outside the box is clipped:
+
+```html
+<div class="ox-h oy-h" style="width: 200px; height: 100px;">
+  Very long content that doesn't fit...
+</div>
+```
+
+### Overflow Auto (Scrollable)
+
+Shows scrollbars when content overflows:
+
+```html
+<div class="oy-a" style="height: 100px;">
+  <p>Line 1</p>
+  <p>Line 2</p>
+  <p>Line 3</p>
+  <!-- More lines... -->
+</div>
+```
+
+## Position
+
+Control how elements are positioned on the page:
+
+| Class | Description |
+|-------|-------------|
+| `dp-r` | Position Relative - normal flow, can offset |
+| `dp-a` | Position Absolute - relative to parent |
+| `dp-f` | Position Fixed - relative to viewport |
+| `dp-s` | Position Sticky - sticks when scrolling |
+
+### Relative + Absolute
+
+Common pattern for overlays:
+
+```html
+<div class="dp-r">
+  <img src="photo.jpg" />
+  <span class="dp-a" style="top: 0; right: 0;">
+    Badge
+  </span>
+</div>
+```
+
+:::info How it works
+Set the parent to `dp-r`, then the child with `dp-a` will position itself relative to that parent!
+:::
+
+## Flex Alignment
+
+Align items within a flex container:
+
+### Justify Content (X-axis / horizontal)
+
+| Class | Description |
+|-------|-------------|
+| `dx-fs` | Justify Content Flex-Start (left) |
+| `dx-fe` | Justify Content Flex-End (right) |
+| `dx-ce` | Justify Content Center |
+| `dx-sb` | Justify Content Space-Between |
+| `dx-sa` | Justify Content Space-Around |
+| `dx-se` | Justify Content Space-Evenly |
+
+### Align Items (Y-axis / vertical)
+
+| Class | Description |
+|-------|-------------|
+| `dy-fs` | Align Items Flex-Start (top) |
+| `dy-fe` | Align Items Flex-End (bottom) |
+| `dy-ce` | Align Items Center |
+| `dy-st` | Align Items Stretch (default) |
+
+### Centering with Flex
+
+Center items both ways with dx-ce and dy-ce:
+
+```html
+<div class="d-flex dx-ce dy-ce" style="height: 100px;">
+  <div>Perfectly centered!</div>
+</div>
+```
+
+### Space Between
+
+Push items to opposite ends:
+
+```html
+<div class="d-flex dx-sb">
+  <div>Left</div>
+  <div>Right</div>
+</div>
+```
+
+## Quick Reference
+
+| Category | Classes |
+|----------|---------|
+| Events | `e-p, e-ns, e-ne` |
+| Dimensions | `ew-100p, eh-100v` |
+| Overflow | `ox-h, oy-a` |
+| Position | `dp-r, dp-a, dp-f, dp-s` |

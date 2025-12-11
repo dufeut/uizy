@@ -1,0 +1,132 @@
+# Display Utilities
+
+Control how elements appear on the screen - show them, hide them, or change their layout behavior!
+
+## Basic Display Classes
+
+These classes control the `display` property:
+
+| Class | Description |
+|-------|-------------|
+| `d-none` | Hides the element completely |
+| `d-block` | Shows as a block (takes full width) |
+| `d-inline` | Shows inline (like text) |
+| `d-inline-block` | Inline but can have width/height |
+| `d-flex` | Enables flexbox layout |
+| `d-inline-flex` | Inline flexbox |
+| `d-grid` | Enables CSS grid layout |
+
+```html
+<!-- Hidden -->
+<div class="d-none">You can't see me!</div>
+
+<!-- Visible -->
+<div class="d-block">I'm visible!</div>
+```
+
+## Flexbox Made Easy
+
+Flexbox is super useful for layouts! Use `d-flex` to enable it:
+
+```html
+<div class="d-flex gx-2">
+  <div class="pa-3 br-2">Item 1</div>
+  <div class="pa-3 br-2">Item 2</div>
+  <div class="pa-3 br-2">Item 3</div>
+</div>
+```
+
+:::tip Pro tip
+Use `gx-*` (column-gap) and `gy-*` (row-gap) classes to add space between flex items!
+`gx-1` = 4px, `gx-2` = 8px, etc.
+:::
+
+## Responsive Display
+
+This is where it gets cool! Add breakpoint prefixes to show/hide on different screens:
+
+| Class | Description |
+|-------|-------------|
+| `d-sm-*` | Small screens and up (576px+) |
+| `d-md-*` | Medium screens and up (768px+) |
+| `d-lg-*` | Large screens and up (992px+) |
+| `d-xl-*` | Extra large screens (1200px+) |
+
+### Mobile-Only Element
+
+```html
+<!-- Shows on mobile, hidden on tablets and up -->
+<div class="d-block d-md-none">
+  I only show on mobile! (under 768px)
+</div>
+```
+
+### Desktop Navigation Example
+
+Common pattern: hamburger on mobile, full nav on desktop:
+
+```html
+<!-- Mobile hamburger menu -->
+<button class="d-block d-md-none">Menu</button>
+
+<!-- Desktop navigation -->
+<nav class="d-none d-md-flex gx-4">
+  <a href="#">Home</a>
+  <a href="#">About</a>
+  <a href="#">Contact</a>
+</nav>
+```
+
+## Common Patterns
+
+### Centered Content
+
+Center items horizontally and vertically:
+
+```html
+<div class="d-flex dx-ce dy-ce" style="height: 100px;">
+  <span>I'm centered!</span>
+</div>
+```
+
+### Space Between
+
+Push items to opposite ends:
+
+```html
+<div class="d-flex dx-sb dy-ce">
+  <span>Left</span>
+  <span>Right</span>
+</div>
+```
+
+:::info Flex alignment classes
+- `dx-ce` - Justify Content Center (X-axis)
+- `dx-sb` - Justify Content Space-Between
+- `dy-ce` - Align Items Center (Y-axis)
+- `dy-fs` - Align Items Flex-Start
+:::
+
+## Quick Reference
+
+### All Display Values
+
+| Class | CSS |
+|-------|-----|
+| `d-none` | display: none |
+| `d-block` | display: block |
+| `d-inline` | display: inline |
+| `d-inline-block` | display: inline-block |
+| `d-flex` | display: flex |
+| `d-inline-flex` | display: inline-flex |
+| `d-grid` | display: grid |
+
+### Breakpoint Prefixes
+
+| Prefix | Screen Size |
+|--------|-------------|
+| (no prefix) | All screen sizes |
+| `-sm-` | >=576px (small tablets) |
+| `-md-` | >=768px (tablets) |
+| `-lg-` | >=992px (laptops) |
+| `-xl-` | >=1200px (desktops) |
