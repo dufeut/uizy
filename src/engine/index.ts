@@ -60,7 +60,10 @@ export interface ThemeConfig {
 }
 
 /** Directives configuration (simple or full handlers) */
-export type DirectivesConfig = Record<string, DirectiveHandler | ((el: HTMLElement) => void)>;
+export type DirectivesConfig = Record<
+  string,
+  DirectiveHandler | ((el: HTMLElement) => void)
+>;
 
 /** Plugin exports - what a plugin provides */
 export interface PluginExports {
@@ -431,6 +434,7 @@ function start(config: StartConfig = {}): void {
  * - `$key()` - Set single key in map store
  * - `$sub()` - Subscribe to store (immediate + changes)
  * - `$on()` - Listen to store (changes only)
+ * - `$computed()` - Create computed store from multiple stores with aliases
  * - `directive()` - Register a custom directive
  * - `plugin()` - Register a namespaced plugin
  */
@@ -459,8 +463,60 @@ const UIZY = {
   /** Nano-Stores utilities */
   store: NanoStore,
 
-  /** Call a registered component by path */
-  use: Components.call.bind(Components),
+  /**
+   * Call registered component(s) by path.
+   * Supports single path or array of paths with shared props.
+   *
+   * Components can return:
+   * - string: "px-4 py-2"
+   * - array: ["px-4", "py-2"]
+   * - object: { "px-4 py-2": true, "bg-red": false } (only truthy keys included)
+   *
+   * @example
+   * ```ts
+   * // Single component
+   * uizy.use("button.primary");
+   * uizy.use("button.primary", { size: "lg" });
+   *
+   * // Multiple components (classes are combined)
+   * uizy.use(["button.base", "button.primary"]);
+   * uizy.use(["button.base", "button.primary"], { size: "lg" });
+   *
+   * // Component returning conditional classes
+   * // button: (props) => ({ "px-4": props.size === "md", "px-8": props.size === "lg" })
+   * uizy.use("button", { size: "lg" }); // "px-8"
+   * ```
+   */
+  use: (path: string | string[], props?: unknown): string => {
+    const _props = props ?? {};
+
+    // Helper to extract classes from component result
+    const extractClasses = (result: unknown): string[] => {
+      if (typeof result === "string") return [result];
+      if (Array.isArray(result)) return result;
+      if (result && typeof result === "object") {
+        // Object format: { "class-name": boolean }
+        return Object.entries(result)
+          .filter(([, enabled]) => enabled)
+          .map(([className]) => className);
+      }
+      return [];
+    };
+
+    if (typeof path === "string") {
+      const result = Components.call(path, _props);
+      return extractClasses(result).join(" ");
+    }
+
+    // Array of paths - combine all results
+    const allClasses: string[] = [];
+    for (const p of path) {
+      if (!Components.has(p)) continue;
+      const result = Components.call(p, _props);
+      allClasses.push(...extractClasses(result));
+    }
+    return allClasses.join(" ");
+  },
 
   /** Register components */
   add: Components.add.bind(Components),
@@ -476,26 +532,95 @@ const UIZY = {
 
   /** Set store value: uizy.$set("path", value) */
   $set: <T>(path: string, value: T): void => {
-    const store = Stores.call<T>(path, { raw: true }) as { set?: (v: T) => void } | undefined;
+    const store = Stores.call<T>(path, { raw: true }) as
+      | { set?: (v: T) => void }
+      | undefined;
     store?.set?.(value);
   },
 
   /** Update a single key in a map store: uizy.$key("path", "key", value) */
   $key: <T, K extends keyof T>(path: string, key: K, value: T[K]): void => {
-    const store = Stores.call<T>(path, { raw: true }) as { setKey?: (k: K, v: T[K]) => void } | undefined;
+    const store = Stores.call<T>(path, { raw: true }) as
+      | { setKey?: (k: K, v: T[K]) => void }
+      | undefined;
     store?.setKey?.(key, value);
   },
 
   /** Subscribe to store changes (immediate + updates): uizy.$sub("path", callback) */
   $sub: <T>(path: string, callback: (value: T) => void): (() => void) => {
-    const store = Stores.call<T>(path, { raw: true }) as { subscribe?: (cb: (v: T) => void) => () => void } | undefined;
+    const store = Stores.call<T>(path, { raw: true }) as
+      | { subscribe?: (cb: (v: T) => void) => () => void }
+      | undefined;
     return store?.subscribe?.(callback) ?? (() => {});
   },
 
   /** Listen to store changes (updates only): uizy.$on("path", callback) */
   $on: <T>(path: string, callback: (value: T) => void): (() => void) => {
-    const store = Stores.call<T>(path, { raw: true }) as { listen?: (cb: (v: T) => void) => () => void } | undefined;
+    const store = Stores.call<T>(path, { raw: true }) as
+      | { listen?: (cb: (v: T) => void) => () => void }
+      | undefined;
     return store?.listen?.(callback) ?? (() => {});
+  },
+
+  /**
+   * Create a computed store from multiple stores with aliases.
+   * Store paths are resolved lazily on first access, allowing use during registration.
+   *
+   * @param aliases - Object mapping alias names to store paths
+   * @param fn - Function that receives resolved values by alias and returns computed value
+   * @returns A nanostore computed store
+   *
+   * @example
+   * ```ts
+   * const $greeting = uizy.$computed(
+   *   { name: "user.name", date: "app.today" },
+   *   ({ name, date }) => `Hello ${name}, today is ${date}`
+   * );
+   *
+   * // Use like any other store
+   * $greeting.get();           // "Hello John, today is Monday"
+   * $greeting.subscribe(cb);   // Subscribe to changes
+   * ```
+   */
+  $computed: <T, A extends Record<string, string>>(
+    aliases: A,
+    fn: (values: { [K in keyof A]: unknown }) => T
+  ): NanoStore.ReadableAtom<T> => {
+    const entries = Object.entries(aliases);
+    let resolvedStores: NanoStore.ReadableAtom<unknown>[] | null = null;
+    let computedStore: NanoStore.ReadableAtom<T> | null = null;
+
+    // Lazily resolve stores and create computed on first access
+    const ensureComputed = (): NanoStore.ReadableAtom<T> => {
+      if (computedStore) return computedStore;
+
+      resolvedStores = entries.map(([alias, path]) => {
+        const store = Stores.call(path, { raw: true });
+        if (!store) {
+          throw new Error(
+            `[uizy] Store not found: "${path}" (alias: "${alias}")`
+          );
+        }
+        return store as NanoStore.ReadableAtom<unknown>;
+      });
+
+      computedStore = NanoStore.computed(resolvedStores, (...values) => {
+        const aliasedValues = {} as { [K in keyof A]: unknown };
+        entries.forEach(([alias], index) => {
+          aliasedValues[alias as keyof A] = values[index];
+        });
+        return fn(aliasedValues);
+      });
+
+      return computedStore;
+    };
+
+    // Return a lazy proxy that matches ReadableAtom interface
+    return {
+      get: () => ensureComputed().get(),
+      subscribe: (cb: (value: T) => void) => ensureComputed().subscribe(cb),
+      listen: (cb: (value: T) => void) => ensureComputed().listen(cb),
+    } as NanoStore.ReadableAtom<T>;
   },
 
   /** Register stores */

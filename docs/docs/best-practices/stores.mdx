@@ -1,0 +1,54 @@
+---
+sidebar_position: 4
+sidebar_label: Stores
+---
+
+# Stores
+
+## Organize Related State
+
+Group related stores under a common namespace:
+
+```javascript
+app.plugin("cart", {
+  stores: {
+    items: app.store.atom([]),
+    total: app.store.atom(0),
+    loading: app.store.atom(false),
+  },
+});
+
+// Access via namespace
+uizy.$("cart.items");
+uizy.$("cart.total");
+```
+
+## Keep Stores Minimal
+
+Store only the essential state. Derive computed values when needed:
+
+```javascript
+// ✅ Store raw data, compute when needed
+stores: {
+  items: app.store.atom([]),
+}
+
+// Compute total in actions or components
+const items = uizy.$("cart.items");
+const total = items.reduce((sum, item) => sum + item.price, 0);
+```
+
+## Batch Store Updates
+
+When updating multiple store values, batch them to avoid unnecessary re-renders:
+
+```javascript
+// ✅ Batch related updates
+actions: {
+  resetForm: () => {
+    app.$set("form.data", {});
+    app.$set("form.errors", {});
+    app.$set("form.submitting", false);
+  },
+}
+```

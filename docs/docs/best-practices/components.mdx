@@ -1,0 +1,64 @@
+---
+sidebar_position: 3
+sidebar_label: Components
+---
+
+# Components
+
+## Use Semantic Naming
+
+Name components based on what they represent, not how they look:
+
+```javascript
+// ✅ Semantic names
+components: {
+  button: {
+    primary: () => "bg-blue-500 text-white px-4 py-2 rounded",
+    secondary: () => "bg-gray-200 text-gray-800 px-4 py-2 rounded",
+    danger: () => "bg-red-500 text-white px-4 py-2 rounded",
+  },
+}
+
+// ❌ Style-based names
+components: {
+  button: {
+    blue: () => "bg-blue-500 text-white px-4 py-2 rounded",
+    gray: () => "bg-gray-200 text-gray-800 px-4 py-2 rounded",
+  },
+}
+```
+
+## Compose Components
+
+Build complex components from simpler base styles:
+
+```javascript
+components: {
+  button: {
+    base: () => "px-4 py-2 rounded font-medium transition-colors",
+    primary: () => "bg-blue-500 text-white hover:bg-blue-600",
+    ghost: () => "bg-transparent hover:bg-gray-100",
+  },
+}
+```
+
+```html
+<ui-box use="button.base button.primary">Submit</ui-box>
+```
+
+## Better Compose
+
+```ts
+function PluginUI(App) {
+  App.plugin("ui", {
+    components: {
+      button: {
+        // Base Component
+        base: () => "px-4 py-2",
+        // Primary Component (+ Base)
+        primary: (props) => ["bd-a", App.use("ui.button.base")],
+      },
+    },
+  });
+}
+```

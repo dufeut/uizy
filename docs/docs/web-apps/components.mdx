@@ -65,39 +65,100 @@ uizy.add({
 const classes = uizy.use("button.primary");
 ```
 
-### With Arguments
+### Multiple Components
+
+Combine multiple components by passing an array of paths:
+
+```javascript
+// All component classes are combined into a single string
+uizy.use(["button.base", "button.primary"]);
+// "px-4 py-2 rounded bg-primary text-white"
+
+uizy.use(["button.base", "button.primary", "button.lg"]);
+// "px-4 py-2 rounded bg-primary text-white text-lg px-6 py-3"
+```
+
+### With Props
+
+Pass configuration to components:
 
 ```javascript
 uizy.add({
     spacing: {
-        pad: (n) => `p-${n}`,
+        pad: (props) => `p-${props.size}`,
         margin: ({ x, y }) => `mx-${x} my-${y}`,
     },
 });
 
-uizy.use("spacing.pad", 4);              // "p-4"
-uizy.use("spacing.margin", { x: 2, y: 4 }); // "mx-2 my-4"
+uizy.use("spacing.pad", { size: 4 });        // "p-4"
+uizy.use("spacing.margin", { x: 2, y: 4 });  // "mx-2 my-4"
+
+// Props are shared across all components when using arrays
+uizy.use(["button.base", "button.sized"], { size: "lg" });
 ```
 
-### Silent Mode
+## Return Types
 
-Returns `undefined` instead of throwing if component doesn't exist:
+Components can return three different formats:
+
+### String (default)
 
 ```javascript
-uizy.use("nonexistent.path", null, { silent: true }); // undefined
+button: {
+    primary: () => "px-4 py-2 bg-primary text-white rounded",
+}
+```
+
+### Array
+
+```javascript
+button: {
+    primary: () => ["px-4", "py-2", "bg-primary", "text-white", "rounded"],
+}
+```
+
+### Object (conditional classes)
+
+Return an object where keys are class strings and values are booleans. Only keys with truthy values are included:
+
+```javascript
+button: {
+    sized: (props) => ({
+        "px-2 py-1 text-sm": props.size === "sm",
+        "px-4 py-2": props.size === "md",
+        "px-6 py-3 text-lg": props.size === "lg",
+        "bg-primary text-white": props.variant === "primary",
+        "bg-gray-200 text-gray-800": props.variant === "secondary",
+    }),
+}
+
+// Usage
+uizy.use("button.sized", { size: "lg", variant: "primary" });
+// "px-6 py-3 text-lg bg-primary text-white"
 ```
 
 ## API Reference
 
-### `uizy.use(path, args?, options?)`
+### `uizy.use(path, props?)`
 
-Call a component by its dot-notation path.
+Call component(s) by path. Returns combined CSS classes as a string.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `path` | `string` | Dot-notation path (e.g., "button.primary") |
-| `args` | `unknown` | Arguments to pass to the component |
-| `options.silent` | `boolean` | Return undefined instead of throwing |
+| `path` | `string \| string[]` | Single path or array of paths |
+| `props` | `unknown` | Props passed to all components |
+| **Returns** | `string` | Combined CSS classes |
+
+```javascript
+// Single component
+uizy.use("button.primary");
+
+// Multiple components
+uizy.use(["button.base", "button.primary"]);
+
+// With props (shared across all components)
+uizy.use(["button.base", "button.sized"], { size: "lg" });
+```
 
 ### `uizy.add(items)`
 
@@ -154,6 +215,31 @@ The `<ui-box>` web component automatically applies component classes:
 <ui-box use="card.elevated">
     <h2>Card Title</h2>
     <p>Card content</p>
+</ui-box>
+```
+
+### Multiple Components in HTML
+
+Use space-separated component names:
+
+```html
+<ui-box use="button.base button.primary button.lg">
+    Large Primary Button
+</ui-box>
+```
+
+### Props in HTML
+
+Pass props using `use:props` attribute:
+
+```html
+<ui-box use="button.sized" use:props='{"size": "lg", "variant": "primary"}'>
+    Large Primary Button
+</ui-box>
+
+<!-- Props are passed to all components -->
+<ui-box use="button.base button.sized" use:props='{"size": "lg"}'>
+    Large Button
 </ui-box>
 ```
 

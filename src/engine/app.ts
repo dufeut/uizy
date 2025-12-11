@@ -1,4 +1,10 @@
-import { Components, Stores, Directives, type DirectiveContext } from "./components.ts";
+import {
+  Components,
+  Stores,
+  Directives,
+  type DirectiveContext,
+  type DirectiveBinding,
+} from "./components.ts";
 
 /* ------------------------------------------------------------------ */
 /* Types                                                              */
@@ -68,19 +74,58 @@ const SELECTORS: Record<string, string> = {
 
 /** Standard DOM event names (same as native onclick, onmouseover, etc.) */
 const DOM_EVENTS = new Set([
-  "click", "dblclick", "mousedown", "mouseup", "mouseover", "mouseout",
-  "mousemove", "mouseenter", "mouseleave", "contextmenu",
-  "keydown", "keyup", "keypress",
-  "focus", "blur", "focusin", "focusout",
-  "input", "change", "submit", "reset",
-  "touchstart", "touchend", "touchmove", "touchcancel",
-  "drag", "dragstart", "dragend", "dragover", "dragenter", "dragleave", "drop",
-  "scroll", "wheel",
-  "copy", "cut", "paste",
-  "animationstart", "animationend", "animationiteration",
-  "transitionstart", "transitionend", "transitionrun", "transitioncancel",
-  "pointerdown", "pointerup", "pointermove", "pointerover", "pointerout",
-  "pointerenter", "pointerleave", "pointercancel",
+  "click",
+  "dblclick",
+  "mousedown",
+  "mouseup",
+  "mouseover",
+  "mouseout",
+  "mousemove",
+  "mouseenter",
+  "mouseleave",
+  "contextmenu",
+  "keydown",
+  "keyup",
+  "keypress",
+  "focus",
+  "blur",
+  "focusin",
+  "focusout",
+  "input",
+  "change",
+  "submit",
+  "reset",
+  "touchstart",
+  "touchend",
+  "touchmove",
+  "touchcancel",
+  "drag",
+  "dragstart",
+  "dragend",
+  "dragover",
+  "dragenter",
+  "dragleave",
+  "drop",
+  "scroll",
+  "wheel",
+  "copy",
+  "cut",
+  "paste",
+  "animationstart",
+  "animationend",
+  "animationiteration",
+  "transitionstart",
+  "transitionend",
+  "transitionrun",
+  "transitioncancel",
+  "pointerdown",
+  "pointerup",
+  "pointermove",
+  "pointerover",
+  "pointerout",
+  "pointerenter",
+  "pointerleave",
+  "pointercancel",
 ]);
 
 /* ------------------------------------------------------------------ */
@@ -289,12 +334,50 @@ class UizyBox extends BaseElement {
       }
     }
 
-    // Component classes
+    // Component classes with optional props (supports multiple space-separated components)
     const use = this.getAttribute("use");
-    if (use && Components.has(use)) {
-      const vm = Components.call(use);
-      if (typeof vm === "string" || Array.isArray(vm)) {
-        this.updateClass(Array.isArray(vm) ? vm : [vm]);
+    if (use) {
+      // Parse props from use:props attribute (JSON)
+      const propsAttr = this.getAttribute("use:props");
+      let props: unknown = undefined;
+      if (propsAttr) {
+        // From JS
+        const propsJson = propsAttr
+          .replace(/([{,]\s*)(\w+)\s*:/g, '$1"$2":') // add key quotes
+          .replace(/'/g, '"'); // normalize quotes if needed
+        // Parse JSON
+        try {
+          props = JSON.parse(propsJson);
+        } catch {
+          console.warn(`[uizy] Invalid JSON in use:props: ${propsAttr}`);
+        }
+      }
+
+      // Helper to extract classes from component result
+      const extractClasses = (result: unknown): string[] => {
+        if (typeof result === "string") return [result];
+        if (Array.isArray(result)) return result;
+        if (result && typeof result === "object") {
+          // Object format: { "class-name": boolean }
+          return Object.entries(result)
+            .filter(([, enabled]) => enabled)
+            .map(([className]) => className);
+        }
+        return [];
+      };
+
+      // Split by whitespace and process each component
+      const componentNames = use.trim().split(/\s+/);
+      const allClasses: string[] = [];
+
+      for (const name of componentNames) {
+        if (!Components.has(name)) continue;
+        const vm = Components.call(name, props);
+        allClasses.push(...extractClasses(vm));
+      }
+
+      if (allClasses.length > 0) {
+        this.updateClass(allClasses);
       }
     }
 
@@ -303,27 +386,65 @@ class UizyBox extends BaseElement {
   }
 
   private bindAttributes(): void {
-    for (const attr of this.attributes) {
-      if (!attr.name.startsWith(":")) continue;
+    // Collect all directive bindings grouped by directive name
+    const directiveBindings = new Map<string, DirectiveBinding[]>();
 
-      // Parse :name.modifier1.modifier2="value"
-      const [fullName, ...modifiers] = attr.name.slice(1).split(".");
+    for (const attr of this.attributes) {
+      // Support both :foo and u-foo prefixes
+      const isColonPrefix = attr.name.startsWith(":");
+      const isUPrefix = attr.name.startsWith("u-");
+
+      if (!isColonPrefix && !isUPrefix) continue;
+
+      // Parse the attribute name based on prefix:
+      // :name:modifier1:modifier2="value" (colon prefix, colon-separated modifiers)
+      // u-name:modifier1:modifier2="value" (u- prefix, colon-separated modifiers)
+      let fullName: string;
+      let modifiers: string[];
+
+      if (isColonPrefix) {
+        const parts = attr.name.slice(1).split(":");
+        fullName = parts[0];
+        modifiers = parts.slice(1);
+      } else {
+        // u-name:modifier1:modifier2
+        const parts = attr.name.slice(2).split(":");
+        fullName = parts[0];
+        modifiers = parts.slice(1);
+      }
+
       const value = attr.value;
 
       // Skip :text (handled above)
       if (fullName === "text") continue;
 
-      // Check if it's a DOM event
-      if (DOM_EVENTS.has(fullName)) {
+      // Check if it's a DOM event (only for : prefix)
+      if (isColonPrefix && DOM_EVENTS.has(fullName)) {
         this.bindEvent(fullName, value);
         continue;
       }
 
-      // Check if it's a custom directive
-      const handler = Directives.get(fullName);
-      if (handler) {
-        this.bindDirective(handler, value, modifiers);
+      // Collect directive bindings (group by directive name)
+      if (Directives.has(fullName)) {
+        // arg is the first modifier (e.g., "one" from ":toy:one" or "u-toy:one")
+        const arg = modifiers[0] || "";
+
+        const binding: DirectiveBinding = {
+          value,
+          arg,
+        };
+
+        if (!directiveBindings.has(fullName)) {
+          directiveBindings.set(fullName, []);
+        }
+        directiveBindings.get(fullName)!.push(binding);
       }
+    }
+
+    // Call each directive handler once with all its bindings
+    for (const [name, bindings] of directiveBindings) {
+      const handler = Directives.get(name)!;
+      this.bindDirective(handler, bindings);
     }
   }
 
@@ -343,13 +464,18 @@ class UizyBox extends BaseElement {
 
   private bindDirective(
     handler: (el: HTMLElement, ctx: DirectiveContext) => void,
-    value: string,
-    modifiers: string[]
+    bindings: DirectiveBinding[]
   ): void {
+    // Use first binding for primary value (backwards compatible)
+    const primary = bindings[0];
+    // Collect all args as modifiers for backwards compatibility
+    const modifiers = bindings.map((b) => b.arg).filter(Boolean);
+
     const ctx: DirectiveContext = {
-      value,
+      value: primary.value,
       modifiers,
-      expression: value,
+      expression: primary.value,
+      bindings,
       effect: (fn) => {
         const cleanup = fn();
         if (cleanup) this.cleanupFns.push(cleanup);

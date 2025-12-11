@@ -19,7 +19,20 @@ uizy.directive("highlight", (el, { value }) => {
 
 // Use it
 // <ui-box :highlight="red">Highlighted text</ui-box>
+// or
+// <ui-box u-highlight="red">Highlighted text</ui-box>
 ```
+
+## Syntax
+
+Directives support two prefix styles:
+
+| Prefix | Example | Description |
+|--------|---------|-------------|
+| `:` | `:foo:arg="value"` | Short syntax (Vue-like) |
+| `u-` | `u-foo:arg="value"` | Explicit syntax |
+
+Both are equivalent and can be mixed.
 
 ## Registration
 
@@ -66,9 +79,10 @@ The second argument to directive handlers is a context object:
 
 ```javascript
 uizy.directive("example", (el, ctx) => {
-    // ctx.value      - The attribute value
-    // ctx.modifiers  - Array of modifiers from the attribute name
+    // ctx.value      - The attribute value (from first binding)
+    // ctx.modifiers  - Array of all args from bindings
     // ctx.expression - The raw expression string
+    // ctx.bindings   - All bindings for this directive
     // ctx.effect     - Register a reactive effect (auto-cleaned)
     // ctx.cleanup    - Register a cleanup function
 });
@@ -76,7 +90,7 @@ uizy.directive("example", (el, ctx) => {
 
 ### `value`
 
-The attribute value as a string:
+The attribute value as a string (from the first binding):
 
 ```html
 <ui-box :example="hello world"></ui-box>
@@ -90,16 +104,41 @@ uizy.directive("example", (el, { value }) => {
 
 ### `modifiers`
 
-Modifiers are dot-separated parts after the directive name:
+When using multiple bindings, all `arg` values are collected into `modifiers`:
 
 ```html
-<ui-box :tooltip.top.arrow="Help text"></ui-box>
+<ui-box :tooltip:top :tooltip:arrow="Help text"></ui-box>
 ```
 
 ```javascript
 uizy.directive("tooltip", (el, { value, modifiers }) => {
     console.log(modifiers); // ["top", "arrow"]
-    console.log(value);     // "Help text"
+    console.log(value);     // "" (from first binding)
+});
+```
+
+### `bindings`
+
+For advanced use cases, access all bindings with their individual values:
+
+```html
+<ui-box u-config:theme="dark" u-config:size="lg" u-config:animate></ui-box>
+```
+
+```javascript
+uizy.directive("config", (el, { bindings }) => {
+    console.log(bindings);
+    // [
+    //   { arg: "theme", value: "dark" },
+    //   { arg: "size", value: "lg" },
+    //   { arg: "animate", value: "" }
+    // ]
+
+    // Convert to object
+    const config = Object.fromEntries(
+        bindings.map(b => [b.arg, b.value || true])
+    );
+    console.log(config); // { theme: "dark", size: "lg", animate: true }
 });
 ```
 
@@ -253,20 +292,22 @@ uizy.directive("show", (el, { value, effect }) => {
 <ui-box :show="ui.modalOpen">Modal content</ui-box>
 ```
 
-### Animation on Enter
+### Multi-Binding Configuration
 
 ```javascript
-uizy.directive("animate", (el, { value, modifiers }) => {
-    const animation = value || "fadeIn";
-    const duration = modifiers.includes("slow") ? "1s" : "0.3s";
-
-    el.style.animation = `${animation} ${duration} ease-out`;
+uizy.directive("style", (el, { bindings }) => {
+    for (const { arg, value } of bindings) {
+        if (arg && value) {
+            el.style[arg] = value;
+        }
+    }
 });
 ```
 
 ```html
-<ui-box :animate="slideIn">Animated content</ui-box>
-<ui-box :animate.slow="fadeIn">Slow fade in</ui-box>
+<ui-box u-style:color="red" u-style:fontSize="20px" u-style:fontWeight="bold">
+    Styled text
+</ui-box>
 ```
 
 ## API Reference
@@ -277,7 +318,7 @@ Register a custom directive.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `name` | `string` | Directive name (used as `:name` attribute) |
+| `name` | `string` | Directive name (used as `:name` or `u-name` attribute) |
 | `handler` | `DirectiveHandler` | Handler function |
 
 ### `uizy.directives`
@@ -299,13 +340,23 @@ Access the directives registry:
 type DirectiveHandler = (el: HTMLElement, ctx: DirectiveContext) => void;
 ```
 
+### DirectiveBinding
+
+```typescript
+interface DirectiveBinding {
+    value: string;  // The attribute value
+    arg: string;    // The first modifier (e.g., "top" from :foo:top)
+}
+```
+
 ### DirectiveContext
 
 ```typescript
 interface DirectiveContext {
-    value: string;
-    modifiers: string[];
-    expression: string;
+    value: string;              // Value from first binding
+    modifiers: string[];        // All args collected from bindings
+    expression: string;         // Raw expression string
+    bindings: DirectiveBinding[]; // All bindings for this directive
     effect: (fn: () => (() => void) | void) => void;
     cleanup: (fn: () => void) => void;
 }
@@ -315,6 +366,6 @@ interface DirectiveContext {
 
 1. **Keep directives focused** - Each directive should do one thing well
 2. **Always cleanup** - Use `cleanup()` or return cleanup from `effect()` to prevent memory leaks
-3. **Use modifiers for options** - Instead of complex value parsing, use modifiers like `:tooltip.top`
+3. **Use bindings for config** - For multiple options, use `u-foo:opt1="val" u-foo:opt2="val"` pattern
 4. **Handle missing values gracefully** - Check if `value` exists before using it
 5. **Document your directives** - Add comments explaining what each directive does

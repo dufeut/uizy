@@ -1,0 +1,146 @@
+---
+sidebar_position: 2
+sidebar_label: Directives
+---
+
+# Directive Syntax
+
+---
+
+## Prefer `u-` Over `:` Prefix
+
+---
+
+Always use the `u-` prefix instead of `:` for better compatibility across build tools and frameworks:
+
+```html
+<!-- ✅ Recommended -->
+<ui-box u-highlight="red">Highlighted text</ui-box>
+
+<!-- ⚠️ May cause issues with some transformers -->
+<ui-box :highlight="red">Highlighted text</ui-box>
+```
+
+**Why?** Some TSX/JSX transformers and build tools struggle with attributes starting with `:`, as it can conflict with other syntax patterns.
+
+---
+
+## Separate Chained Modifiers
+
+---
+
+Instead of chaining multiple modifiers on a single attribute, split them into separate attributes:
+
+```html
+<!-- ✅ Recommended -->
+<ui-box u-fx-tooltip:top u-fx-tooltip:arrow u-fx-tooltip:delay>
+  Hover me
+</ui-box>
+
+<!-- ⚠️ May cause parsing issues -->
+<ui-box u-fx-tooltip:top:arrow:delay>Hover me</ui-box>
+```
+
+This approach ensures compatibility and makes each modifier's purpose clearer.
+
+---
+
+## Always Clean Up Resources
+
+---
+
+Use `cleanup()` or return a cleanup function from `effect()` to prevent memory leaks:
+
+```javascript
+// ✅ Proper cleanup
+uizy.directive("interval", (el, { value, cleanup }) => {
+  const id = setInterval(() => {
+    el.textContent = new Date().toLocaleTimeString();
+  }, parseInt(value) || 1000);
+
+  cleanup(() => clearInterval(id));
+});
+
+// ✅ Cleanup via effect return
+uizy.directive("resize", (el, { effect }) => {
+  effect(() => {
+    const handler = () => {
+      /* resize logic */
+    };
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  });
+});
+```
+
+---
+
+## Handle Missing Values
+
+---
+
+Check if values exist before using them:
+
+```javascript
+uizy.directive("color", (el, { value }) => {
+  // ✅ Provide fallback
+  el.style.color = value || "inherit";
+});
+
+uizy.directive("delay", (el, { value }) => {
+  // ✅ Validate and provide default
+  const ms = parseInt(value) || 1000;
+  // Use ms...
+});
+```
+
+---
+
+## Keep Directives Single-Purpose
+
+---
+
+Each directive should do one thing well:
+
+```javascript
+// ✅ Single-purpose directives
+uizy.directive("focus", (el) => el.focus());
+uizy.directive("uppercase", (el) => (el.style.textTransform = "uppercase"));
+uizy.directive("fade", (el) => (el.style.transition = "opacity 0.3s ease"));
+
+// ❌ Directive doing too much
+uizy.directive("setup", (el, { modifiers }) => {
+  if (modifiers.includes("focus")) el.focus();
+  if (modifiers.includes("uppercase")) el.style.textTransform = "uppercase";
+  if (modifiers.includes("fade")) el.style.transition = "opacity 0.3s ease";
+  // Combine these into separate directives instead
+});
+```
+
+---
+
+## Lazy Load Heavy Directives
+
+---
+
+For complex directives, consider lazy initialization:
+
+```javascript
+uizy.directive("chart", (el, { value, cleanup }) => {
+  let chart = null;
+
+  // Initialize only when element is visible
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && !chart) {
+      chart = initializeChart(el, value);
+      observer.disconnect();
+    }
+  });
+
+  observer.observe(el);
+  cleanup(() => {
+    observer.disconnect();
+    chart?.destroy();
+  });
+});
+```

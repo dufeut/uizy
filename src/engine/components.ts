@@ -383,14 +383,24 @@ export const Stores: StoreRegistry = {
 /* Directives Registry                                                 */
 /* ------------------------------------------------------------------ */
 
+/** Single binding from an attribute (e.g., :foo:one="value") */
+export interface DirectiveBinding {
+  /** The attribute value */
+  value: string;
+  /** The first modifier / argument (e.g., "one" from :foo:one) */
+  arg: string;
+}
+
 /** Context passed to directive handlers */
 export interface DirectiveContext {
-  /** The attribute value (e.g., "user.name" from :foo="user.name") */
+  /** The attribute value from the first/primary binding */
   value: string;
-  /** Parsed modifiers from the attribute name (e.g., ["prevent", "stop"] from :foo.prevent.stop) */
+  /** Modifiers from the first/primary binding */
   modifiers: string[];
   /** The raw expression string */
   expression: string;
+  /** All bindings for this directive (when multiple :foo:* attributes exist) */
+  bindings: DirectiveBinding[];
   /** Register a reactive effect (auto-cleaned on disconnect) */
   effect: (fn: () => (() => void) | void) => void;
   /** Register a cleanup function (called on disconnect) */

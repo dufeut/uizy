@@ -67,6 +67,72 @@ uizy.add({
 });
 ```
 
+### Multiple Components
+
+Combine multiple components with space-separated names:
+
+```html
+<ui-box use="button.base button.primary button.lg">
+    Large Primary Button
+</ui-box>
+```
+
+All component classes are combined and applied to the element.
+
+### Passing Props
+
+Pass configuration to components using `use:props` with JSON:
+
+```html
+<ui-box use="button.sized" use:props='{"size":"lg"}'>Large Button</ui-box>
+<ui-box use="spacing.pad" use:props='{"x":4,"y":2}'>Padded</ui-box>
+
+<!-- Props are passed to all components -->
+<ui-box use="button.base button.sized" use:props='{"size":"lg"}'>
+    Large Button
+</ui-box>
+```
+
+```javascript
+uizy.add({
+    button: {
+        sized: (props) => {
+            const sizes = { sm: "px-2 py-1 text-sm", md: "px-4 py-2", lg: "px-6 py-3 text-lg" };
+            return sizes[props?.size] || sizes.md;
+        },
+    },
+    spacing: {
+        pad: ({ x = 0, y = 0 } = {}) => `px-${x} py-${y}`,
+    },
+});
+```
+
+### Conditional Classes
+
+Components can return an object where keys are class strings and values are booleans:
+
+```javascript
+uizy.add({
+    button: {
+        dynamic: (props) => ({
+            "px-2 py-1 text-sm": props.size === "sm",
+            "px-4 py-2": props.size === "md",
+            "px-6 py-3 text-lg": props.size === "lg",
+            "bg-primary text-white": props.variant === "primary",
+            "bg-gray-200": props.variant === "secondary",
+        }),
+    },
+});
+```
+
+```html
+<ui-box use="button.dynamic" use:props='{"size":"lg","variant":"primary"}'>
+    Large Primary
+</ui-box>
+<!-- Only classes with truthy values are applied -->
+<!-- Result: class="px-6 py-3 text-lg bg-primary text-white" -->
+```
+
 ## Event Handlers
 
 Handle DOM events inline with `:<event>` attributes:

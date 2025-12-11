@@ -200,6 +200,33 @@ const unlisten = uizy.$on("user.name", (value) => {
 unlisten();
 ```
 
+### `uizy.$computed(aliases, fn)`
+
+Create a computed store from multiple registered stores using aliases:
+
+```javascript
+// Register stores first
+uizy.state({
+    project: { name: uizy.store.atom("My App") },
+    date: { now: uizy.store.atom("2024-01-15") },
+});
+
+// Create a computed store with aliases
+const $summary = uizy.$computed(
+    {
+        myAlias: "project.name",
+        today: "date.now",
+    },
+    ({ myAlias, today }) => `${myAlias} live on ${today}`
+);
+
+$summary.get(); // "My App live on 2024-01-15"
+
+// Computed store updates automatically when dependencies change
+uizy.$set("project.name", "New App");
+$summary.get(); // "New App live on 2024-01-15"
+```
+
 ## API Reference
 
 ### `uizy.$(path, options?)`
@@ -250,6 +277,16 @@ Listen to store changes. Callback is only called when value changes (not immedia
 | `path` | `string` | Dot-notation path to store |
 | `callback` | `(value) => void` | Called on changes |
 | **Returns** | `() => void` | Unlisten function |
+
+### `uizy.$computed(aliases, fn)` {#computed-ref}
+
+Create a computed store from multiple stores using aliases. Returns a nanostore computed store.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `aliases` | `object` | Object mapping alias names to store paths |
+| `fn` | `(values) => T` | Function receiving aliased values, returns computed value |
+| **Returns** | `ReadableAtom<T>` | A computed store |
 
 ### `uizy.state(items)`
 

@@ -246,7 +246,7 @@ function EffectsPlugin(app) {
                 el.style.borderRadius = "2px";
             },
 
-            // :fx-tooltip.top="Help text"
+            // :fx-tooltip:top="Help text"
             tooltip: (el, { value, modifiers, cleanup }) => {
                 const position = modifiers[0] || "bottom";
                 const tooltip = document.createElement("div");
@@ -296,7 +296,7 @@ function EffectsPlugin(app) {
 
 ```html
 <ui-box :fx-highlight="lightblue">Highlighted</ui-box>
-<ui-box :fx-tooltip.top="Click to submit" use="kit.button.primary">Submit</ui-box>
+<ui-box :fx-tooltip:top="Click to submit" use="kit.button.primary">Submit</ui-box>
 <ui-box :fx-show="modal.visible" :fx-fade>Modal content</ui-box>
 ```
 
