@@ -6,10 +6,11 @@
   padding: 3rem 0;
   text-align: center;
   background: linear-gradient(
-    135deg,
+    120deg,
     var(--ifm-color-primary) 0%,
-    var(--ifm-color-primary-dark) 100%
+    transparent 195%
   );
+
   border-radius: 12px;
   margin: 1rem -1rem 2rem -1rem;
   color: white;

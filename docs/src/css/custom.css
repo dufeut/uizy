@@ -18,7 +18,7 @@
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
-[data-theme='dark'] {
+[data-theme="dark"] {
   --ifm-color-primary: #818cf8;
   --ifm-color-primary-dark: #6366f1;
   --ifm-color-primary-darker: #4f46e5;
@@ -27,12 +27,6 @@
   --ifm-color-primary-lighter: #c7d2fe;
   --ifm-color-primary-lightest: #e0e7ff;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
-}
-
-/* Custom styles for Uizy docs */
-.hero--primary {
-  --ifm-hero-background-color: var(--ifm-color-primary);
-  --ifm-hero-text-color: #fff;
 }
 
 /* Better code block styling */
