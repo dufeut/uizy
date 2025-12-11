@@ -108,4 +108,8 @@ docs/.pdm-python
 docs/.pdm.toml
 docs/.pdm.toml
 
+# Dist
 dist/
+
+# Extras
+.claude/
