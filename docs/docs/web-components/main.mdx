@@ -1,0 +1,107 @@
+---
+sidebar_position: 8
+sidebar_label: "<uizy-main>"
+---
+
+# `<uizy-main>`
+
+The main content area with full viewport height.
+
+## Attributes
+
+| Attribute | Description |
+|-----------|-------------|
+| `clip-top` | Add margin below header |
+| `clip-bottom` | Add margin above footer |
+| `clip-left` | Add margin for left sidebar |
+| `clip-right` | Add margin for right sidebar |
+
+## Usage
+
+```html
+<uizy-main clip-top clip-bottom clip-left clip-right>
+    <div class="pa-4">
+        <h1>Welcome</h1>
+        <p>Your content here</p>
+    </div>
+</uizy-main>
+```
+
+## Clipping Options
+
+### Full Clipping (Most Common)
+
+Respects header, footer, and both sidebars:
+
+```html
+<uizy-main clip-top clip-bottom clip-left clip-right>
+    Content
+</uizy-main>
+```
+
+### No Sidebar Clipping
+
+Content extends under sidebars:
+
+```html
+<uizy-main clip-top clip-bottom>
+    Content
+</uizy-main>
+```
+
+### Left Sidebar Only
+
+```html
+<uizy-main clip-top clip-bottom clip-left>
+    Content
+</uizy-main>
+```
+
+## Examples
+
+### Basic Content Area
+
+```html
+<uizy-main clip-top clip-bottom clip-left clip-right>
+    <article class="pa-4">
+        <h1>Page Title</h1>
+        <p>Lorem ipsum dolor sit amet...</p>
+    </article>
+</uizy-main>
+```
+
+### Scrollable Content
+
+```html
+<uizy-main clip-top clip-bottom clip-left clip-right>
+    <div style="overflow-y: auto; height: 100%;">
+        <div class="pa-4">
+            <!-- Long content here -->
+        </div>
+    </div>
+</uizy-main>
+```
+
+### Grid Layout
+
+```html
+<uizy-main clip-top clip-bottom clip-left clip-right>
+    <div class="grid pa-4">
+        <div class="card">Card 1</div>
+        <div class="card">Card 2</div>
+        <div class="card">Card 3</div>
+    </div>
+</uizy-main>
+
+<style>
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1rem;
+    }
+</style>
+```
+
+:::tip
+Always use all four clip attributes on `<uizy-main>` for proper spacing when you have header, footer, and sidebars.
+:::

@@ -1,0 +1,86 @@
+---
+sidebar_position: 1
+sidebar_label: Overview
+---
+
+# Web Components
+
+Uizy provides custom web components for building application layouts. These components work together to create responsive, animated app shells with headers, footers, sidebars, and drawers.
+
+## Installation
+
+```javascript
+import uizy from "@dufeut/uizy";
+import "@dufeut/uizy/index.css";
+```
+
+## Quick Start
+
+```html
+<uizy-app id="app">
+    <!-- System Bar -->
+    <uizy-system-bar>System bar</uizy-system-bar>
+
+    <!-- Header -->
+    <uizy-header shadow="12">
+        <span></span>
+        Header
+        <span></span>
+    </uizy-header>
+
+    <!-- Left Drawers -->
+    <uizy-drawer open shadow="6" clip-top clip-bottom>
+        Left Sidebar
+    </uizy-drawer>
+
+    <!-- Right Drawers -->
+    <uizy-drawer right open shadow="6" clip-top clip-bottom>
+        Right Sidebar
+    </uizy-drawer>
+
+    <!-- Overlay -->
+    <uizy-overlay clip-top clip-bottom></uizy-overlay>
+
+    <!-- Main Content -->
+    <uizy-main clip-top clip-bottom clip-left clip-right>
+        <p>Main content here</p>
+    </uizy-main>
+
+    <!-- Footer -->
+    <uizy-footer shadow="12">Footer</uizy-footer>
+</uizy-app>
+```
+
+## Available Components
+
+| Component | Description |
+|-----------|-------------|
+| [`<uizy-app>`](/web-components/app) | Root container that manages all layout components |
+| [`<uizy-system-bar>`](/web-components/system-bar) | Top bar for system status or branding |
+| [`<uizy-header>`](/web-components/header) | Main application header |
+| [`<uizy-footer>`](/web-components/footer) | Fixed footer |
+| [`<uizy-drawer>`](/web-components/drawer) | Animated slide-in panels |
+| [`<uizy-overlay>`](/web-components/overlay) | Semi-transparent backdrop |
+| [`<uizy-main>`](/web-components/main) | Main content area |
+| [`<ui-box>`](/web-components/ui-box) | Utility component for reactive binding and events |
+
+## Clipping System
+
+Clip attributes adjust positioning to account for other layout elements:
+
+| Attribute | Description |
+|-----------|-------------|
+| `clip-top` | Position below system bar + header |
+| `clip-bottom` | Position above footer |
+| `clip-left` | Add left margin for sidebar |
+| `clip-right` | Add right margin for sidebar |
+| `clip-system` | Position below system bar only |
+
+:::info
+Horizontal clips (`clip-left`, `clip-right`) automatically reset on mobile breakpoints.
+:::
+
+## Next Steps
+
+- [Layout Configuration](/web-components/layout-config) - Configure dimensions and breakpoints
+- [CSS Variables](/web-components/css-variables) - Customize via CSS custom properties

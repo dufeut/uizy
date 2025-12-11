@@ -1,0 +1,124 @@
+---
+sidebar_position: 1
+sidebar_label: Overview
+---
+
+# JavaScript API
+
+Uizy provides a powerful JavaScript API for managing components, actions, and reactive state.
+
+## Installation
+
+```javascript
+import uizy from "@dufeut/uizy";
+import "@dufeut/uizy/index.css";
+```
+
+## Quick Start
+
+```javascript
+uizy.start({
+    // Layout configuration
+    layout: {
+        layout: { header: 56, footer: 48, left: 240 },
+    },
+
+    // Theme configuration
+    theme: {
+        colors: { primary: "#6b08a5", accent: "#1eadff" },
+    },
+
+    // Register components (UI utilities)
+    components: {
+        button: {
+            primary: () => "px-4 py-2 bg-primary text-white rounded",
+            secondary: () => "px-4 py-2 bg-gray-200 rounded",
+        },
+    },
+
+    // Register actions (event handlers)
+    actions: {
+        user: {
+            login: (data) => console.log("Login:", data),
+            logout: () => console.log("Logout"),
+        },
+    },
+
+    // Register stores (reactive state)
+    stores: {
+        user: {
+            name: uizy.store.atom("Guest"),
+            isLoggedIn: uizy.store.atom(false),
+        },
+    },
+
+    // Ready callback
+    onReady: () => {
+        console.log("Uizy is ready!");
+    },
+});
+```
+
+## Core Registries
+
+| Registry | Purpose | Access |
+|----------|---------|--------|
+| [Components](/api/components) | UI utility functions | `uizy.use()` / `uizy.components` |
+| [Actions](/api/actions) | Event handlers | `uizy.emit()` / `uizy.actions` |
+| [Stores](/api/stores) | Reactive state (nanostores) | `uizy.$()` / `uizy.store` |
+
+## API Reference
+
+### Configuration
+
+| Method | Description |
+|--------|-------------|
+| `uizy.start(config)` | Unified configuration (layout, theme, registries) |
+| `uizy.init(callback)` | Initialize and run callback on DOM ready |
+| `uizy.layout(config)` | Configure layout dimensions |
+
+### Components
+
+| Method | Description |
+|--------|-------------|
+| `uizy.use(path, args?)` | Call a component by path |
+| `uizy.add(items)` | Register components |
+| `uizy.components.has(path)` | Check if component exists |
+| `uizy.components.paths()` | List all component paths |
+
+### Actions
+
+| Method | Description |
+|--------|-------------|
+| `uizy.emit(path, payload?)` | Call an action by path |
+| `uizy.on(items)` | Register actions |
+| `uizy.actions.has(path)` | Check if action exists |
+| `uizy.actions.paths()` | List all action paths |
+
+### Stores
+
+| Method | Description |
+|--------|-------------|
+| `uizy.$(path)` | Get store value |
+| `uizy.$(path, { raw: true })` | Get raw store (for `.set()`) |
+| `uizy.$set(path, value)` | Set store value |
+| `uizy.$key(path, key, value)` | Set single key in map store |
+| `uizy.$sub(path, callback)` | Subscribe to changes (immediate + updates) |
+| `uizy.$on(path, callback)` | Listen to changes (updates only) |
+| `uizy.state(items)` | Register stores |
+| `uizy.store.atom(value)` | Create an atom store |
+| `uizy.store.map(object)` | Create a map store |
+
+### Utilities
+
+| Method | Description |
+|--------|-------------|
+| `uizy.get(id)` | Get element by ID |
+| `uizy.theme` | Theme configuration class |
+
+## Next Steps
+
+- [Components](/api/components) - Register and use UI components
+- [Actions](/api/actions) - Handle events and commands
+- [Stores](/api/stores) - Manage reactive state
+- [Theme](/api/theme) - Configure colors and styles

@@ -1,20 +1,28 @@
 /**
- * Components Registry
+ * Registry System
  *
- * A type-safe component registry that allows registering and calling
- * nested component functions via dot-notation paths.
+ * Provides registries for managing callable functions and reactive stores:
+ * - **Components**: Nested component trees (UI elements, services)
+ * - **Actions**: Nested action handlers (events, commands)
+ * - **Stores**: Nanostore instances (reactive state)
  *
  * @example
  * ```ts
- * const tree = {
- *   drawer: {
- *     left: { open: () => {}, close: () => {} },
- *     right: { open: () => {}, close: () => {} }
- *   }
- * };
+ * // Components: nested structure for UI elements
+ * Components.add({
+ *   drawer: { left: { open: () => {}, close: () => {} } }
+ * });
+ * Components.call("drawer.left.open");
  *
- * Components.add(tree);
- * Components.call("drawer.left.open", {});
+ * // Actions: nested handlers for events
+ * Actions.add({
+ *   user: { login: (data) => authenticate(data) }
+ * });
+ * Actions.call("user.login", { email, password });
+ *
+ * // Stores: nanostore instances
+ * Stores.add({ user: { name: uizy.store.atom("john") } });
+ * uizy.$("user.name"); // "john"
  * ```
  */
 
@@ -22,124 +30,78 @@
 /* Types                                                               */
 /* ------------------------------------------------------------------ */
 
-/** Base type for a nested component tree */
+/** Nested tree structure for components/actions/stores */
 export type ComponentTree = Record<string, unknown>;
 
-/** Any callable component function */
-export type ComponentFunction = (...args: unknown[]) => unknown;
+/** Action handler function signature */
+export type ActionHandler = (payload?: unknown) => unknown;
 
-/**
- * Recursively extracts all valid dot-notation paths from a component tree.
- * Only paths that lead to functions are included.
- */
-export type ExtractPaths<T, P extends string = ""> = T extends ComponentFunction
-  ? P
-  : T extends object
-    ? {
-        [K in keyof T & string]: ExtractPaths<
-          T[K],
-          P extends "" ? K : `${P}.${K}`
-        >;
-      }[keyof T & string]
-    : never;
-
-/**
- * Extracts the value type at a given dot-notation path.
- */
-export type ExtractValueAtPath<
-  T,
-  P extends string,
-> = P extends `${infer K}.${infer R}`
-  ? K extends keyof T
-    ? ExtractValueAtPath<T[K], R>
-    : never
-  : P extends keyof T
-    ? T[P]
-    : never;
-
-/** Options for component calls */
+/** Call options */
 export interface CallOptions {
-  /** If true, returns undefined instead of throwing when component not found */
   silent?: boolean;
+}
+
+/** Store call options */
+export interface StoreCallOptions extends CallOptions {
+  /** Return the raw store object instead of its value */
+  raw?: boolean;
+}
+
+/** Registry interface */
+export interface Registry {
+  add<C extends ComponentTree>(items: C): Registry;
+  call(path: string, args?: unknown, options?: CallOptions): unknown;
+  has(path: string): boolean;
+  paths(): string[];
+  clear(): void;
+  getTree(): Readonly<ComponentTree>;
 }
 
 /* ------------------------------------------------------------------ */
 /* Path Resolution                                                     */
 /* ------------------------------------------------------------------ */
 
-/**
- * Resolves a dot-notation path to a value in an object tree.
- * Uses caching for performance on repeated lookups.
- */
-function resolvePath(root: ComponentTree, path: string): unknown {
-  const segments = path.split(".");
+/** Resolves dot-notation path to value */
+const resolvePath = (root: ComponentTree, path: string): unknown => {
   let current: unknown = root;
-
-  for (const segment of segments) {
-    if (current === null || current === undefined) {
-      return undefined;
-    }
-    if (typeof current !== "object") {
-      return undefined;
-    }
+  for (const segment of path.split(".")) {
+    if (current == null || typeof current !== "object") return undefined;
     current = (current as Record<string, unknown>)[segment];
   }
-
   return current;
-}
-
-/** Type for the component caller function */
-type ComponentCaller = (
-  path: string,
-  args: unknown,
-  options?: CallOptions
-) => unknown;
-
-/**
- * Creates a callable interface for a component tree.
- * Returns a function that resolves and calls component functions by path.
- */
-function createComponentCaller(root: ComponentTree): ComponentCaller {
-  // Cache resolved paths for performance
-  const cache = new Map<string, unknown>();
-
-  return function call(
-    path: string,
-    args: unknown,
-    options: CallOptions = {}
-  ): unknown {
-    // Check cache first
-    let method = cache.get(path);
-
-    if (method === undefined && !cache.has(path)) {
-      method = resolvePath(root, path);
-      cache.set(path, method);
-    }
-
-    if (typeof method === "function") {
-      return method(args);
-    }
-
-    if (options.silent) {
-      return undefined;
-    }
-
-    throw new ComponentNotFoundError(path);
-  };
-}
+};
 
 /* ------------------------------------------------------------------ */
-/* Errors                                                              */
+/* Registry Errors                                                     */
 /* ------------------------------------------------------------------ */
 
-/** Error thrown when a component path cannot be resolved */
-export class ComponentNotFoundError extends Error {
+class RegistryError extends Error {
+  readonly type: string;
   readonly path: string;
 
-  constructor(path: string) {
-    super(`Component not found: "${path}"`);
-    this.name = "ComponentNotFoundError";
+  constructor(type: string, path: string) {
+    super(`${type} not found: "${path}"`);
+    this.name = `${type}NotFoundError`;
+    this.type = type;
     this.path = path;
+  }
+}
+
+export class ComponentNotFoundError extends RegistryError {
+  constructor(path: string) {
+    super("Component", path);
+  }
+}
+
+export class ActionNotFoundError extends RegistryError {
+  constructor(path: string) {
+    super("Action", path);
+  }
+}
+
+export class StoreNotFoundError extends RegistryError {
+  constructor(path: string) {
+    super("Store", path);
   }
 }
 
@@ -147,175 +109,375 @@ export class ComponentNotFoundError extends Error {
 /* Utilities                                                           */
 /* ------------------------------------------------------------------ */
 
-/**
- * Extracts all valid action paths from a component tree.
- * Useful for debugging or generating documentation.
- *
- * @example
- * ```ts
- * const paths = flattenPaths({ a: { b: () => {} } });
- * // Returns: ["a.b"]
- * ```
- */
-export function flattenPaths<T extends ComponentTree>(
-  obj: T
-): ExtractPaths<T>[] {
+/** Nanostore-like object for type checking */
+interface NanoStoreLike {
+  get(): unknown;
+  subscribe(cb: (value: unknown) => void): () => void;
+}
+
+/** Type guard for nanostore objects (atom, map, computed, deepMap) */
+const isNanoStore = (value: unknown): value is NanoStoreLike =>
+  value != null &&
+  typeof value === "object" &&
+  "get" in value &&
+  "subscribe" in value &&
+  typeof (value as NanoStoreLike).get === "function" &&
+  typeof (value as NanoStoreLike).subscribe === "function";
+
+/** Extracts paths leading to functions */
+const flattenFunctions = (obj: ComponentTree): string[] => {
   const result: string[] = [];
-
-  function walk(current: unknown, prefix: string): void {
-    if (current === null || current === undefined) return;
-
+  const walk = (current: unknown, prefix: string): void => {
+    if (current == null) return;
     if (typeof current === "function") {
       result.push(prefix);
       return;
     }
-
     if (typeof current === "object") {
-      for (const key of Object.keys(current as object)) {
-        const value = (current as Record<string, unknown>)[key];
-        const path = prefix ? `${prefix}.${key}` : key;
-        walk(value, path);
+      for (const [key, value] of Object.entries(current as object)) {
+        walk(value, prefix ? `${prefix}.${key}` : key);
       }
     }
-  }
-
+  };
   walk(obj, "");
-  return result as ExtractPaths<T>[];
+  return result;
+};
+
+/** Extracts paths leading to nanostores */
+const flattenStores = (obj: ComponentTree): string[] => {
+  const result: string[] = [];
+  const walk = (current: unknown, prefix: string): void => {
+    if (current == null) return;
+    if (isNanoStore(current)) {
+      result.push(prefix);
+      return;
+    }
+    if (typeof current === "object") {
+      for (const [key, value] of Object.entries(current as object)) {
+        walk(value, prefix ? `${prefix}.${key}` : key);
+      }
+    }
+  };
+  walk(obj, "");
+  return result;
+};
+
+/* ------------------------------------------------------------------ */
+/* Base Registry Factory                                               */
+/* ------------------------------------------------------------------ */
+
+type ErrorFactory = (path: string) => Error;
+
+interface RegistryState {
+  root: ComponentTree;
+  cache: Map<string, unknown>;
 }
 
+function createRegistry(errorFactory: ErrorFactory): Registry {
+  const state: RegistryState = { root: {}, cache: new Map() };
+
+  return {
+    add<C extends ComponentTree>(items: C): Registry {
+      Object.assign(state.root, items);
+      state.cache.clear();
+      return this;
+    },
+
+    call(path: string, args?: unknown, options: CallOptions = {}): unknown {
+      let method = state.cache.get(path);
+      if (method === undefined && !state.cache.has(path)) {
+        method = resolvePath(state.root, path);
+        state.cache.set(path, method);
+      }
+
+      if (typeof method === "function") return method(args);
+      if (options.silent) return undefined;
+      throw errorFactory(path);
+    },
+
+    has: (path: string) => typeof resolvePath(state.root, path) === "function",
+    paths: () => flattenFunctions(state.root),
+    clear() {
+      state.root = {};
+      state.cache.clear();
+    },
+    getTree: () => state.root as Readonly<ComponentTree>,
+  };
+}
+
+/* ------------------------------------------------------------------ */
+/* Components Registry                                                 */
+/* ------------------------------------------------------------------ */
+
 /**
- * Checks if a path exists and points to a callable function.
+ * Registry for nested UI elements and services.
+ * @example
+ * ```ts
+ * Components.add({ modal: { open: () => {}, close: () => {} } });
+ * Components.call("modal.open");
+ * ```
  */
-export function hasComponent<T extends ComponentTree>(
-  tree: T,
-  path: string
-): boolean {
-  const segments = path.split(".");
-  let current: unknown = tree;
-
-  for (const segment of segments) {
-    if (current === null || current === undefined) return false;
-    if (typeof current !== "object") return false;
-    current = (current as Record<string, unknown>)[segment];
-  }
-
-  return typeof current === "function";
-}
+export const Components: Registry = createRegistry(
+  (p) => new ComponentNotFoundError(p)
+);
 
 /* ------------------------------------------------------------------ */
-/* Components Registry Class                                           */
+/* Actions Registry                                                    */
 /* ------------------------------------------------------------------ */
 
 /**
- * Global component registry with type-safe path resolution.
+ * Registry for event handlers and commands.
+ * @example
+ * ```ts
+ * Actions.add({ user: { login: (data) => auth(data) } });
+ * Actions.call("user.login", credentials);
+ * ```
+ */
+export const Actions: Registry = createRegistry(
+  (p) => new ActionNotFoundError(p)
+);
+
+/* ------------------------------------------------------------------ */
+/* Stores Registry                                                     */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Nanostore interface - supports atom, map, computed, and deepMap.
  *
- * Supports:
- * - Adding component trees dynamically
- * - Calling components by dot-notation path
- * - Type inference for paths and return values
- * - Lazy initialization
+ * All nanostores provide:
+ * - `get()` - returns current value
+ * - `subscribe(cb)` - calls callback immediately with current value, then on every change
+ * - `listen(cb)` - calls callback only on changes (not immediately)
+ *
+ * Atoms additionally provide:
+ * - `set(value)` - replaces the entire value
+ *
+ * Maps additionally provide:
+ * - `set(value)` - replaces the entire object
+ * - `setKey(key, value)` - updates a single property
+ *
+ * @see https://github.com/nanostores/nanostores
+ */
+export interface NanoStore<T = unknown> {
+  /** Returns the current value */
+  get(): T;
+  /** Replaces the store value (atom, map) */
+  set?(value: T): void;
+  /** Updates a single key in the store (map only) */
+  setKey?<K extends keyof T>(key: K, value: T[K]): void;
+  /** Subscribes to changes - calls callback immediately with current value, then on every change. Returns unsubscribe function. */
+  subscribe(callback: (value: T) => void): () => void;
+  /** Listens for changes - calls callback only when value changes (not immediately). Returns unsubscribe function. */
+  listen(callback: (value: T) => void): () => void;
+}
+
+/** Store registry interface */
+export interface StoreRegistry {
+  add<C extends ComponentTree>(items: C): StoreRegistry;
+  call<T = unknown>(path: string, options?: StoreCallOptions): T | NanoStore<T> | undefined;
+  has(path: string): boolean;
+  paths(): string[];
+  clear(): void;
+  getTree(): Readonly<ComponentTree>;
+}
+
+const storesState: RegistryState = { root: {}, cache: new Map() };
+
+/**
+ * Registry for nanostores (atom, map, computed, deepMap).
+ *
+ * Supports all nanostore types:
+ * - **atom** - single value store
+ * - **map** - object store with setKey()
+ * - **computed** - derived/calculated store
+ * - **deepMap** - nested object store
  *
  * @example
  * ```ts
- * // Register components
- * Components.add({
- *   modal: {
- *     open: (opts: { id: string }) => console.log("Opening", opts.id),
- *     close: () => console.log("Closing")
- *   }
+ * // === REGISTER STORES ===
+ * uizy.state({
+ *   user: {
+ *     name: uizy.store.atom("john"),
+ *     profile: uizy.store.map({ age: 25, city: "NYC" }),
+ *   },
+ *   // Computed store (derived from other stores)
+ *   greeting: uizy.store.computed($name, name => `Hello, ${name}!`)
  * });
  *
- * // Call with full type safety
- * Components.call("modal.open", { id: "settings" });
+ * // === GET CURRENT VALUE ===
+ * uizy.$("user.name");           // "john"
+ * uizy.$("user.profile");        // { age: 25, city: "NYC" }
+ *
+ * // === GET RAW STORE (for mutations & subscriptions) ===
+ * const $name = uizy.$("user.name", { raw: true });
+ *
+ * // Atom: set entire value
+ * $name.set("jane");
+ *
+ * // Map: set entire object or single key
+ * const $profile = uizy.$("user.profile", { raw: true });
+ * $profile.set({ age: 30, city: "LA" });  // Replace entire object
+ * $profile.setKey("age", 31);              // Update single key
+ *
+ * // === SUBSCRIBE (immediate + changes) ===
+ * const unsubscribe = $name.subscribe(value => {
+ *   console.log("Current name:", value);  // Called immediately with "jane"
+ * });
+ * $name.set("bob");  // Logs: "Current name: bob"
+ * unsubscribe();     // Stop listening
+ *
+ * // === LISTEN (changes only) ===
+ * const unlisten = $name.listen(value => {
+ *   console.log("Name changed to:", value);  // NOT called immediately
+ * });
+ * $name.set("alice");  // Logs: "Name changed to: alice"
+ * unlisten();          // Stop listening
  * ```
  */
-export default class Components {
-  private static _root: ComponentTree = {};
-  private static _caller: ReturnType<typeof createComponentCaller> | null =
-    null;
-  private static _initialized = false;
+export const Stores: StoreRegistry = {
+  add<C extends ComponentTree>(items: C): StoreRegistry {
+    Object.assign(storesState.root, items);
+    storesState.cache.clear();
+    return Stores;
+  },
 
-  /**
-   * Registers components into the global registry.
-   * Merges with existing components (shallow merge at top level).
-   *
-   * @param items - Component tree to register
-   * @returns The Components class for chaining
-   */
-  static add<C extends ComponentTree>(items: C): typeof Components {
-    Components._root = { ...Components._root, ...items };
-    // Invalidate caller cache when tree changes
-    Components._caller = null;
-    Components._initialized = false;
-    return Components;
-  }
-
-  /**
-   * Calls a component function by its dot-notation path.
-   * Auto-initializes the registry if needed.
-   *
-   * @param path - Dot-notation path to the component (e.g., "drawer.left.open")
-   * @param args - Arguments to pass to the component function
-   * @param options - Call options
-   * @returns The component function's return value
-   * @throws {ComponentNotFoundError} If the path doesn't resolve to a function
-   */
-  static call<T extends ComponentTree = ComponentTree>(
-    path: ExtractPaths<T> | string,
-    args?: unknown,
-    options: CallOptions = {}
-  ): unknown {
-    if (!Components._initialized) {
-      Components._build();
+  call<T = unknown>(path: string, options: StoreCallOptions = {}): T | NanoStore<T> | undefined {
+    let store = storesState.cache.get(path);
+    if (store === undefined && !storesState.cache.has(path)) {
+      store = resolvePath(storesState.root, path);
+      storesState.cache.set(path, store);
     }
 
-    return Components._caller!(path as string, args, options);
-  }
+    if (store == null) {
+      if (options.silent) return undefined;
+      throw new StoreNotFoundError(path);
+    }
 
-  /**
-   * Checks if a component exists at the given path.
-   *
-   * @param path - Dot-notation path to check
-   * @returns True if the path resolves to a function
-   */
-  static has(path: string): boolean {
-    return hasComponent(Components._root, path);
-  }
+    // Return raw store for direct access to set/listen/subscribe
+    if (options.raw) return store as NanoStore<T>;
 
-  /**
-   * Returns all registered component paths.
-   * Useful for debugging or introspection.
-   *
-   * @returns Array of all valid component paths
-   */
-  static paths(): string[] {
-    return flattenPaths(Components._root);
-  }
+    // Return current value if it's a nanostore
+    if (isNanoStore(store)) {
+      return store.get() as T;
+    }
 
-  /**
-   * Clears all registered components.
-   * Mainly useful for testing.
-   */
-  static clear(): void {
-    Components._root = {};
-    Components._caller = null;
-    Components._initialized = false;
-  }
+    return store as T;
+  },
 
-  /**
-   * Returns the current component tree.
-   * For debugging purposes only.
-   */
-  static getTree(): Readonly<ComponentTree> {
-    return Components._root;
-  }
+  has: (path: string) => {
+    const value = resolvePath(storesState.root, path);
+    return value !== undefined && isNanoStore(value);
+  },
 
-  /** Internal: builds the caller from the current tree */
-  private static _build(): void {
-    Components._caller = createComponentCaller(Components._root);
-    Components._initialized = true;
-  }
+  paths: () => flattenStores(storesState.root),
+
+  clear() {
+    storesState.root = {};
+    storesState.cache.clear();
+  },
+
+  getTree: () => storesState.root as Readonly<ComponentTree>,
+};
+
+/* ------------------------------------------------------------------ */
+/* Directives Registry                                                 */
+/* ------------------------------------------------------------------ */
+
+/** Context passed to directive handlers */
+export interface DirectiveContext {
+  /** The attribute value (e.g., "user.name" from :foo="user.name") */
+  value: string;
+  /** Parsed modifiers from the attribute name (e.g., ["prevent", "stop"] from :foo.prevent.stop) */
+  modifiers: string[];
+  /** The raw expression string */
+  expression: string;
+  /** Register a reactive effect (auto-cleaned on disconnect) */
+  effect: (fn: () => (() => void) | void) => void;
+  /** Register a cleanup function (called on disconnect) */
+  cleanup: (fn: () => void) => void;
 }
 
-// Legacy export for backwards compatibility
-export { flattenPaths as flattenActions };
+/** Directive handler function */
+export type DirectiveHandler = (el: HTMLElement, ctx: DirectiveContext) => void;
+
+/** Simple directive handler (just element) */
+export type SimpleDirectiveHandler = (el: HTMLElement) => void;
+
+/** Directive registry interface */
+export interface DirectiveRegistry {
+  /** Register a single directive */
+  add(name: string, handler: DirectiveHandler): DirectiveRegistry;
+  /** Register multiple directives from an object */
+  addAll(directives: Record<string, DirectiveHandler | SimpleDirectiveHandler>): DirectiveRegistry;
+  /** Get a directive handler by name */
+  get(name: string): DirectiveHandler | undefined;
+  /** Check if a directive exists */
+  has(name: string): boolean;
+  /** List all directive names */
+  names(): string[];
+  /** Clear all directives */
+  clear(): void;
+}
+
+const directivesMap = new Map<string, DirectiveHandler>();
+
+/**
+ * Registry for custom directives.
+ *
+ * Directives are custom attributes that can be applied to ui-box elements.
+ * They receive the element and a context object with utilities for reactive effects.
+ *
+ * @example
+ * ```ts
+ * // Register a simple directive
+ * uizy.directive("highlight", (el, { value }) => {
+ *   el.style.backgroundColor = value || "yellow";
+ * });
+ *
+ * // Usage: <ui-box :highlight="red">Highlighted</ui-box>
+ *
+ * // Register a directive with modifiers
+ * uizy.directive("tooltip", (el, { value, modifiers }) => {
+ *   const position = modifiers.includes("top") ? "top" : "bottom";
+ *   // Setup tooltip...
+ * });
+ *
+ * // Usage: <ui-box :tooltip.top="Help text">Hover me</ui-box>
+ *
+ * // Register a reactive directive
+ * uizy.directive("bind", (el, { value, effect }) => {
+ *   effect(() => {
+ *     const store = Stores.call(value, { raw: true });
+ *     return store?.subscribe((v) => {
+ *       el.textContent = String(v);
+ *     });
+ *   });
+ * });
+ * ```
+ */
+export const Directives: DirectiveRegistry = {
+  add(name: string, handler: DirectiveHandler): DirectiveRegistry {
+    directivesMap.set(name, handler);
+    return Directives;
+  },
+
+  addAll(directives: Record<string, DirectiveHandler | SimpleDirectiveHandler>): DirectiveRegistry {
+    for (const [name, handler] of Object.entries(directives)) {
+      // Wrap simple handlers to match full signature
+      const fullHandler: DirectiveHandler = handler.length === 1
+        ? (el) => (handler as SimpleDirectiveHandler)(el)
+        : handler as DirectiveHandler;
+      directivesMap.set(name, fullHandler);
+    }
+    return Directives;
+  },
+
+  get: (name: string) => directivesMap.get(name),
+
+  has: (name: string) => directivesMap.has(name),
+
+  names: () => Array.from(directivesMap.keys()),
+
+  clear: () => directivesMap.clear(),
+};
+

@@ -1,15 +1,20 @@
 import { injectCSS } from "./utils.ts";
 
 /* ------------------------------------------------------------------ */
-/* TYPES */
+/* Constants                                                          */
 /* ------------------------------------------------------------------ */
+
 const BREAKPOINT: Record<string, number> = {
   sm: 576,
   md: 768,
   lg: 992,
   xl: 1200,
   xxl: 1400,
-} as const;
+};
+
+/* ------------------------------------------------------------------ */
+/* Types                                                              */
+/* ------------------------------------------------------------------ */
 
 export interface BreakpointConfig {
   name: string;
@@ -45,7 +50,7 @@ export interface LayoutInput {
 }
 
 /* ------------------------------------------------------------------ */
-/* DEFAULT CONFIG */
+/* Default Configuration                                              */
 /* ------------------------------------------------------------------ */
 
 const DEFAULT_BREAKPOINT: BreakpointConfig = {
@@ -76,7 +81,7 @@ const DEFAULT_OVERLAY: OverlayConfig = {
 };
 
 /* ------------------------------------------------------------------ */
-/* MAIN LAYOUT FUNCTION */
+/* Main Layout Function                                               */
 /* ------------------------------------------------------------------ */
 
 export function layout({
@@ -94,7 +99,7 @@ export function layout({
 }
 
 /* ------------------------------------------------------------------ */
-/* BREAKPOINT CSS GENERATOR */
+/* Breakpoint CSS Generator                                           */
 /* ------------------------------------------------------------------ */
 
 function setBreakPoint(bp: BreakpointConfig): string {
@@ -113,64 +118,31 @@ function setBreakPoint(bp: BreakpointConfig): string {
   const margin = marginRules.join(" ");
   if (bp.main) allRules.push(`.uizy-main { ${margin} }`);
   if (bp.header) allRules.push(`.uizy-header { ${margin} }`);
-  return `
-@media (max-width: ${width}px) {
-  ${allRules.join(" ")}
-  .uizy-drawer { ${drawerRules.join(" ")} }
-}
-`;
+  const rules = allRules.join(" ");
+  return `@media (max-width: ${width}px) {${rules}.uizy-drawer { ${drawerRules.join()} }}`;
 }
 
 /* ------------------------------------------------------------------ */
-/* LAYOUT VARIABLE MAPPING */
+/* Layout CSS Generator                                               */
 /* ------------------------------------------------------------------ */
 
-type CSSVariableMap = {
-  [K in keyof LayoutConfig | keyof OverlayConfig]: string;
+const CSS_VAR_MAP: Record<string, { name: string; unit: string }> = {
+  system: { name: "--uizy-system-bar-height", unit: "px" },
+  header: { name: "--uizy-header-height", unit: "px" },
+  footer: { name: "--uizy-footer-height", unit: "px" },
+  left: { name: "--uizy-left-width", unit: "px" },
+  right: { name: "--uizy-right-width", unit: "px" },
+  leftMini: { name: "--uizy-left-mini-width", unit: "px" },
+  rightMini: { name: "--uizy-right-mini-width", unit: "px" },
+  drawerSpeed: { name: "--uizy-drawer-speed", unit: "s" },
+  color: { name: "--uizy-overlay-color", unit: "" },
+  opacity: { name: "--uizy-overlay-opacity", unit: "" },
 };
-
-const CSS_VAR_MAP: CSSVariableMap = {
-  system: "--uizy-system-bar-height",
-  header: "--uizy-header-height",
-  footer: "--uizy-footer-height",
-  left: "--uizy-left-width",
-  right: "--uizy-right-width",
-  leftMini: "--uizy-left-mini-width",
-  rightMini: "--uizy-right-mini-width",
-  drawerSpeed: "--uizy-drawer-speed",
-  color: "--uizy-overlay-color",
-  opacity: "--uizy-overlay-opacity",
-};
-
-/* ------------------------------------------------------------------ */
-/* LAYOUT CSS GENERATOR */
-/* ------------------------------------------------------------------ */
 
 function setLayout(vars: LayoutConfig & OverlayConfig): string {
   const cssVars = Object.entries(CSS_VAR_MAP)
-    .map(([key, cssVar]) => {
-      const value = vars[key as keyof typeof vars];
-      const suffix =
-        key === "drawerSpeed"
-          ? "s"
-          : key === "color"
-          ? ""
-          : key === "opacity"
-          ? ""
-          : "px";
+    .map(([key, { name, unit }]) => `${name}: ${vars[key as keyof typeof vars]}${unit};`)
+    .join(" ");
 
-      return `${cssVar}: ${value}${suffix};`;
-    })
-    .join("\n    ");
-
-  return `
-:root {
-    ${cssVars}
-}
-uizy-overlay.full {
-  z-index: 100 !important;
-  top: 0 !important;
-  bottom: 0 !important;
-}
-`;
+  return `:root { ${cssVars} } uizy-overlay.full { z-index: 100 !important; top: 0 !important; bottom: 0 !important; }`;
 }

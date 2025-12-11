@@ -1,52 +1,25 @@
-/**
- * The CSS attr
- */
-const attrCSS = "uizy-design";
+/* ------------------------------------------------------------------ */
+/* CSS Injection Utilities                                            */
+/* ------------------------------------------------------------------ */
 
-/**
- * Injects replaceable CSS.
- * @param {string} code - The CSS code to inject.
- * @param {string} id - The ID of the style element to inject the code into.
- */
-export const injectCSS = (code: string, id: string = "main") =>
-  injectCSSBase({ code, id });
+const STYLE_ATTR = "uizy-design";
 
-/**
- * Base function for injecting replaceable CSS.
- * @param {object} options - Options for injecting CSS.
- * @param {string} options.code - The CSS code to inject.
- * @param {string} options.id - The ID of the style element to inject the code into.
- */
-function injectCSSBase({ code, id }: { code: string; id: string }) {
-  const elem = getStyle(id);
-  elem.textContent = removeSpace(code);
-}
+/** Minifies CSS by removing extra whitespace and newlines */
+const minifyCSS = (css: string): string =>
+  css.replace(/\s\s+/g, " ").replace(/\r?\n|\r/g, "").trim();
 
-/**
- * Gets the style element with the specified ID, creating one if it doesn't exist.
- * @param {string} id - The ID of the style element to retrieve or create.
- * @returns {HTMLElement} - The style element with the specified ID.
- */
-export function getStyle(id: string): HTMLElement {
-  const found = window.document.querySelectorAll(`[${attrCSS}="${id}"]`);
-  if (found.length > 0) {
-    return found[0] as HTMLElement;
-  } else {
-    const style = window.document.createElement("style");
-    style.setAttribute(attrCSS, id);
-    window.document.head.append(style);
-    return style;
-  }
-}
+/** Gets or creates a style element with the specified ID */
+const getOrCreateStyle = (id: string): HTMLStyleElement => {
+  const existing = document.querySelector<HTMLStyleElement>(`style[${STYLE_ATTR}="${id}"]`);
+  if (existing) return existing;
 
-/**
- * Cleans up CSS code by removing extra spaces and newlines.
- * @param {string} text - The CSS code to clean up.
- * @returns {string} - The cleaned up CSS code.
- */
-export function removeSpace(text: string): string {
-  return text
-    .replace(/\s\s+/g, " ")
-    .replace(/\r?\n|\r/g, "")
-    .trim();
-}
+  const style = document.createElement("style");
+  style.setAttribute(STYLE_ATTR, id);
+  document.head.append(style);
+  return style;
+};
+
+/** Injects CSS into a named style element (creates if not exists) */
+export const injectCSS = (code: string, id = "main"): void => {
+  getOrCreateStyle(id).textContent = minifyCSS(code);
+};

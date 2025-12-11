@@ -1,0 +1,320 @@
+---
+sidebar_position: 5
+sidebar_label: Directives
+---
+
+# Directives
+
+Create custom attributes for `<ui-box>` elements with reusable logic.
+
+## Overview
+
+Directives are custom attributes that extend `<ui-box>` functionality. They receive the element and a context object with utilities for reactive effects and cleanup.
+
+```javascript
+// Register a directive
+uizy.directive("highlight", (el, { value }) => {
+    el.style.backgroundColor = value || "yellow";
+});
+
+// Use it
+// <ui-box :highlight="red">Highlighted text</ui-box>
+```
+
+## Registration
+
+### Via `start()`
+
+```javascript
+uizy.start({
+    directives: {
+        // Simple directive (just element)
+        uppercase: (el) => {
+            el.style.textTransform = "uppercase";
+        },
+
+        // Full directive with context
+        color: (el, { value }) => {
+            el.style.color = value;
+        },
+
+        // Reactive directive
+        bind: (el, { value, effect }) => {
+            effect(() => {
+                const store = uizy.$(value, { raw: true });
+                return store?.subscribe((v) => {
+                    el.textContent = String(v);
+                });
+            });
+        },
+    },
+});
+```
+
+### Via `uizy.directive()`
+
+```javascript
+uizy.directive("tooltip", (el, { value, modifiers }) => {
+    const position = modifiers.includes("top") ? "top" : "bottom";
+    // Setup tooltip logic...
+});
+```
+
+## Directive Context
+
+The second argument to directive handlers is a context object:
+
+```javascript
+uizy.directive("example", (el, ctx) => {
+    // ctx.value      - The attribute value
+    // ctx.modifiers  - Array of modifiers from the attribute name
+    // ctx.expression - The raw expression string
+    // ctx.effect     - Register a reactive effect (auto-cleaned)
+    // ctx.cleanup    - Register a cleanup function
+});
+```
+
+### `value`
+
+The attribute value as a string:
+
+```html
+<ui-box :example="hello world"></ui-box>
+```
+
+```javascript
+uizy.directive("example", (el, { value }) => {
+    console.log(value); // "hello world"
+});
+```
+
+### `modifiers`
+
+Modifiers are dot-separated parts after the directive name:
+
+```html
+<ui-box :tooltip.top.arrow="Help text"></ui-box>
+```
+
+```javascript
+uizy.directive("tooltip", (el, { value, modifiers }) => {
+    console.log(modifiers); // ["top", "arrow"]
+    console.log(value);     // "Help text"
+});
+```
+
+### `effect`
+
+Register a reactive effect that returns an optional cleanup function:
+
+```javascript
+uizy.directive("autosize", (el, { effect }) => {
+    effect(() => {
+        const resize = () => {
+            el.style.height = "auto";
+            el.style.height = el.scrollHeight + "px";
+        };
+
+        el.addEventListener("input", resize);
+
+        // Return cleanup function
+        return () => el.removeEventListener("input", resize);
+    });
+});
+```
+
+### `cleanup`
+
+Register cleanup functions directly:
+
+```javascript
+uizy.directive("interval", (el, { value, cleanup }) => {
+    const id = setInterval(() => {
+        el.textContent = new Date().toLocaleTimeString();
+    }, parseInt(value) || 1000);
+
+    cleanup(() => clearInterval(id));
+});
+```
+
+## Examples
+
+### Focus Directive
+
+```javascript
+uizy.directive("focus", (el) => {
+    el.focus();
+});
+```
+
+```html
+<ui-box :focus>Auto-focused element</ui-box>
+```
+
+### Click Outside
+
+```javascript
+uizy.directive("click-outside", (el, { value, cleanup }) => {
+    const handler = (event) => {
+        if (!el.contains(event.target)) {
+            // Execute the expression
+            new Function(value).call(el);
+        }
+    };
+
+    document.addEventListener("click", handler);
+    cleanup(() => document.removeEventListener("click", handler));
+});
+```
+
+```html
+<ui-box :click-outside="console.log('clicked outside')">
+    Click outside me
+</ui-box>
+```
+
+### Lazy Load Images
+
+```javascript
+uizy.directive("lazy", (el, { value, cleanup }) => {
+    const img = el.querySelector("img") || el;
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                img.src = value;
+                observer.disconnect();
+            }
+        });
+    });
+
+    observer.observe(el);
+    cleanup(() => observer.disconnect());
+});
+```
+
+```html
+<ui-box :lazy="/images/large-photo.jpg">
+    <img src="/images/placeholder.jpg" alt="Photo" />
+</ui-box>
+```
+
+### Reactive Store Binding
+
+```javascript
+uizy.directive("model", (el, { value, effect }) => {
+    const input = el.querySelector("input") || el;
+
+    effect(() => {
+        const store = uizy.$(value, { raw: true });
+        if (!store) return;
+
+        // Two-way binding
+        const unsubscribe = store.subscribe((v) => {
+            if (input.value !== v) input.value = v;
+        });
+
+        const onInput = () => store.set(input.value);
+        input.addEventListener("input", onInput);
+
+        return () => {
+            unsubscribe();
+            input.removeEventListener("input", onInput);
+        };
+    });
+});
+```
+
+```html
+<ui-box :model="form.username">
+    <input type="text" />
+</ui-box>
+```
+
+### Conditional Visibility
+
+```javascript
+uizy.directive("show", (el, { value, effect }) => {
+    effect(() => {
+        const store = uizy.$(value, { raw: true });
+        if (!store) {
+            el.style.display = value ? "" : "none";
+            return;
+        }
+
+        return store.subscribe((v) => {
+            el.style.display = v ? "" : "none";
+        });
+    });
+});
+```
+
+```html
+<ui-box :show="ui.modalOpen">Modal content</ui-box>
+```
+
+### Animation on Enter
+
+```javascript
+uizy.directive("animate", (el, { value, modifiers }) => {
+    const animation = value || "fadeIn";
+    const duration = modifiers.includes("slow") ? "1s" : "0.3s";
+
+    el.style.animation = `${animation} ${duration} ease-out`;
+});
+```
+
+```html
+<ui-box :animate="slideIn">Animated content</ui-box>
+<ui-box :animate.slow="fadeIn">Slow fade in</ui-box>
+```
+
+## API Reference
+
+### `uizy.directive(name, handler)`
+
+Register a custom directive.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `name` | `string` | Directive name (used as `:name` attribute) |
+| `handler` | `DirectiveHandler` | Handler function |
+
+### `uizy.directives`
+
+Access the directives registry:
+
+| Method | Description |
+|--------|-------------|
+| `.add(name, handler)` | Register a directive |
+| `.addAll(directives)` | Register multiple directives |
+| `.get(name)` | Get a directive handler |
+| `.has(name)` | Check if directive exists |
+| `.names()` | List all directive names |
+| `.clear()` | Remove all directives |
+
+### DirectiveHandler
+
+```typescript
+type DirectiveHandler = (el: HTMLElement, ctx: DirectiveContext) => void;
+```
+
+### DirectiveContext
+
+```typescript
+interface DirectiveContext {
+    value: string;
+    modifiers: string[];
+    expression: string;
+    effect: (fn: () => (() => void) | void) => void;
+    cleanup: (fn: () => void) => void;
+}
+```
+
+## Best Practices
+
+1. **Keep directives focused** - Each directive should do one thing well
+2. **Always cleanup** - Use `cleanup()` or return cleanup from `effect()` to prevent memory leaks
+3. **Use modifiers for options** - Instead of complex value parsing, use modifiers like `:tooltip.top`
+4. **Handle missing values gracefully** - Check if `value` exists before using it
+5. **Document your directives** - Add comments explaining what each directive does

@@ -1,0 +1,113 @@
+---
+sidebar_position: 3
+sidebar_label: "<uizy-app>"
+---
+
+# `<uizy-app>`
+
+The root container that manages all layout components. Required for the JavaScript API to work.
+
+## Attributes
+
+| Attribute | Description |
+|-----------|-------------|
+| `id` | Required for accessing via `uizy.get()` |
+
+## Usage
+
+```html
+<uizy-app id="app">
+    <!-- All other components go here -->
+</uizy-app>
+```
+
+## JavaScript API
+
+### Accessing the App
+
+```javascript
+uizy.init(() => {
+    const app = uizy.get("app");
+    if (!app) return;
+
+    // Use the app instance...
+});
+```
+
+### Controlling Components with Actions
+
+The `action()` method lets you control drawers and overlays programmatically:
+
+```javascript
+const app = uizy.get("app");
+
+// Close overlay
+app.action("overlay", ({ set }) => set(false));
+
+// Toggle left drawer
+app.action("left", ({ set }) => set());
+
+// Toggle left mini drawer
+app.action("left.mini", ({ set }) => set());
+
+// Toggle right drawer
+app.action("right", ({ set }) => set());
+
+// Toggle right mini drawer
+app.action("right.mini", ({ set }) => set());
+
+// Set overlay to auto (follows drawer state)
+app.action("overlay", ({ set }) => set(null));
+```
+
+### Action Targets
+
+| Target | Description |
+|--------|-------------|
+| `overlay` | Controls the overlay visibility |
+| `left` | Controls the left drawer |
+| `left.mini` | Controls the left mini drawer |
+| `right` | Controls the right drawer |
+| `right.mini` | Controls the right mini drawer |
+
+### Set Function Values
+
+| Value | Description |
+|-------|-------------|
+| `true` | Open/show the element |
+| `false` | Close/hide the element |
+| `undefined` or no arg | Toggle the current state |
+| `null` | Auto mode (overlay follows drawer state) |
+
+## Example
+
+```html
+<uizy-app id="app">
+    <uizy-header shadow="12">
+        <button id="menu-btn">Menu</button>
+        <span>My App</span>
+    </uizy-header>
+
+    <uizy-drawer shadow="6" clip-top clip-bottom>
+        Navigation
+    </uizy-drawer>
+
+    <uizy-overlay clip-top clip-bottom></uizy-overlay>
+
+    <uizy-main clip-top clip-bottom clip-left>
+        Content
+    </uizy-main>
+</uizy-app>
+
+<script type="module">
+    import uizy from "@dufeut/uizy";
+
+    uizy.init(() => {
+        const app = uizy.get("app");
+
+        document.getElementById("menu-btn").onclick = () => {
+            app.action("left", ({ set }) => set());
+        };
+    });
+</script>
+```

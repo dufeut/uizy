@@ -1,0 +1,236 @@
+---
+sidebar_position: 2
+sidebar_label: Components
+---
+
+# Components Registry
+
+Register and call UI utility functions using dot-notation paths.
+
+## Overview
+
+Components are nested functions that return CSS classes, HTML strings, or any value. They're perfect for reusable UI utilities.
+
+```javascript
+// Register
+uizy.add({
+    button: {
+        primary: () => "px-4 py-2 bg-primary text-white rounded",
+        secondary: () => "px-4 py-2 bg-gray-200 rounded",
+        sized: (size) => `px-${size} py-${size / 2}`,
+    },
+});
+
+// Use
+uizy.use("button.primary");        // "px-4 py-2 bg-primary text-white rounded"
+uizy.use("button.sized", 6);       // "px-6 py-3"
+```
+
+## Registration
+
+### Via `start()`
+
+```javascript
+uizy.start({
+    components: {
+        card: {
+            base: () => "rounded shadow p-4",
+            elevated: () => "rounded shadow-lg p-4",
+        },
+        text: {
+            heading: () => "text-2xl font-bold",
+            body: () => "text-base leading-relaxed",
+        },
+    },
+});
+```
+
+### Via `uizy.add()`
+
+```javascript
+uizy.add({
+    modal: {
+        container: () => "fixed inset-0 flex items-center justify-center",
+        backdrop: () => "absolute inset-0 bg-black/50",
+        content: () => "relative bg-white rounded-lg shadow-xl p-6",
+    },
+});
+```
+
+## Calling Components
+
+### Basic Call
+
+```javascript
+const classes = uizy.use("button.primary");
+```
+
+### With Arguments
+
+```javascript
+uizy.add({
+    spacing: {
+        pad: (n) => `p-${n}`,
+        margin: ({ x, y }) => `mx-${x} my-${y}`,
+    },
+});
+
+uizy.use("spacing.pad", 4);              // "p-4"
+uizy.use("spacing.margin", { x: 2, y: 4 }); // "mx-2 my-4"
+```
+
+### Silent Mode
+
+Returns `undefined` instead of throwing if component doesn't exist:
+
+```javascript
+uizy.use("nonexistent.path", null, { silent: true }); // undefined
+```
+
+## API Reference
+
+### `uizy.use(path, args?, options?)`
+
+Call a component by its dot-notation path.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `path` | `string` | Dot-notation path (e.g., "button.primary") |
+| `args` | `unknown` | Arguments to pass to the component |
+| `options.silent` | `boolean` | Return undefined instead of throwing |
+
+### `uizy.add(items)`
+
+Register components. Merges with existing components.
+
+```javascript
+uizy.add({
+    newComponent: () => "classes",
+});
+```
+
+### `uizy.components.has(path)`
+
+Check if a component exists.
+
+```javascript
+uizy.components.has("button.primary"); // true
+uizy.components.has("nonexistent");    // false
+```
+
+### `uizy.components.paths()`
+
+Get all registered component paths.
+
+```javascript
+uizy.components.paths();
+// ["button.primary", "button.secondary", "card.base", ...]
+```
+
+### `uizy.components.clear()`
+
+Remove all registered components.
+
+```javascript
+uizy.components.clear();
+```
+
+### `uizy.components.getTree()`
+
+Get the raw component tree (readonly).
+
+```javascript
+const tree = uizy.components.getTree();
+```
+
+## Using with `<ui-box>`
+
+The `<ui-box>` web component automatically applies component classes:
+
+```html
+<ui-box use="button.primary">Click me</ui-box>
+<!-- Renders with class="px-4 py-2 bg-primary text-white rounded" -->
+
+<ui-box use="card.elevated">
+    <h2>Card Title</h2>
+    <p>Card content</p>
+</ui-box>
+```
+
+## Examples
+
+### Design System
+
+```javascript
+uizy.start({
+    components: {
+        // Typography
+        text: {
+            h1: () => "text-4xl font-bold tracking-tight",
+            h2: () => "text-3xl font-semibold",
+            h3: () => "text-2xl font-medium",
+            body: () => "text-base leading-relaxed",
+            small: () => "text-sm text-gray-600",
+        },
+
+        // Buttons
+        btn: {
+            base: () => "inline-flex items-center justify-center rounded font-medium transition",
+            primary: () => "bg-primary text-white hover:bg-primary-dark",
+            secondary: () => "bg-gray-100 text-gray-900 hover:bg-gray-200",
+            ghost: () => "bg-transparent hover:bg-gray-100",
+            sm: () => "px-3 py-1.5 text-sm",
+            md: () => "px-4 py-2 text-base",
+            lg: () => "px-6 py-3 text-lg",
+        },
+
+        // Cards
+        card: {
+            container: () => "bg-white rounded-lg border border-gray-200",
+            header: () => "px-4 py-3 border-b border-gray-200",
+            body: () => "px-4 py-4",
+            footer: () => "px-4 py-3 border-t border-gray-200 bg-gray-50",
+        },
+    },
+});
+```
+
+### Dynamic Classes
+
+```javascript
+uizy.add({
+    grid: {
+        cols: (n) => `grid grid-cols-${n} gap-4`,
+        responsive: ({ sm, md, lg }) =>
+            `grid grid-cols-${sm} md:grid-cols-${md} lg:grid-cols-${lg} gap-4`,
+    },
+    flex: {
+        row: () => "flex flex-row",
+        col: () => "flex flex-col",
+        center: () => "flex items-center justify-center",
+        between: () => "flex items-center justify-between",
+        gap: (n) => `flex gap-${n}`,
+    },
+});
+
+// Usage
+uizy.use("grid.cols", 3);                              // "grid grid-cols-3 gap-4"
+uizy.use("grid.responsive", { sm: 1, md: 2, lg: 4 }); // "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+```
+
+### Conditional Classes
+
+```javascript
+uizy.add({
+    input: {
+        field: ({ error, disabled }) => [
+            "w-full px-3 py-2 border rounded",
+            error ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-blue-500",
+            disabled ? "bg-gray-100 cursor-not-allowed" : "bg-white",
+        ].join(" "),
+    },
+});
+
+uizy.use("input.field", { error: true, disabled: false });
+// "w-full px-3 py-2 border rounded border-red-500 focus:ring-red-500 bg-white"
+```

@@ -1,5 +1,5 @@
 {
-  "name": "@dufeut/uizy",
+  "name": "uizy",
   "version": "0.1.1",
   "description": "Small footprint, big impact – the micro CSS framework for UIs.",
   "license": "BSD-3-Clause",
@@ -27,13 +27,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build && node scripts/postbuild.mjs",
+    "build": "tsc && vite build && tsc -p tsconfig.build.json",
     "preview": "vite preview"
   },
   "devDependencies": {
     "cssnano": "^7.1.2",
     "postcss": "^8.5.6",
     "sass": "^1.77.8",
+    "terser": "^5.44.1",
+    "typescript": "~5.9.3",
     "vite": "^7.2.7"
   },
   "repository": {
@@ -54,5 +56,8 @@
   "homepage": "https://github.com/dufeut/uizy#readme",
   "files": [
     "dist"
-  ]
+  ],
+  "dependencies": {
+    "nanostores": "^1.1.0"
+  }
 }

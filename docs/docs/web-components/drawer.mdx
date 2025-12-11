@@ -1,0 +1,150 @@
+---
+sidebar_position: 6
+sidebar_label: "<uizy-drawer>"
+---
+
+# `<uizy-drawer>`
+
+Animated slide-in panels for navigation, sidebars, or contextual content.
+
+## Attributes
+
+| Attribute | Description |
+|-----------|-------------|
+| `right` | Position on right side (default: left) |
+| `open` | Shows the drawer |
+| `mini` | Collapsed/mini state |
+| `shadow` | Shadow intensity (1-24) |
+| `clip-top` | Clip below header |
+| `clip-bottom` | Clip above footer |
+| `clip-system` | Clip below system bar only |
+
+## Usage
+
+### Left Sidebar
+
+```html
+<uizy-drawer open shadow="6" clip-top clip-bottom>
+    Main Navigation
+</uizy-drawer>
+```
+
+### Right Sidebar
+
+```html
+<uizy-drawer right open shadow="6" clip-top clip-bottom>
+    Details Panel
+</uizy-drawer>
+```
+
+### Mini Sidebar (Collapsed)
+
+```html
+<uizy-drawer open mini shadow="6" clip-system clip-bottom>
+    Icons Only
+</uizy-drawer>
+```
+
+## CSS Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `--uizy-left-width` | `240px` | Left drawer width |
+| `--uizy-left-mini-width` | `64px` | Left mini drawer width |
+| `--uizy-right-width` | `240px` | Right drawer width |
+| `--uizy-right-mini-width` | `64px` | Right mini drawer width |
+| `--uizy-drawer-speed` | `0.2s` | Animation duration |
+| `--uizy-drawer-easing` | `cubic-bezier(0.4, 0, 0.2, 1)` | Animation easing |
+| `--uizy-left-layer` | `20` | Left drawer z-index |
+| `--uizy-right-layer` | `20` | Right drawer z-index |
+
+## Controlling Drawers
+
+Use the app's `action()` method to control drawers programmatically:
+
+```javascript
+const app = uizy.get("app");
+
+// Toggle left drawer
+app.action("left", ({ set }) => set());
+
+// Open left drawer
+app.action("left", ({ set }) => set(true));
+
+// Close left drawer
+app.action("left", ({ set }) => set(false));
+
+// Toggle mini drawer
+app.action("left.mini", ({ set }) => set());
+```
+
+## Examples
+
+### Navigation Drawer
+
+```html
+<uizy-drawer open shadow="6" clip-top clip-bottom>
+    <nav class="nav-menu">
+        <a href="#" class="nav-item active">
+            <span class="icon">🏠</span>
+            <span class="label">Home</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="icon">📁</span>
+            <span class="label">Projects</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="icon">⚙️</span>
+            <span class="label">Settings</span>
+        </a>
+    </nav>
+</uizy-drawer>
+
+<style>
+    .nav-menu {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem 0;
+    }
+    .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        text-decoration: none;
+        color: inherit;
+    }
+    .nav-item:hover, .nav-item.active {
+        background: rgba(0,0,0,0.05);
+    }
+</style>
+```
+
+### Dual Drawers (Full + Mini)
+
+```html
+<!-- Full drawer -->
+<uizy-drawer open shadow="6" clip-top clip-bottom>
+    <nav>Full navigation with labels</nav>
+</uizy-drawer>
+
+<!-- Mini drawer (icons only) -->
+<uizy-drawer open mini shadow="6" clip-system clip-bottom>
+    <nav>🏠 📁 ⚙️</nav>
+</uizy-drawer>
+```
+
+### Right Panel
+
+```html
+<uizy-drawer right shadow="6" clip-top clip-bottom>
+    <h3>Details</h3>
+    <p>Selected item information...</p>
+    <button>Edit</button>
+    <button>Delete</button>
+</uizy-drawer>
+```
+
+:::tip
+You can have multiple drawers on each side - typically a full drawer and a mini drawer for different screen sizes or states.
+:::
