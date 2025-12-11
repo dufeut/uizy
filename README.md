@@ -2,7 +2,7 @@
 
 <div align="center">
 
-  <img height="140px" src="https://raw.githubusercontent.com/dufeut/uizy/main/docs/public/logo.png" alt="logo"/>
+  <img height="140px" src="https://raw.githubusercontent.com/dufeut/uizy/main/docs/static/img/logo.png" alt="logo"/>
 
    <p><strong>Small footprint, big impact – the micro CSS framework for UIs.</strong></p>
    <p><code>6.46kb</code> gzipped</p>
@@ -20,7 +20,7 @@
 ### CDN
 
 ```html
-<link href="https://unpkg.com/@dufeut/uizy@latest" rel="stylesheet" />
+<link href="https://unpkg.com/@dufeut/uizy/dist/index.css" rel="stylesheet" />
 ```
 
 ### NPM
@@ -30,7 +30,8 @@ npm install @dufeut/uizy
 ```
 
 ```js
-import "@dufeut/uizy";
+import uizy from "@dufeut/uizy";
+import "@dufeut/uizy/index.css";
 ```
 
 ## Usage
