@@ -478,10 +478,12 @@
             toggleLeft: () => {
               const app = App.get("app");
               app?.action("left", ({ set }) => set());
+              app?.action("main", ({ set }) => set("left"));
             },
             toggleRight: () => {
               const app = App.get("app");
               app?.action("right", ({ set }) => set());
+              app?.action("main", ({ set }) => set("right"));
             },
           },
           nav: {

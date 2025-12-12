@@ -282,6 +282,18 @@ class UizyApp extends BaseElement {
     el.classList.toggle(CLASS.DRAWER_OPEN, open ?? undefined);
   }
 
+  private toggleMain(
+    el: HTMLElement,
+    side?: string,
+    open?: boolean | null
+  ): void {
+    if (side === "left") {
+      el.classList.toggle(CLIP_CLASS_MAP.left, open ?? undefined);
+    } else {
+      el.classList.toggle(CLIP_CLASS_MAP.right, open ?? undefined);
+    }
+  }
+
   action(section: string, callback: (payload: ActionPayload) => void): void {
     this.ensureInitialized();
 
@@ -295,17 +307,25 @@ class UizyApp extends BaseElement {
 
     const isDrawer = ["left", "right", "leftMini", "rightMini"].includes(key);
     const isOverlay = key === "overlay";
+    const isMain = key === "main";
 
-    if (!isDrawer && !isOverlay) return;
+    if (!isDrawer && !isOverlay && !isMain) return;
 
-    const payload: ActionPayload = {
-      set: isOverlay
-        ? (open, full) => this.toggleDisplay(el, open, full)
-        : (open) => this.toggleDrawer(el, open),
-      self: el,
-    };
+    if (isMain) {
+      callback({
+        self: el,
+        set: (side, open) => this.toggleMain(el, String(side), open),
+      });
+    } else {
+      const payload: ActionPayload = {
+        set: isOverlay
+          ? (open, full) => this.toggleDisplay(el, open, full)
+          : (open) => this.toggleDrawer(el, open),
+        self: el,
+      };
 
-    callback(payload);
+      callback(payload);
+    }
   }
 }
 
