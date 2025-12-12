@@ -321,7 +321,7 @@ class UizyBox extends BaseElement {
 
   connectedCallback() {
     // Reactive text binding - subscribes to store changes
-    const textPath = this.getAttribute(":text");
+    const textPath = this.getAttribute(":text") ?? this.getAttribute("u-text");
     if (textPath && Stores.has(textPath)) {
       const store = Stores.call<unknown>(textPath, { raw: true }) as
         | { subscribe: (cb: (value: unknown) => void) => () => void }
