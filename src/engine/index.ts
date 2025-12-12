@@ -451,8 +451,39 @@ const UIZY = {
   /** Get an element by ID */
   get: (id: string): HTMLElement | null => document.getElementById(id),
 
-  /** Theme configuration class */
-  theme: Theme,
+  /** Theme configuration class (static methods) */
+  themeClass: Theme,
+
+  /**
+   * Updates theme configuration and injects CSS.
+   * Can be called multiple times to update specific theme aspects.
+   *
+   * @param config - Partial theme configuration to apply
+   *
+   * @example
+   * ```ts
+   * // Update colors only
+   * uizy.theme({ colors: { primary: "#ff0000" } });
+   *
+   * // Update scrollbar only
+   * uizy.theme({ scrollbar: { size: 10 } });
+   *
+   * // Update multiple aspects
+   * uizy.theme({
+   *   colors: { accent: "#6b08a5" },
+   *   brands: [{ name: "info", back: "#0050b9", text: "#fff" }],
+   * });
+   * ```
+   */
+  theme: (config: ThemeConfig): void => {
+    if (config.colors) Theme.system(config.colors);
+    if (config.scrollbar) Theme.scrollbar(config.scrollbar);
+    if (config.brands) {
+      for (const brand of config.brands) Theme.brand(brand);
+    }
+    const css = Theme.toCSS();
+    if (css) injectCSS(`:root { ${css} }`, "theme");
+  },
 
   /** Component registry class */
   components: Components,

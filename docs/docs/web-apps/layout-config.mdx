@@ -5,7 +5,7 @@ sidebar_label: Layout
 
 # Layout Configuration
 
-Configure layout dimensions and breakpoints using the `uizy.layout()` method.
+Configure layout dimensions and breakpoints using `uizy.layout()`. This method can be called at startup via `start()` or anytime at runtime to update layout settings.
 
 ## Basic Usage
 
@@ -14,12 +14,12 @@ import uizy from "@dufeut/uizy";
 import "@dufeut/uizy/index.css";
 
 uizy.layout({
-    layout: {
-        header: 56,
-        footer: 48,
-        left: 240,
-        right: 240,
-    },
+  layout: {
+    header: 56,
+    footer: 48,
+    left: 240,
+    right: 240,
+  },
 });
 ```
 
@@ -27,35 +27,35 @@ uizy.layout({
 
 ```javascript
 uizy.layout({
-    // Dimensions
-    layout: {
-        system: 24,       // System bar height (px)
-        header: 56,       // Header height (px)
-        footer: 48,       // Footer height (px)
-        left: 240,        // Left drawer width (px)
-        right: 240,       // Right drawer width (px)
-        leftMini: 64,     // Left mini drawer width (px)
-        rightMini: 64,    // Right mini drawer width (px)
-        drawerSpeed: 0.2, // Animation speed (seconds)
-    },
+  // Dimensions
+  layout: {
+    system: 24, // System bar height (px)
+    header: 56, // Header height (px)
+    footer: 48, // Footer height (px)
+    left: 240, // Left drawer width (px)
+    right: 240, // Right drawer width (px)
+    leftMini: 64, // Left mini drawer width (px)
+    rightMini: 64, // Right mini drawer width (px)
+    drawerSpeed: 0.2, // Animation speed (seconds)
+  },
 
-    // Overlay styling
-    overlay: {
-        opacity: 0.45,
-        color: "black",
-    },
+  // Overlay styling
+  overlay: {
+    opacity: 0.45,
+    color: "black",
+  },
 
-    // Responsive breakpoint
-    breakpoint: {
-        name: "md",       // Breakpoint name (sm, md, lg, xl, xxl)
-        width: 768,       // Or custom width in pixels
-        main: true,       // Adjust main content margins
-        header: true,     // Adjust header margins
-        top: true,        // Adjust top clipping
-        bottom: false,    // Adjust bottom clipping
-        left: true,       // Reset left margins on mobile
-        right: true,      // Reset right margins on mobile
-    },
+  // Responsive breakpoint
+  breakpoint: {
+    name: "md", // Breakpoint name (sm, md, lg, xl, xxl)
+    width: 768, // Or custom width in pixels
+    main: true, // Adjust main content margins
+    header: true, // Adjust header margins
+    top: true, // Adjust top clipping
+    bottom: false, // Adjust bottom clipping
+    left: true, // Reset left margins on mobile
+    right: true, // Reset right margins on mobile
+  },
 });
 ```
 
@@ -63,45 +63,45 @@ uizy.layout({
 
 ### Layout Options
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `system` | `number` | `0` | System bar height in pixels |
-| `header` | `number` | `56` | Header height in pixels |
-| `footer` | `number` | `48` | Footer height in pixels |
-| `left` | `number` | `240` | Left drawer width in pixels |
-| `right` | `number` | `240` | Right drawer width in pixels |
-| `leftMini` | `number` | `64` | Left mini drawer width in pixels |
-| `rightMini` | `number` | `64` | Right mini drawer width in pixels |
-| `drawerSpeed` | `number` | `0.2` | Drawer animation speed in seconds |
+| Property      | Type     | Default | Description                       |
+| ------------- | -------- | ------- | --------------------------------- |
+| `system`      | `number` | `0`     | System bar height in pixels       |
+| `header`      | `number` | `56`    | Header height in pixels           |
+| `footer`      | `number` | `48`    | Footer height in pixels           |
+| `left`        | `number` | `240`   | Left drawer width in pixels       |
+| `right`       | `number` | `240`   | Right drawer width in pixels      |
+| `leftMini`    | `number` | `64`    | Left mini drawer width in pixels  |
+| `rightMini`   | `number` | `64`    | Right mini drawer width in pixels |
+| `drawerSpeed` | `number` | `0.2`   | Drawer animation speed in seconds |
 
 ### Overlay Options
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `opacity` | `number` | `0.45` | Overlay opacity (0-1) |
-| `color` | `string` | `"black"` | Overlay background color |
+| Property  | Type     | Default   | Description              |
+| --------- | -------- | --------- | ------------------------ |
+| `opacity` | `number` | `0.45`    | Overlay opacity (0-1)    |
+| `color`   | `string` | `"black"` | Overlay background color |
 
 ### Breakpoint Options
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `name` | `string` | `""` | Named breakpoint (sm, md, lg, xl, xxl) |
-| `width` | `number` | `0` | Custom breakpoint width in pixels |
-| `main` | `boolean` | `true` | Adjust main content margins |
-| `header` | `boolean` | `true` | Adjust header margins |
-| `top` | `boolean` | `false` | Adjust top clipping |
-| `bottom` | `boolean` | `false` | Adjust bottom clipping |
-| `left` | `boolean` | `false` | Reset left margins below breakpoint |
-| `right` | `boolean` | `false` | Reset right margins below breakpoint |
+| Property | Type      | Default | Description                            |
+| -------- | --------- | ------- | -------------------------------------- |
+| `name`   | `string`  | `""`    | Named breakpoint (sm, md, lg, xl, xxl) |
+| `width`  | `number`  | `0`     | Custom breakpoint width in pixels      |
+| `main`   | `boolean` | `true`  | Adjust main content margins            |
+| `header` | `boolean` | `true`  | Adjust header margins                  |
+| `top`    | `boolean` | `false` | Adjust top clipping                    |
+| `bottom` | `boolean` | `false` | Adjust bottom clipping                 |
+| `left`   | `boolean` | `false` | Reset left margins below breakpoint    |
+| `right`  | `boolean` | `false` | Reset right margins below breakpoint   |
 
 ### Named Breakpoints
 
-| Name | Width |
-|------|-------|
-| `sm` | 576px |
-| `md` | 768px |
-| `lg` | 992px |
-| `xl` | 1200px |
+| Name  | Width  |
+| ----- | ------ |
+| `sm`  | 576px  |
+| `md`  | 768px  |
+| `lg`  | 992px  |
+| `xl`  | 1200px |
 | `xxl` | 1400px |
 
 ## Examples
@@ -110,18 +110,18 @@ uizy.layout({
 
 ```javascript
 uizy.layout({
-    layout: {
-        header: 56,
-        footer: 48,
-        left: 280,
-        leftMini: 56,
-    },
-    breakpoint: {
-        name: "md",
-        main: true,
-        header: true,
-        left: true,
-    },
+  layout: {
+    header: 56,
+    footer: 48,
+    left: 280,
+    leftMini: 56,
+  },
+  breakpoint: {
+    name: "md",
+    main: true,
+    header: true,
+    left: true,
+  },
 });
 ```
 
@@ -129,10 +129,10 @@ uizy.layout({
 
 ```javascript
 uizy.layout({
-    overlay: {
-        opacity: 0.7,
-        color: "#000",
-    },
+  overlay: {
+    opacity: 0.7,
+    color: "#000",
+  },
 });
 ```
 
@@ -140,31 +140,95 @@ uizy.layout({
 
 ```javascript
 uizy.layout({
-    layout: {
-        drawerSpeed: 0.4,
-    },
+  layout: {
+    drawerSpeed: 0.4,
+  },
 });
+```
+
+## Runtime Updates
+
+Call `uizy.layout()` anytime to update layout configuration. Only the properties you provide will be updated; others retain their current values.
+
+```javascript
+// Update header height at runtime
+uizy.layout({ layout: { header: 72 } });
+
+// Update overlay appearance
+uizy.layout({ overlay: { opacity: 0.6 } });
+
+// Update multiple settings
+uizy.layout({
+  layout: { left: 300, drawerSpeed: 0.3 },
+  overlay: { color: "#1a1a1a" },
+});
+```
+
+:::tip
+Use runtime updates to implement features like collapsible headers, dynamic drawer widths, or user-customizable layouts.
+:::
+
+### Example: Collapsible Header
+
+```javascript
+let headerExpanded = true;
+
+function toggleHeader() {
+  headerExpanded = !headerExpanded;
+  uizy.layout({
+    layout: { header: headerExpanded ? 56 : 0 },
+  });
+}
+```
+
+### Example: Responsive Drawer Width
+
+```javascript
+function setDrawerWidth(width) {
+  uizy.layout({ layout: { left: width } });
+}
+
+// Expand drawer on hover
+drawer.addEventListener("mouseenter", () => setDrawerWidth(280));
+drawer.addEventListener("mouseleave", () => setDrawerWidth(64));
 ```
 
 ## Using with `start()`
 
-You can also configure layout through the unified `start()` method:
+Configure layout through the unified `start()` method for initial setup:
 
 ```javascript
 uizy.start({
+  layout: {
     layout: {
-        layout: {
-            header: 56,
-            footer: 48,
-            left: 240,
-        },
-        breakpoint: {
-            name: "md",
-            left: true,
-        },
+      header: 56,
+      footer: 48,
+      left: 240,
     },
-    onReady: () => {
-        console.log("Layout configured!");
+    breakpoint: {
+      name: "md",
+      left: true,
     },
+  },
+  onReady: () => {
+    console.log("Layout configured!");
+  },
 });
 ```
+
+## Generated CSS Variables
+
+`uizy.layout()` injects CSS custom properties that control the layout:
+
+| Variable                   | Description               |
+| -------------------------- | ------------------------- |
+| `--uizy-system-bar-height` | System bar height         |
+| `--uizy-header-height`     | Header height             |
+| `--uizy-footer-height`     | Footer height             |
+| `--uizy-left-width`        | Left drawer width         |
+| `--uizy-right-width`       | Right drawer width        |
+| `--uizy-left-mini-width`   | Left mini drawer width    |
+| `--uizy-right-mini-width`  | Right mini drawer width   |
+| `--uizy-drawer-speed`      | Drawer animation duration |
+| `--uizy-overlay-color`     | Overlay background color  |
+| `--uizy-overlay-opacity`   | Overlay opacity           |
