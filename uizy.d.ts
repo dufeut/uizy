@@ -41,6 +41,7 @@ declare module "preact" {
         open?: boolean;
         right?: boolean;
         left?: boolean;
+        mini?: boolean;
         shadow?: string | number;
         "clip-top"?: boolean;
         "clip-bottom"?: boolean;
