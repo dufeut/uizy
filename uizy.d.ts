@@ -1,4 +1,10 @@
 import type { JSX } from "preact";
+import type UIZY from "@dufeut/uizy";
+
+// Declare uizy as a global variable
+declare global {
+  const uizy: typeof UIZY;
+}
 
 // Base attributes for all uizy components
 type UizyBaseAttributes = JSX.HTMLAttributes<HTMLElement>;
