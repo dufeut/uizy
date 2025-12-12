@@ -37,27 +37,38 @@ Or via CDN:
 
 ```js
 uizy.start({
+  globals: true,
   layout: { layout: { header: 56, footer: 48, left: 240 } },
   theme: { colors: { primary: "#6b08a5", accent: "#1eadff" } },
   components: {
-    button: () => "px-4 py-2 br-1 e-p",
+    button: () => "px-4 py-2 bd-a br-1 e-p e-ns",
   },
   stores: {
-    counter: { value: uizy.store.atom(0) },
+    counter: uizy.store.atom(0),
   },
   onReady: () => console.log("Ready!"),
 });
 ```
 
 ```html
+<style>
+  uizy-header {
+    background: var(--color-primary);
+  }
+  uizy-footer {
+    background: var(--color-accent);
+  }
+</style>
 <uizy-app>
-  <uizy-header>Header</uizy-header>
-  <uizy-drawer open>Sidebar</uizy-drawer>
-  <uizy-main clip-top clip-left>
-    <ui-box use="button" :click="console.log('clicked')">Click me</ui-box>
-    <ui-box :text="counter.value"></ui-box>
+  <uizy-header class="bd-a">Header</uizy-header>
+  <uizy-drawer clip-top clip-bottom class="bd-a" open>Sidebar</uizy-drawer>
+  <uizy-main clip-top clip-bottom clip-left class="pa-8 bd-a">
+    <ui-box use="button" onclick="uizy.$set('counter', $('counter') + 1)"
+      >Add +</ui-box
+    >
+    Count: <ui-box :text="counter"></ui-box>
   </uizy-main>
-  <uizy-footer>Footer</uizy-footer>
+  <uizy-footer class="bd-a">Footer</uizy-footer>
 </uizy-app>
 ```
 
