@@ -5,7 +5,7 @@
   <img height="140px" src="https://raw.githubusercontent.com/dufeut/uizy/main/docs/static/img/logo.png" alt="logo"/>
 
    <p><strong>Small footprint, big impact – the micro CSS framework for UIs.</strong></p>
-   <p><code>~5kb</code> gzipped JS + <code>~6.5kb</code> gzipped CSS</p>
+   <p><code>~6kb</code> gzipped JS + <code>~6.5kb</code> gzipped CSS</p>
 
 [![License: BSD 3-Clause](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![npm version](https://img.shields.io/npm/v/@dufeut/uizy.svg)](https://www.npmjs.com/package/@dufeut/uizy)
