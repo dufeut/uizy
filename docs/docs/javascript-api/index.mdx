@@ -1,0 +1,101 @@
+---
+sidebar_position: 1
+sidebar_label: Overview
+---
+
+# JavaScript API
+
+Add interactivity with components, actions, stores, and directives.
+
+## Installation
+
+```javascript
+import uizy from "@dufeut/uizy";
+import "@dufeut/uizy/index.css";
+```
+
+## Quick Start
+
+```javascript
+uizy.start({
+  // Components (reusable CSS classes)
+  components: {
+    button: {
+      primary: () => "px-4 py-2 bg-blue-500 text-white rounded",
+    },
+  },
+
+  // Actions (event handlers)
+  actions: {
+    user: {
+      login: (data) => console.log("Login:", data),
+    },
+  },
+
+  // Stores (reactive state)
+  stores: {
+    user: {
+      name: uizy.store.atom("Guest"),
+    },
+  },
+
+  // Ready callback
+  onReady: () => console.log("Uizy ready!"),
+});
+```
+
+## Core Concepts
+
+| Feature | Purpose | Access |
+|---------|---------|--------|
+| [Components](./components) | Reusable CSS class generators | `uizy.use("path")` |
+| [Actions](./actions) | Event handlers & side effects | `uizy.emit("path")` |
+| [Stores](./stores) | Reactive state management | `uizy.$("path")` |
+| [Directives](./directives) | Custom HTML attributes | `u-name="value"` |
+| [Plugins](./plugins) | Bundled, namespaced modules | `uizy.plugin()` |
+
+## API Quick Reference
+
+### Configuration
+
+| Method | Description |
+|--------|-------------|
+| `uizy.start(config)` | Initialize with full configuration |
+| `uizy.layout(config)` | Configure layout dimensions |
+| `uizy.theme(config)` | Configure colors and styles |
+
+### Components
+
+| Method | Description |
+|--------|-------------|
+| `uizy.use(path, props?)` | Get CSS classes from component |
+| `uizy.add(items)` | Register components |
+
+### Actions
+
+| Method | Description |
+|--------|-------------|
+| `uizy.emit(path, payload?)` | Call an action |
+| `uizy.on(items)` | Register actions |
+
+### Stores
+
+| Method | Description |
+|--------|-------------|
+| `uizy.$(path)` | Get store value |
+| `uizy.$set(path, value)` | Set store value |
+| `uizy.$sub(path, fn)` | Subscribe to changes |
+| `uizy.state(items)` | Register stores |
+
+### Directives
+
+| Method | Description |
+|--------|-------------|
+| `uizy.directive(name, handler)` | Register a directive |
+
+## Next Steps
+
+- [Components](./components) - Build reusable UI utilities
+- [Actions](./actions) - Handle events and commands
+- [Stores](./stores) - Manage reactive state
+- [Directives](./directives) - Create custom attributes

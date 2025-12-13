@@ -1,0 +1,335 @@
+---
+sidebar_position: 2
+sidebar_label: Complete App
+---
+
+# Building a Complete App
+
+Learn by building a task manager app that uses all of Uizy's features.
+
+## What We'll Build
+
+A simple task manager with:
+- Responsive layout (header, sidebar, main content)
+- Task list with add/complete/delete
+- Theme switching (light/dark)
+- Reactive state management
+
+## Step 1: Setup
+
+Create your HTML file:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager</title>
+  <link rel="stylesheet" href="https://unpkg.com/@dufeut/uizy/dist/index.css">
+  <script type="module">
+    import uizy from "https://unpkg.com/@dufeut/uizy";
+    window.uizy = uizy;
+
+    // We'll add our app code here
+  </script>
+</head>
+<body>
+  <!-- App goes here -->
+</body>
+</html>
+```
+
+## Step 2: Layout Structure
+
+Add the app shell using web components:
+
+```html
+<uizy-app id="app">
+  <!-- Header -->
+  <uizy-header shadow="4">
+    <ui-box class="d-flex dx-sb dy-ce ew-100p px-4">
+      <ui-box class="d-flex dy-ce gx-2">
+        <button class="d-md-none pa-2 br-2" onclick="uizy.emit('drawer.toggle')">
+          ☰
+        </button>
+        <span class="ts-4 td-b">Task Manager</span>
+      </ui-box>
+      <button class="pa-2 br-2" onclick="uizy.emit('theme.toggle')">
+        🌓
+      </button>
+    </ui-box>
+  </uizy-header>
+
+  <!-- Sidebar -->
+  <uizy-drawer clip-top clip-bottom shadow="2">
+    <ui-box class="pa-4">
+      <ui-box class="ts-5 td-b mb-4">Categories</ui-box>
+      <ui-box class="d-flex dy-ce gx-2 pa-2 br-2 mb-2 e-p">
+        📋 All Tasks
+      </ui-box>
+      <ui-box class="d-flex dy-ce gx-2 pa-2 br-2 mb-2 e-p">
+        ⭐ Important
+      </ui-box>
+      <ui-box class="d-flex dy-ce gx-2 pa-2 br-2 e-p">
+        ✅ Completed
+      </ui-box>
+    </ui-box>
+  </uizy-drawer>
+
+  <!-- Overlay -->
+  <uizy-overlay clip-top clip-bottom></uizy-overlay>
+
+  <!-- Main Content -->
+  <uizy-main clip-top clip-bottom clip-left>
+    <ui-box class="pa-4">
+      <!-- Add task form -->
+      <ui-box class="d-flex gx-2 mb-4">
+        <input
+          id="task-input"
+          type="text"
+          placeholder="Add a new task..."
+          class="ew-100p pa-3 br-2 bd-a bw-1"
+          onkeypress="if(event.key==='Enter') uizy.emit('task.add')"
+        >
+        <button
+          class="px-4 py-2 br-2 td-b"
+          onclick="uizy.emit('task.add')"
+        >
+          Add
+        </button>
+      </ui-box>
+
+      <!-- Task list -->
+      <ui-box id="task-list">
+        <!-- Tasks will be rendered here -->
+      </ui-box>
+    </ui-box>
+  </uizy-main>
+</uizy-app>
+```
+
+## Step 3: Configure Uizy
+
+Initialize with stores, actions, and layout:
+
+```javascript
+import uizy from "https://unpkg.com/@dufeut/uizy";
+window.uizy = uizy;
+
+uizy.start({
+  // Layout dimensions
+  layout: {
+    layout: {
+      header: 56,
+      left: 240,
+      leftMini: 0,
+    },
+    breakpoint: {
+      name: "md",
+      left: true,
+    },
+  },
+
+  // Theme colors
+  theme: {
+    colors: {
+      primary: "#6366f1",
+      background: "#ffffff",
+      surface: "#f8fafc",
+      text: "#1e293b",
+    },
+  },
+
+  // Reactive state
+  stores: {
+    app: {
+      theme: uizy.store.atom("light"),
+    },
+    tasks: {
+      list: uizy.store.atom([
+        { id: 1, text: "Learn Uizy basics", done: false },
+        { id: 2, text: "Build a complete app", done: false },
+        { id: 3, text: "Deploy to production", done: false },
+      ]),
+    },
+  },
+
+  // Event handlers
+  actions: {
+    drawer: {
+      toggle: () => {
+        const app = document.getElementById("app");
+        app?.action("left", ({ toggle }) => toggle());
+      },
+    },
+    theme: {
+      toggle: () => {
+        const current = uizy.$("app.theme");
+        const next = current === "light" ? "dark" : "light";
+        uizy.$set("app.theme", next);
+      },
+    },
+    task: {
+      add: () => {
+        const input = document.getElementById("task-input");
+        const text = input.value.trim();
+        if (!text) return;
+
+        const tasks = uizy.$("tasks.list");
+        const newTask = {
+          id: Date.now(),
+          text,
+          done: false,
+        };
+        uizy.$set("tasks.list", [...tasks, newTask]);
+        input.value = "";
+      },
+      toggle: (id) => {
+        const tasks = uizy.$("tasks.list");
+        const updated = tasks.map((t) =>
+          t.id === id ? { ...t, done: !t.done } : t
+        );
+        uizy.$set("tasks.list", updated);
+      },
+      remove: (id) => {
+        const tasks = uizy.$("tasks.list");
+        uizy.$set("tasks.list", tasks.filter((t) => t.id !== id));
+      },
+    },
+  },
+
+  onReady: () => {
+    // Render initial tasks
+    renderTasks();
+
+    // Subscribe to task changes
+    uizy.$sub("tasks.list", renderTasks);
+
+    // Subscribe to theme changes
+    uizy.$sub("app.theme", (theme) => {
+      document.documentElement.dataset.theme = theme;
+      applyTheme(theme);
+    });
+  },
+});
+
+function renderTasks() {
+  const tasks = uizy.$("tasks.list");
+  const container = document.getElementById("task-list");
+
+  container.innerHTML = tasks
+    .map(
+      (task) => `
+    <ui-box class="d-flex dx-sb dy-ce pa-3 mb-2 br-2 sb-1 ${
+      task.done ? "task-done" : ""
+    }">
+      <ui-box class="d-flex dy-ce gx-3">
+        <input
+          type="checkbox"
+          ${task.done ? "checked" : ""}
+          onchange="uizy.emit('task.toggle', ${task.id})"
+        >
+        <span class="${task.done ? "td-s" : ""}">${task.text}</span>
+      </ui-box>
+      <button
+        class="pa-2 br-2 e-p"
+        onclick="uizy.emit('task.remove', ${task.id})"
+      >
+        🗑️
+      </button>
+    </ui-box>
+  `
+    )
+    .join("");
+}
+
+function applyTheme(theme) {
+  if (theme === "dark") {
+    uizy.theme({
+      colors: {
+        primary: "#818cf8",
+        background: "#0f172a",
+        surface: "#1e293b",
+        text: "#f1f5f9",
+      },
+    });
+  } else {
+    uizy.theme({
+      colors: {
+        primary: "#6366f1",
+        background: "#ffffff",
+        surface: "#f8fafc",
+        text: "#1e293b",
+      },
+    });
+  }
+}
+```
+
+## Step 4: Add Styles
+
+Add custom styles that use CSS variables:
+
+```html
+<style>
+  body {
+    background: var(--color-background);
+    color: var(--color-text);
+    transition: background 0.3s, color 0.3s;
+  }
+
+  uizy-header {
+    background: var(--color-surface);
+  }
+
+  uizy-drawer {
+    background: var(--color-surface);
+  }
+
+  input[type="text"] {
+    background: var(--color-background);
+    color: var(--color-text);
+    border-color: var(--color-primary);
+  }
+
+  button {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  button:hover {
+    opacity: 0.9;
+  }
+
+  .task-done {
+    opacity: 0.6;
+  }
+</style>
+```
+
+## Key Concepts Used
+
+| Feature | Usage in App |
+|---------|--------------|
+| **Layout** | `<uizy-app>`, `<uizy-header>`, `<uizy-drawer>`, `<uizy-main>` |
+| **CSS Utilities** | `d-flex`, `pa-4`, `br-2`, `sb-1`, `gx-2` |
+| **Stores** | `tasks.list`, `app.theme` for reactive state |
+| **Actions** | `task.add`, `task.toggle`, `theme.toggle` |
+| **Theme** | `uizy.theme()` for runtime color updates |
+| **Responsive** | `d-md-none` for mobile menu button |
+
+## Next Steps
+
+- Add task editing
+- Persist tasks to localStorage
+- Add due dates and priorities
+- Create custom components with `uizy.add()`
+- Add animations with directives
+
+## Full Source Code
+
+See the complete example on [GitHub](https://github.com/dufeut/uizy/tree/main/examples).

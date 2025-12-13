@@ -42,6 +42,22 @@ const config: Config = {
     ],
   ],
 
+  themes: [
+    [
+      "@easyops-cn/docusaurus-search-local",
+      {
+        hashed: true,
+        indexDocs: true,
+        indexBlog: false,
+        docsRouteBasePath: "/",
+        highlightSearchTermsOnTargetPage: true,
+        searchResultLimits: 8,
+        searchBarShortcutHint: true,
+        explicitSearchResultPath: true,
+      },
+    ],
+  ],
+
   themeConfig: {
     image: "img/uizy-social-card.jpg",
     colorMode: {
@@ -65,19 +81,32 @@ const config: Config = {
       style: "dark",
       links: [
         {
-          title: "Documentation",
+          title: "Learn",
           items: [
             {
               label: "Getting Started",
               to: "/getting-started",
             },
             {
-              label: "Display",
-              to: "/utilities/display",
+              label: "CSS Utilities",
+              to: "/css-utilities",
             },
             {
-              label: "Grid System",
-              to: "/utilities/grid",
+              label: "JavaScript API",
+              to: "/javascript-api",
+            },
+          ],
+        },
+        {
+          title: "Reference",
+          items: [
+            {
+              label: "Cheatsheet",
+              to: "/reference/cheatsheet",
+            },
+            {
+              label: "Layout",
+              to: "/layout",
             },
           ],
         },

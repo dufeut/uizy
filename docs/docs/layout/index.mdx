@@ -1,0 +1,98 @@
+---
+sidebar_position: 1
+sidebar_label: Overview
+---
+
+# Layout System
+
+Build complete application layouts with headers, sidebars, drawers, and responsive behavior.
+
+## Two Approaches
+
+Uizy offers two ways to build layouts:
+
+| Approach | Best For | Method |
+|----------|----------|--------|
+| [CSS Classes](./css-classes) | Static sites, quick prototypes | Add classes to HTML elements |
+| [Web Components](./web-components) | Dynamic apps, JS interactivity | Use `<uizy-*>` custom elements |
+
+Both approaches use the same CSS variables and are fully compatible.
+
+## Quick Comparison
+
+### CSS Classes
+
+```html
+<header class="uizy-header">My App</header>
+<aside class="uizy-left uizy-drawer uizy-drawer--left">Nav</aside>
+<main class="uizy-main uizy-clip-top uizy-clip-left">Content</main>
+<footer class="uizy-footer">Footer</footer>
+```
+
+### Web Components
+
+```html
+<uizy-app id="app">
+  <uizy-header>My App</uizy-header>
+  <uizy-drawer open>Nav</uizy-drawer>
+  <uizy-main clip-top clip-left>Content</uizy-main>
+  <uizy-footer>Footer</uizy-footer>
+</uizy-app>
+```
+
+## Layout Elements
+
+| Element | Description |
+|---------|-------------|
+| System Bar | Top-most bar for status/branding |
+| Header | Main navigation bar |
+| Footer | Bottom bar |
+| Left/Right Sidebar | Fixed side panels |
+| Drawer | Animated slide-in panels |
+| Overlay | Semi-transparent backdrop |
+| Main | Primary content area |
+
+## Clipping System
+
+Clip elements to account for fixed layout parts:
+
+| Clip | Effect |
+|------|--------|
+| `clip-top` | Position below header |
+| `clip-bottom` | Position above footer |
+| `clip-left` | Account for left sidebar |
+| `clip-right` | Account for right sidebar |
+| `clip-system` | Position below system bar only |
+
+## Configuration
+
+Configure dimensions via JavaScript:
+
+```javascript
+uizy.layout({
+  layout: {
+    header: 56,      // Header height (px)
+    footer: 48,      // Footer height (px)
+    left: 240,       // Left drawer width (px)
+    right: 240,      // Right drawer width (px)
+    drawerSpeed: 0.2 // Animation speed (s)
+  }
+});
+```
+
+Or via CSS variables:
+
+```css
+:root {
+  --uizy-header-height: 56px;
+  --uizy-footer-height: 48px;
+  --uizy-left-width: 240px;
+  --uizy-drawer-speed: 0.2s;
+}
+```
+
+## Next Steps
+
+- [CSS Classes](./css-classes) - Use utility classes for layout
+- [Web Components](./web-components) - Use custom elements
+- [Layout Config](/javascript-api/layout-config) - Full configuration options

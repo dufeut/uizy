@@ -16,23 +16,37 @@ Directives are custom attributes that extend `<ui-box>` functionality. They rece
 uizy.directive("highlight", (el, { value }) => {
     el.style.backgroundColor = value || "yellow";
 });
+```
 
-// Use it
-// <ui-box :highlight="red">Highlighted text</ui-box>
-// or
-// <ui-box u-highlight="red">Highlighted text</ui-box>
+```html
+<!-- Use it -->
+<ui-box u-highlight="red">Highlighted text</ui-box>
 ```
 
 ## Syntax
 
-Directives support two prefix styles:
+:::tip Recommended: Use `u-` prefix
+Always use the `u-` prefix for better compatibility across build tools and frameworks. Some TSX/JSX transformers struggle with `:` prefixed attributes.
+:::
 
-| Prefix | Example | Description |
-|--------|---------|-------------|
-| `:` | `:foo:arg="value"` | Short syntax (Vue-like) |
-| `u-` | `u-foo:arg="value"` | Explicit syntax |
+| Prefix | Example | Notes |
+|--------|---------|-------|
+| `u-` | `u-foo:arg="value"` | **Recommended** - Works everywhere |
+| `:` | `:foo:arg="value"` | May cause issues with some transformers |
 
-Both are equivalent and can be mixed.
+### Modifiers
+
+Split multiple modifiers into separate attributes for clarity:
+
+```html
+<!-- ✅ Recommended -->
+<ui-box u-tooltip:top u-tooltip:arrow u-tooltip:delay="500">
+  Hover me
+</ui-box>
+
+<!-- ⚠️ May cause parsing issues -->
+<ui-box u-tooltip:top:arrow:delay="500">Hover me</ui-box>
+```
 
 ## Registration
 
@@ -41,14 +55,14 @@ Both are equivalent and can be mixed.
 ```javascript
 uizy.start({
     directives: {
-        // Simple directive (just element)
+        // Simple directive
         uppercase: (el) => {
             el.style.textTransform = "uppercase";
         },
 
-        // Full directive with context
+        // With value
         color: (el, { value }) => {
-            el.style.color = value;
+            el.style.color = value || "inherit";
         },
 
         // Reactive directive
@@ -69,31 +83,30 @@ uizy.start({
 ```javascript
 uizy.directive("tooltip", (el, { value, modifiers }) => {
     const position = modifiers.includes("top") ? "top" : "bottom";
-    // Setup tooltip logic...
+    // Setup tooltip...
 });
 ```
 
-## Directive Context
+## Context Object
 
-The second argument to directive handlers is a context object:
+The second argument provides utilities:
 
 ```javascript
 uizy.directive("example", (el, ctx) => {
-    // ctx.value      - The attribute value (from first binding)
-    // ctx.modifiers  - Array of all args from bindings
-    // ctx.expression - The raw expression string
-    // ctx.bindings   - All bindings for this directive
-    // ctx.effect     - Register a reactive effect (auto-cleaned)
-    // ctx.cleanup    - Register a cleanup function
+    ctx.value      // Attribute value (string)
+    ctx.modifiers  // Array of modifier args
+    ctx.bindings   // All bindings for this directive
+    ctx.effect     // Register reactive effect (auto-cleanup)
+    ctx.cleanup    // Register cleanup function
 });
 ```
 
-### `value`
+### value
 
-The attribute value as a string (from the first binding):
+The attribute value as a string:
 
 ```html
-<ui-box :example="hello world"></ui-box>
+<ui-box u-example="hello world"></ui-box>
 ```
 
 ```javascript
@@ -102,12 +115,12 @@ uizy.directive("example", (el, { value }) => {
 });
 ```
 
-### `modifiers`
+### modifiers
 
-When using multiple bindings, all `arg` values are collected into `modifiers`:
+Args from multiple bindings:
 
 ```html
-<ui-box :tooltip:top :tooltip:arrow="Help text"></ui-box>
+<ui-box u-tooltip:top u-tooltip:arrow="Help text"></ui-box>
 ```
 
 ```javascript
@@ -117,34 +130,28 @@ uizy.directive("tooltip", (el, { value, modifiers }) => {
 });
 ```
 
-### `bindings`
+### bindings
 
-For advanced use cases, access all bindings with their individual values:
+Access individual binding values:
 
 ```html
-<ui-box u-config:theme="dark" u-config:size="lg" u-config:animate></ui-box>
+<ui-box u-config:theme="dark" u-config:size="lg"></ui-box>
 ```
 
 ```javascript
 uizy.directive("config", (el, { bindings }) => {
-    console.log(bindings);
-    // [
-    //   { arg: "theme", value: "dark" },
-    //   { arg: "size", value: "lg" },
-    //   { arg: "animate", value: "" }
-    // ]
+    // [{ arg: "theme", value: "dark" }, { arg: "size", value: "lg" }]
 
-    // Convert to object
     const config = Object.fromEntries(
         bindings.map(b => [b.arg, b.value || true])
     );
-    console.log(config); // { theme: "dark", size: "lg", animate: true }
+    // { theme: "dark", size: "lg" }
 });
 ```
 
-### `effect`
+### effect
 
-Register a reactive effect that returns an optional cleanup function:
+Register a reactive effect with automatic cleanup:
 
 ```javascript
 uizy.directive("autosize", (el, { effect }) => {
@@ -155,14 +162,12 @@ uizy.directive("autosize", (el, { effect }) => {
         };
 
         el.addEventListener("input", resize);
-
-        // Return cleanup function
         return () => el.removeEventListener("input", resize);
     });
 });
 ```
 
-### `cleanup`
+### cleanup
 
 Register cleanup functions directly:
 
@@ -178,37 +183,33 @@ uizy.directive("interval", (el, { value, cleanup }) => {
 
 ## Examples
 
-### Focus Directive
+### Focus on Mount
 
 ```javascript
-uizy.directive("focus", (el) => {
-    el.focus();
-});
+uizy.directive("focus", (el) => el.focus());
 ```
 
 ```html
-<ui-box :focus>Auto-focused element</ui-box>
+<ui-box u-focus>Auto-focused</ui-box>
 ```
 
 ### Click Outside
 
 ```javascript
 uizy.directive("click-outside", (el, { value, cleanup }) => {
-    const handler = (event) => {
-        if (!el.contains(event.target)) {
-            // Execute the expression
+    const handler = (e) => {
+        if (!el.contains(e.target)) {
             new Function(value).call(el);
         }
     };
-
     document.addEventListener("click", handler);
     cleanup(() => document.removeEventListener("click", handler));
 });
 ```
 
 ```html
-<ui-box :click-outside="console.log('clicked outside')">
-    Click outside me
+<ui-box u-click-outside="uizy.emit('modal.close')">
+    Click outside to close
 </ui-box>
 ```
 
@@ -219,12 +220,10 @@ uizy.directive("lazy", (el, { value, cleanup }) => {
     const img = el.querySelector("img") || el;
 
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                img.src = value;
-                observer.disconnect();
-            }
-        });
+        if (entries[0].isIntersecting) {
+            img.src = value;
+            observer.disconnect();
+        }
     });
 
     observer.observe(el);
@@ -233,12 +232,12 @@ uizy.directive("lazy", (el, { value, cleanup }) => {
 ```
 
 ```html
-<ui-box :lazy="/images/large-photo.jpg">
+<ui-box u-lazy="/images/large-photo.jpg">
     <img src="/images/placeholder.jpg" alt="Photo" />
 </ui-box>
 ```
 
-### Reactive Store Binding
+### Two-Way Binding
 
 ```javascript
 uizy.directive("model", (el, { value, effect }) => {
@@ -248,7 +247,6 @@ uizy.directive("model", (el, { value, effect }) => {
         const store = uizy.$(value, { raw: true });
         if (!store) return;
 
-        // Two-way binding
         const unsubscribe = store.subscribe((v) => {
             if (input.value !== v) input.value = v;
         });
@@ -265,12 +263,12 @@ uizy.directive("model", (el, { value, effect }) => {
 ```
 
 ```html
-<ui-box :model="form.username">
+<ui-box u-model="form.username">
     <input type="text" />
 </ui-box>
 ```
 
-### Conditional Visibility
+### Conditional Show/Hide
 
 ```javascript
 uizy.directive("show", (el, { value, effect }) => {
@@ -289,83 +287,109 @@ uizy.directive("show", (el, { value, effect }) => {
 ```
 
 ```html
-<ui-box :show="ui.modalOpen">Modal content</ui-box>
+<ui-box u-show="ui.modalOpen">Modal content</ui-box>
 ```
 
-### Multi-Binding Configuration
+### Inline Styles
 
 ```javascript
 uizy.directive("style", (el, { bindings }) => {
     for (const { arg, value } of bindings) {
-        if (arg && value) {
-            el.style[arg] = value;
-        }
+        if (arg && value) el.style[arg] = value;
     }
 });
 ```
 
 ```html
-<ui-box u-style:color="red" u-style:fontSize="20px" u-style:fontWeight="bold">
+<ui-box u-style:color="red" u-style:fontSize="20px">
     Styled text
 </ui-box>
+```
+
+## Best Practices
+
+### Always Clean Up
+
+Prevent memory leaks with proper cleanup:
+
+```javascript
+// ✅ Using cleanup()
+uizy.directive("interval", (el, { value, cleanup }) => {
+    const id = setInterval(() => { /* ... */ }, 1000);
+    cleanup(() => clearInterval(id));
+});
+
+// ✅ Using effect return
+uizy.directive("resize", (el, { effect }) => {
+    effect(() => {
+        const handler = () => { /* ... */ };
+        window.addEventListener("resize", handler);
+        return () => window.removeEventListener("resize", handler);
+    });
+});
+```
+
+### Handle Missing Values
+
+Provide defaults for optional values:
+
+```javascript
+uizy.directive("color", (el, { value }) => {
+    el.style.color = value || "inherit"; // ✅ Fallback
+});
+
+uizy.directive("delay", (el, { value }) => {
+    const ms = parseInt(value) || 1000; // ✅ Parse + default
+});
+```
+
+### Keep Directives Focused
+
+Each directive should do one thing:
+
+```javascript
+// ✅ Single-purpose
+uizy.directive("focus", (el) => el.focus());
+uizy.directive("uppercase", (el) => el.style.textTransform = "uppercase");
+
+// ❌ Too many responsibilities
+uizy.directive("setup", (el, { modifiers }) => {
+    if (modifiers.includes("focus")) el.focus();
+    if (modifiers.includes("uppercase")) /* ... */
+    // Split into separate directives instead
+});
 ```
 
 ## API Reference
 
 ### `uizy.directive(name, handler)`
 
-Register a custom directive.
-
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `name` | `string` | Directive name (used as `:name` or `u-name` attribute) |
-| `handler` | `DirectiveHandler` | Handler function |
+| `name` | `string` | Directive name (used as `u-name`) |
+| `handler` | `(el, ctx) => void` | Handler function |
 
 ### `uizy.directives`
-
-Access the directives registry:
 
 | Method | Description |
 |--------|-------------|
 | `.add(name, handler)` | Register a directive |
-| `.addAll(directives)` | Register multiple directives |
-| `.get(name)` | Get a directive handler |
-| `.has(name)` | Check if directive exists |
-| `.names()` | List all directive names |
-| `.clear()` | Remove all directives |
+| `.addAll(directives)` | Register multiple |
+| `.get(name)` | Get handler |
+| `.has(name)` | Check if exists |
+| `.names()` | List all names |
+| `.clear()` | Remove all |
 
-### DirectiveHandler
-
-```typescript
-type DirectiveHandler = (el: HTMLElement, ctx: DirectiveContext) => void;
-```
-
-### DirectiveBinding
-
-```typescript
-interface DirectiveBinding {
-    value: string;  // The attribute value
-    arg: string;    // The first modifier (e.g., "top" from :foo:top)
-}
-```
-
-### DirectiveContext
+### Types
 
 ```typescript
 interface DirectiveContext {
-    value: string;              // Value from first binding
-    modifiers: string[];        // All args collected from bindings
-    expression: string;         // Raw expression string
-    bindings: DirectiveBinding[]; // All bindings for this directive
+    value: string;
+    modifiers: string[];
+    bindings: { arg: string; value: string }[];
     effect: (fn: () => (() => void) | void) => void;
     cleanup: (fn: () => void) => void;
 }
+
+type DirectiveHandler = (el: HTMLElement, ctx: DirectiveContext) => void;
 ```
-
-## Best Practices
-
-1. **Keep directives focused** - Each directive should do one thing well
-2. **Always cleanup** - Use `cleanup()` or return cleanup from `effect()` to prevent memory leaks
-3. **Use bindings for config** - For multiple options, use `u-foo:opt1="val" u-foo:opt2="val"` pattern
-4. **Handle missing values gracefully** - Check if `value` exists before using it
-5. **Document your directives** - Add comments explaining what each directive does
